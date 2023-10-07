@@ -1,22 +1,22 @@
 # drcschool
 LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Klassenarbeiten in den Fächern Mathematik und Physik in der Schule.
 
-  H I S T O R Y
+ ## HISTORY
 
- 2023-10-06 v1.0.3
+ ### 2023-10-06 v1.0.3
  The macro \the@fakepage was redefined each time the fake page number was
  being reset, which was quite pointless.
  Added {hint} environment (copied from unituemnf). Further cosmetic changes.
 
- 2023-09-23 v1.0.2
+ ### 2023-09-23 v1.0.2
  I had a small bug in \grid and \lines because of the missing "inner sep=\z@".
  Fixed also a mismanagement of \starredquestionmark.
 
- 2023-09-22 v1.0.1
+### 2023-09-22 v1.0.1
  Added \lines, similar to \grid.
  Added horizontal versions of {multchoice} and {multresponse}.
 
- 2023-08-30 v1.0.0
+### 2023-08-30 v1.0.0
  Wow, after sixteen months and two weeks of school and two more weeks of
  heavy TeXing I think I've finally got something acceptable which I can denote
  as a version v1.0... From now on, version numbers will use the more customary
@@ -63,14 +63,14 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    in some other places. Results with older documents will result in
    slightly different vertical spacing, there is no way to avoid that.
 
- 2023-07-31 v0.4d / v0.4e
+### 2023-07-31 v0.4d / v0.4e
  These versions never really existed. They lasted a couple of days
  before I moved to the following version.
 
- 2023-06-28 v0.4c
+### 2023-06-28 v0.4c
  Completely recoded \crosstable; added global scratch length registers.
 
- 2023-06-23 v0.4b
+### 2023-06-23 v0.4b
  - In version v0.3b I defined the {questions} environment from scratch
    as a list, instead of it being a wrapper around {compactenum}. In
    doing so I accidentally moved the saving of the current question
@@ -84,22 +84,22 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
  - Changed the tikz pic rightangle: it does /not/ draw a 90 degree
    angle but only prints the dot in the middle.
 
- 2023-06-15 v0.4a
+### 2023-06-15 v0.4a
  Added starred version of \shortsolution.
 
- 2023-05-23 v0.4
+### 2023-05-23 v0.4
  - Completely changed the individual configurations. Now the class
    always checks whether a configuration file drcschool.cfg exists,
    and loads it. The .sco files can still be manually loaded but
    not as class option any more but rather with \LoadSchoolOptionFile.
  - Added optional parameter to \drcput.
 
- 2023-05-19 v0.3e
+### 2023-05-19 v0.3e
  Upps, small bug: When passing KoMa options to \documentclass (which
  I haven't done in ages) there was the problem that \@xp wasn't
  defined yet, since I still had to load amsgen at that moment. Fixed.
 
- 2023-05-17 v0.3d
+### 2023-05-17 v0.3d
  - When using a font change command in the worksheets, the first
    paragraph was actually badly spaced. I need a further
    \normalsize at the start of the environments.
@@ -110,11 +110,11 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    *xxx would have also given a false positive. The test has been
    now re-implemented by using \ifx. Should be somewhat safer.
 
- 2023-05-13 v0.3c
+### 2023-05-13 v0.3c
  - Cosmetic changes.
  - Added {TA*}
 
- 2023-05-12 v0.3b
+### 2023-05-12 v0.3b
  - Cosmetic changes in \wrap.
  - Changed {questions}, not based on {compactenum} any more but set
    up as independent list. Added the ``horizontal'' version
@@ -126,7 +126,7 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    the meaning of the optional parameter; this shouldn't be an issue,
    since I never used it and it wasn't documented in the template.
 
- 2023-04-01 v0.3a
+### 2023-04-01 v0.3a
  - Added environment {matching} and related macro \match{...}{...}.
  - Added \let\par\relax as end code of \newblock and at the start
    of the {schedule} environment. In this way empty lines are
@@ -139,7 +139,7 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    a page.
  - Added \exercises and \homework.
 
- 2023-03-21 v0.3
+### 2023-03-21 v0.3
  - Some major changes (in internal coding, not in usage).
  - I had actually screwed up quite a lot with the page
    numbering, and \cleardoublepage led sometimes to strange
@@ -157,7 +157,7 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    as I forgot a \nointerlineskip. Fixed.
  - Added option NwT for the test.
 
- 2023-03-17 v0.2f
+### 2023-03-17 v0.2f
  Changed a bit the bounding box of \fillbox in math mode.
  The environment {experiment} was basically a copy of the
  {worksheet} code, so I just did that: \begin{experiment} simply
@@ -168,7 +168,7 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
  Adapted {cluecards}, now also with a key/value syntax possible,
  such that the fonts can be changed.
 
- 2023-03-10 v0.2e
+### 2023-03-10 v0.2e
  General rearranging of code. Do I really need the \AtEndOfClass hooks?
  I don't quite think so but I leave it there for the time being...
  The code for the background grid has been extremely simplified
@@ -181,19 +181,19 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
  document. The names `Aufgabe' and `Lösung' are not hard-coded any
  more but rather saved in the macros \exercisename and \solutionname.
 
- 2023-03-07 v0.2d
+### 2023-03-07 v0.2d
  Changed the internal coding of \fillbox. Changed a bit also hot it behaves:
  in text mode now similar to \fillhere, the default length is twice the
  natural length of the argument.
 
- 2023-03-05 v0.2c
+### 2023-03-05 v0.2c
  Added \shortsolution and \IfSolutionFT.
 
- 2023-02-28 v0.2b
+### 2023-02-28 v0.2b
  Changed a bit the loading of a configuration file.
  Some simplifications in code here and there.
 
- 2023-02-23 v0.2a
+### 2023-02-23 v0.2a
  - Changed definition of \fillhere. This might lead to different
    results with old files. I'll survive.
  - The old handling of blocks has been changed. Now it is possible
@@ -211,7 +211,7 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
  - A personal configuration files <filename>.sco can be used to
    customize block starting times.
 
- 2023-02-15 v0.2
+### 2023-02-15 v0.2
  Major changes:
  - The environments {multchoice} and {multresponse} now check
    that there is a correct \choice per question, and {multchoice}
@@ -221,41 +221,41 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
  - The start times of the single blocks can be given by \SetBlockStart.
  - The school's logo can be given as key/val.
 
- 2023-02-14 v0.1f
+### 2023-02-14 v0.1f
  Added \wraptikz. I had forgotten to replace the period by a
  comma in the output of \vecsum.
 
- 2023-02-10 v0.1e
+### 2023-02-10 v0.1e
  Rearranged some code. Added \drcput and \vecsum.
 
- 2023-02-09 v0.1d
+### 2023-02-09 v0.1d
  Changed definition of \rightangle in order to work with declared
  coordinates. (No idea why the original version didn't work.) Added
  possibility to pass tikz options too.
 
- 2023-01-31 v0.1c
+### 2023-01-31 v0.1c
  Added fontsize key for all {print...} environments.
 
- 2023-01-27 v0.1c
+### 2023-01-27 v0.1c
  Heavily changed the internal coding of the {schedule} environment.
  Now a key/value syntax can be also used instead of only number or
  start time. The optional printing of the headline is also a possibility.
 
- 2023-01-23 v0.1b
+### 2023-01-23 v0.1b
  Added radio buttons, recoded some stuff, added {multresponse},
  changed {multchoice}, added \setduration, corrected a bunch of
  bugs which I inadvertently introduced...
  Thinking of introducing a key/value syntax for the {schedule}
  environment, but I'm too tired right now.
 
- 2022-12-20 v0.1a
+### 2022-12-20 v0.1a
  - Changed the handling of number of points, based now on a length
    instead of a counter. In this way also decimals (mainly
    half-points) can be used.
  - Heavily changed the internal coding of some stuff but otherwise
    no end-user changes.
 
- 2022-11-25 v0.1
+### 2022-11-25 v0.1
  - Changed heavily internal coding of test. More than one test
    per file now possible. Added also a ``version label'' for
    different versions of the test.
@@ -267,25 +267,25 @@ LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
    number of points.
  - Added the {cluecards} environment (and related \cluecard macro).
 
- 2022-10-20 v0.0f
+### 2022-10-20 v0.0f
  Added \fillbox. Changed order of solution/no solution for
  worksheets & Co. (to save paper...)
 
- 2022-10-03 v0.0e
+### 2022-10-03 v0.0e
  Added key/value syntax for {worksheet}.
 
- 2022-09-30 v0.0d
+### 2022-09-30 v0.0d
  Added tabular column types L,C,R,s,S,f,F.
  Added default font correction to \sqrt.
 
- 2022-09-20 v0.0c
+### 2022-09-20 v0.0c
  Added {worksheet*}.
 
- 2022-09-15 v0.0b
+### 2022-09-15 v0.0b
  Made \grid \long.
 
- 2022-08-15 v0.0a
+### 2022-08-15 v0.0a
  Added optional number of points to \question.
 
- 2022-08-10 v0.0
+### 2022-08-10 v0.0
  First more or less stable version.
