@@ -1,74 +1,74 @@
 # drcschool
 LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Klassenarbeiten in den Fächern Mathematik und Physik in der Schule.
 
- ## HISTORY
+## HISTORY
 
- ### 2023-10-06 v1.0.3
- The macro \the@fakepage was redefined each time the fake page number was
- being reset, which was quite pointless.
- Added {hint} environment (copied from unituemnf). Further cosmetic changes.
+### 2023-10-06 v1.0.3
+The macro `\the@fakepage` was redefined each time the fake page number was
+being reset, which was quite pointless.
+Added `{hint}` environment (copied from unituemnf). Further cosmetic changes.
 
- ### 2023-09-23 v1.0.2
- I had a small bug in \grid and \lines because of the missing "inner sep=\z@".
- Fixed also a mismanagement of \starredquestionmark.
+### 2023-09-23 v1.0.2
+I had a small bug in `\grid` and `\lines` because of the missing `inner sep=\z@`.
+Fixed also a mismanagement of `\starredquestionmark`.
 
 ### 2023-09-22 v1.0.1
- Added \lines, similar to \grid.
- Added horizontal versions of {multchoice} and {multresponse}.
+Added `\lines`, similar to `\grid`.
+Added horizontal versions of `{multchoice}` and `{multresponse}`.
 
 ### 2023-08-30 v1.0.0
- Wow, after sixteen months and two weeks of school and two more weeks of
- heavy TeXing I think I've finally got something acceptable which I can denote
- as a version v1.0... From now on, version numbers will use the more customary
- numbering v[major].[minor].[patch] instead of the strange number/letter
- combinations I've been using.
- There has been some major code rewriting and a lot of new features have been
- introduced. Let us see how many bugs have crept in... :-)
- Here a short list of changes, in no particular order:
- - Biggie: Added fillable pdf worksheets and in general hyperref support.
- - I actually screwed up \label's, as amsmath redefines \label at the
-   start of every environment. Right now I've fixed this, but every
-   package redefining \label will break something. In the long run I
-   guess I'll have to put the version with solution first and the
-   version without after.
- - \drcschool@fix@time was badly coded: first the test if more than
-   119 minutes, then the test for more than 59 minutes. Larger time
-   spans were not checked (admittedly, they would never occur...).
-   Anyway, re-coded: the test is now performed recursively.
- - Fixed indentation at start of worksheets of all sorts by placing
-   the appropriate \@afterindentfalse\@afterheading.
- - There was still a warning about a font size substitution, though
-   I never really understood where it came from. I am pretty sure it
-   was due to drcmath doing something with fonts (someday I'll have to
-   rewrite that...) but I couldn't pinpoint the issue. Rearranging
-   packages seems to have silenced the warning, but I still would like
-   to understand what the freaking problem was...
- - Completely recoded the {schedule}. Now one can define different
-   ``styles'' with different columns and related macros. We'll see
-   how many bugs I introduced...
- - Added a {schedule*} which does not start a new page.
-   (Mainly for the documentation...)
- - The parentheses around the exercises' titles can be changed.
- - No {experiment} environment any more, but an \experiment macro
-   with an independent counter which can be used together with \exercise
-   within a {worksheet}.
- - Removed the \sectionformat-related things. I was using a \section for
-   exercises, but this would have collided with ,,normal`` sections. Not
-   that I ever used them, but better safe than sorry. Now the counters
-   \c@exercise and \c@experiment are defined separately, and
-   \exercise/\experiment use a modified copy of \@startsection.
- - The strange \vskip-\baselineskip I had in the \content of {schedule}
-   was indeed due to a bug in longtable (well, David Carlisle wouldn't
-   agree...). I kind of fixed that, though that required some change
-   in some other places. Results with older documents will result in
-   slightly different vertical spacing, there is no way to avoid that.
+Wow, after sixteen months and two weeks of school and two more weeks of
+heavy TeXing I think I've finally got something acceptable which I can denote
+as a version v1.0... From now on, version numbers will use the more customary
+numbering v[major].[minor].[patch] instead of the strange number/letter
+combinations I've been using.
+There has been some major code rewriting and a lot of new features have been
+introduced. Let us see how many bugs have crept in... :-)
+Here a short list of changes, in no particular order:
+- Biggie: Added fillable pdf worksheets and in general hyperref support.
+- I actually screwed up `\label`'s, as amsmath redefines `\label` at the
+  start of every environment. Right now I've fixed this, but every
+  package redefining `\label` will break something. In the long run I
+  guess I'll have to put the version with solution first and the
+  version without after.
+- `\drcschool@fix@time` was badly coded: first the test if more than
+  119 minutes, then the test for more than 59 minutes. Larger time
+  spans were not checked (admittedly, they would never occur...).
+  Anyway, re-coded: the test is now performed recursively.
+- Fixed indentation at start of worksheets of all sorts by placing
+  the appropriate `\@afterindentfalse\@afterheading`.
+- There was still a warning about a font size substitution, though
+  I never really understood where it came from. I am pretty sure it
+  was due to drcmath doing something with fonts (someday I'll have to
+  rewrite that...) but I couldn't pinpoint the issue. Rearranging
+  packages seems to have silenced the warning, but I still would like
+  to understand what the freaking problem was...
+- Completely recoded the {schedule}. Now one can define different
+  "*styles*" with different columns and related macros. We'll see
+  how many bugs I introduced...
+- Added a `{schedule*}` which does not start a new page.
+  (Mainly for the documentation...)
+- The parentheses around the exercises' titles can be changed.
+- No `{experiment}` environment any more, but an `\experiment` macro
+  with an independent counter which can be used together with `\exercise`
+  within a `{worksheet}`.
+- Removed the `\sectionformat`-related things. I was using a `\section` for
+  exercises, but this would have collided with "normal" sections. Not
+  that I ever used them, but better safe than sorry. Now the counters
+  `\c@exercise` and `\c@experiment` are defined separately, and
+  `\exercise`/`\experiment` use a modified copy of `\@startsection`.
+- The strange `\vskip-\baselineskip` I had in the `\content` of `{schedule}`
+  was indeed due to a bug in `longtable` (well, David Carlisle wouldn't
+  agree...). I kind of fixed that, though that required some change
+  in some other places. Results with older documents will result in
+  slightly different vertical spacing, there is no way to avoid that.
 
 ### 2023-07-31 v0.4d / v0.4e
- These versions never really existed. They lasted a couple of days
- before I moved to the following version.
+These versions never really existed. They lasted a couple of days
+before I moved to the following version.
 
 ### 2023-06-28 v0.4c
- Completely recoded \crosstable; added global scratch length registers.
+ Completely recoded `\crosstable`; added global scratch length registers.
 
 ### 2023-06-23 v0.4b
  - In version v0.3b I defined the {questions} environment from scratch
