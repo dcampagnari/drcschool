@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2023-10-08 v1.0.4
+## 2023-10-08 [v1.0.4]
 Removed history (can be now found in changelog).
 
 ## 2023-10-06 v1.0.3
