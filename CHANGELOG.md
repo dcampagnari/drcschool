@@ -82,7 +82,7 @@ before I moved to the following version.
   global macro `\drcschool@last@qst` (the last remnant of the `unituemnf`
   class) isn't needed any more, so I simply deleted it.
 - Added the name `\starredexercisename`.
-- Changed the tikz pic rightangle: it does /not/ draw a 90 degree
+- Changed the tikz pic rightangle: it does *not* draw a 90 degree
   angle but only prints the dot in the middle.
 
 ## 2023-06-15 v0.4a
