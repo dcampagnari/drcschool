@@ -1,7 +1,7 @@
 # `drcschool` --- DRC' s LaTeX school class
 
 ## Beschreibung
-LaTeX Klasse zur herstellung von Unterrichtsentwürfen, Arbeitsblättern und Klassenarbeiten in den Fächern Mathematik und Physik in der Schule.
+LaTeX Klasse zur Herstellung von Unterrichtsentwürfen, Arbeitsblättern und Klassenarbeiten in den Fächern Mathematik und Physik in der Schule.
 
 ## Distributed files
 - The class file `drcschool.cls` itself.
