@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2023-10-08 v1.0.4
+Removed history (can be now found in changelog).
+
 ## 2023-10-06 v1.0.3
 - The macro `\the@fakepage` was redefined each time the fake page number was being reset, which was quite pointless.
 - Added `{hint}` environment (copied from `unituemnf`).
@@ -82,7 +85,7 @@ before I moved to the following version.
   global macro `\drcschool@last@qst` (the last remnant of the `unituemnf`
   class) isn't needed any more, so I simply deleted it.
 - Added the name `\starredexercisename`.
-- Changed the tikz pic rightangle: it does *not* draw a 90 degree
+- Changed the tikz pic rightangle: it does /not/ draw a 90 degree
   angle but only prints the dot in the middle.
 
 ## 2023-06-15 v0.4a
