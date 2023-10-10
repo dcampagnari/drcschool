@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 2023-10-10 v1.0.5
+I had a strange, useless assignment in `{cluecards}`.
+Possibly a relic of something I ended not using.
+
 ## 2023-10-08 v1.0.4
 Removed history (can be now found in changelog).
 
@@ -209,9 +213,9 @@ Added `\shortsolution` and `\IfSolutionFT`.
   starts at midnight :-) and everything from the fifth starts at 2pm.
   The idea is now that anyone can personalize starting times
   by declaring single hours e.g. as
-    \SetDuration{45}
-    \SetBlockStart{1}{8:00}
-    \SetBlockStart{2}{8:45}
+    `\SetDuration{45}`
+    `\SetBlockStart{1}{8:00}`
+    `\SetBlockStart{2}{8:45}`
   and so on...
 - A personal configuration files `<filename>.sco` can be used to
   customize block starting times.
@@ -262,27 +266,30 @@ start time. The optional printing of the headline is also a possibility.
   no end-user changes.
 
 ## 2022-11-25 v0.1
+### Added
+- Added the macros `\IfSolutionT`, `\IfSolutionF`, `\IfSolutionTF`.
+- Added the option ptspre for test to add something before the
+  number of points.
+- Added the `{cluecards}` environment (and related `\cluecard` macro).
+### Changed
 - Changed heavily internal coding of test. More than one test
   per file now possible. Added also a "version label" for
   different versions of the test.
 - Changed a bit the definition of the `{TF}` environment, now
   based on `{tabularx}`.
-- Added the macros `\IfSolutionT`, `\IfSolutionF`, `\IfSolutionTF`.
 - Discontinued the Stoffsverteilungsplan.
-- Added the option ptspre for test to add something before the
-  number of points.
-- Added the `{cluecards}` environment (and related `\cluecard` macro).
 
 ## 2022-10-20 v0.0f
-Added `\fillbox`. Changed order of solution/no solution for
+- Added `\fillbox`.
+- Changed order of solution/no solution for
 worksheets & Co. (to save paper...)
 
 ## 2022-10-03 v0.0e
 Added key/value syntax for `{worksheet}`.
 
 ## 2022-09-30 v0.0d
-Added tabular column types L,C,R,s,S,f,F.
-Added default font correction to `\sqrt`.
+- Added tabular column types `L`, `C`, `R`, `s`, `S`, `f`, `F`.
+- Added default font correction to `\sqrt`.
 
 ## 2022-09-20 v0.0c
 Added `{worksheet*}`.

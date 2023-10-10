@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-10-08 v1.0.4]
+\ProvidesClass{drcschool}[2023-10-10 v1.0.5]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -290,7 +290,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% TYPESETING THE SCHEDULE
+%% TYPESETTING THE SCHEDULE
 \newcount\c@dur@tion
 \newcommand*{\drc@duration}{90}% standard is 90 minutes
 \newcommand*{\SetDuration}[1]{\def\drc@duration{#1}}
@@ -1264,7 +1264,6 @@
    \let\cluecard\@cluecard
    \ignorespaces
   }{%
-   \dimen@=\dimexpr1cm
    \drc@dima=\dimexpr(\paperwidth-1cm)/\drc@nx-1cm-2\fboxsep-2\fboxrule\relax
    \drc@dimb=\dimexpr(\paperheight-1cm)/\drc@ny-1cm-2\fboxsep-2\fboxrule\relax
    \parindent\z@
