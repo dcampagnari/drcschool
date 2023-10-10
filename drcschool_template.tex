@@ -13,11 +13,12 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   !! Dieser Teil ist NUR für diese Dokumentation !!                           %
-\newcommand{\code}[1]{%                                                         %
+\newcommand*{\bcode}{%                                                          %
    \vskip.5ex\begingroup                                                        %
    \parindent0pt\advance\leftskip4em\ttfamily                                   %
-   \def\\{\textbackslash}\ignorespaces#1\par                                    %
-   \endgroup\vskip.5ex\noindent\ignorespaces}                                   %
+   \def\\{\textbackslash}\def\nl{\newline}                                      %
+}                                                                               %
+\newcommand*{\ecode}{\par\endgroup\vskip.5ex\csname @doendpe\endcsname}         %
 \newcommand*{\cs}[1]{\textup{\ttfamily\textbackslash#1}}                        %
 \newcommand*{\str}[1]{\textup{\ttfamily\string#1}}                              %
 \newcommand*{\marg}[1]{\textup{\ttfamily\{#1\}}}                                %
@@ -72,9 +73,9 @@ gefunden werden, ist aber relativ alt (2013). Keine Gewähr!
 
 \section{Laden der Klasse und Optionen}
 Die Klasse wird ganz normal mittels
-\code{
+\bcode
 \\documentclass[\param{Optionen}]\{drcschool\}
-}
+\ecode
 geladen. Zu Grunde liegt die \KOMAScript-Klasse \pkg{scrartcl}, deren
 entsprechende Optionen als Optionen zu \pkg{drcschool} weitergegeben werden können.
 
@@ -283,9 +284,9 @@ in der/denen die Stunde stattfindet: \opt{1} für den ersten Block, \opt{2} für
    Mit \opt{111} kriegt man dreimal den ersten Block. Man muss selbst etwas mitdenken\ldots
 }
 \item Alternativ kann man explizit eine Uhrzeit angeben
-\code{
+\bcode
    \\begin\{schedule\}[8:15]
-}
+\ecode
 und dann beginnt die Planung zur gegebenen Uhrzeit.
 \item Man kann auch eine Key-Value-Syntax verwenden. Die uninteressanten Beispiele sind\\[1ex]
 \null\kern4em\cs{begin}\marg{schedule}\oarg{start=8:15} ist dasselbe wie \cs{begin}\marg{schedule}\oarg{8:15}\\[1ex]
@@ -293,9 +294,9 @@ und\\[1ex]
 \null\kern4em\cs{begin}\marg{schedule}\oarg{block=13} ist dasselbe wie \cs{begin\{schedule\}[13]}\\[1ex]
 Es gibt aber auch \emph{andere} Optionen, nämlich \opt{duration=...} und \opt{title=true/false}.
 Man kann also angeben
-\code{
+\bcode
    \\begin\{schedule\}[start=8:00,duration=45]
-}
+\ecode
 wenn man eine Einzelstunde will, die um 8 Uhr startet. Mit der Angabe \opt{title=false}
 wird die Kopfzeile nicht gedruckt. (Default ist \opt{true}.) Natürlich ist es sinnlos,
 sowohl \opt{block=...} als auch \opt{start=...} anzugeben: das letzte gewinnt.
@@ -314,14 +315,15 @@ einer Umgebung \env{schedule} die Befehle \cs{time}, \cs{goal},
 jede/r Fachleiter/in am Seminar etwas anderes haben, und so stehen
 Anpassungsmöglichkeiten zur Verfügung. Jede \env{schedule} wird in
 einem gegebenen \emph{Stil} gesetzt. Ein Stil wird durch
-\code{
+\bcode
    \\NewScheduleStyle\{\param{Name}\}[\param{relative Breite der Zeit-Spalte}]\{\param{Spaltendefinitionen}\}
-}
+\ecode
 definiert. Im ersten Argumenten von \cs{NewScheduleStyle} steht der Name
 des Stils; das zweite, optionale Argument beschreibe ich später. Im weiteren
-obligatorischen Argumenten muss eine Reihe von verschiedenen Deklarationen der Form\code{
+obligatorischen Argumenten muss eine Reihe von verschiedenen Deklarationen der Form
+\bcode
    \\DeclareColumn[\param{Extra-Code}]\{\param{Marko}\}\{\param{Überschrift}\}\{\param{relative Breite}\}
-}
+\ecode
 sein; jede davon legt fest
 \begin{compactenum}[(1)]
 \item das Makro, das den Inhalt der Spalte setzt,
@@ -360,9 +362,9 @@ Stelle platziert. Da aber in der Tabelle das Makro \texttt{\string\\} die neue
 Tabellenzeile startet, kann man \texttt{\string\\} im Argumenten von \cs{content}
 nicht verwenden, was natürlich blöd ist. Dazu ist das optionale Argument
 zu \cs{DeclareColumn} da: es ist extra Code, das zu Beginn der Zelle kopiert wird
-\code{
+\bcode
    ... \& \param{extra Code}\\drc@content \& \\drc@notes ...
-}
+\ecode
 Das heißt, in der ,,Inhalt``-Spalte kann man \texttt{\string\\} verwenden,
 ohne dass eine neue Tabellenzeile gestartet wird (mit dem Chaos, das dabei
 entstehen würde), und das Makro \cs{time} bekommt wieder seine ursprüngliche
@@ -429,9 +431,10 @@ existiert \cs{RenewScheduleStyle}, und man könnte mit
 \end{verbatim}
 den Defaultstil umdefinieren. Es wäre aber auch denkbar, dass man den Defaultstil
 umdefinieren aber nicht unbedingt verlieren möchte: Man kann auch Stile kopieren.
-Mit\code{
+Mit
+\bcode
    \\CopyScheduleStyle\{\param{neuer Stil}\}\{\param{alter Stil}\}
-}
+\ecode
 macht man eine Kopie eines existierenden Stils, der dann geändert werden kann.
 
 \subsection{Uhrzeiten}
@@ -582,22 +585,22 @@ sein. Mögliche Optionen sind:
 \end{compactdesc}
 (Ein \param{Ein-Aus-Wert} ist wie gewohnt \opt{true}/\opt{yes}/\opt{on} oder \opt{false}/\opt{no}/\opt{off}.)
 Im Grunde ist also
-\code{
+\bcode
 \\begin\{worksheet\}[Titel des Arbeitsblatts]
-}
+\ecode
 in etwa dasselbe wie
-\code{
+\bcode
 \\begin\{worksheet\}[%
    \begin{tabular}[t]{@{}l}title=Titel des Arbeitsblatts,\%\\
                            date=true,name=false]\end{tabular}
-}
+\ecode
 Wenn man die Standardeinstellungen ändern will, dann stehen die Befehle
 \cs{SetWorksheetOptions} und \cs{AddWorksheetOptions} zur Verfügung.
 Wenn z.B.~alle Arbeitsblätter grundsätzlich den Platz für den Namen
 haben sollen, so kann man
-\code{
+\bcode
 \\SetWorksheetOptions\{name=true,date=true\}
-}
+\ecode
 in der Präambel oder in einer Konfigurationsdatei schreiben.
 
 \exercise[Titel]\label{ex:foo}
@@ -814,9 +817,10 @@ Eine einfache Aufgabe kriegt man mit \cs{easy}\cs{exercise}.
 
 Bitte beachten: Die drei Makros \cs{hard}, \cs{medium}
 und \cs{easy} dürfen \emph{nur} vor dem Befehl \cs{exercise}
-verwendet werden. Der Code\code{
+verwendet werden. Der Code
+\bcode
    \\hard\\SomeOtherMacro
-}
+\ecode
 wird einen Fehler erzeugen.
 Will man die Symbole irgendwo haben, so gibt es dafür die Befehle
 \cs{easysymbol} (\easysymbol), \cs{mediumsymbol} (\mediumsymbol), und \cs{hardsymbol} (\hardsymbol).
@@ -950,9 +954,9 @@ denn für Linien ist die Trunkierung nicht relevant.}
 Die Variante \cs{exercise*} (z.B.~für Zusatzaufgaben) markiert die Aufgabe mit einem
 Symbol, das im Makro \cs{starredexercisemark} gespeichert ist. Das verwendete Symbol
 kann auf übliche Weise mit \cs{renewcommand} umdefiniert werden, z.B. mit
-\code{
+\bcode
    \\renewcommand*\{\\starredexercisemark\}\{\\textsuperscript\{+\}\}
-}
+\ecode
 bekommt man in der folgenden Aufgabe ein Plus anstatt von einem Sternchen.
 
 \renewcommand{\starredexercisemark}{\textsuperscript{+}}
@@ -960,10 +964,10 @@ bekommt man in der folgenden Aufgabe ein Plus anstatt von einem Sternchen.
 Man kann natürlich \cs{hard} \& Co.\ auch verwenden, sowie einen Titel
 angeben. Es wäre aber auch möglich, dass das Sternchen nicht eindeutig
 ist und lieber ,,Zusatzaufgabe`` verwendet wird. Geht auch mit:
-\code{
+\bcode
    \\renewcommand*\{\\starredexercisemark\}\{\}\newline
    \\renewcommand*\{\\starredexercisename\}\{Zusatzaufgabe\}
-}
+\ecode
 wird die nächste Zusatzaufgabe so aussehen:
 
 \renewcommand*{\starredexercisemark}{}
@@ -983,7 +987,7 @@ es ein Makro \cs{solutionname}, das auf ,,Lösung`` initialisiert wird.
 \exercise[Zuordnug-Quizzen]
 Eine weitere nützliche (?) Umgebung ist \env{matching} für Zuordnung-Quizzen. Innerhalb der Umgebung
 werden mehrere Befehle \cs{match} mit zwei Argumenten angegeben, als in
-\code{
+\bcode
    \\begin\{matching\}[\param{key=val}]\newline
    \\match\{aaa\}\{AAA\}\newline
    \\match\{bbb\}\{BBB\}\newline
@@ -991,7 +995,7 @@ werden mehrere Befehle \cs{match} mit zwei Argumenten angegeben, als in
    \\match\{ddd\}\{DDD\}\newline
    \\match\{eee\}\{EEE\}\newline
    \\end\{matching\}
-}
+\ecode
 Diese Paare werden in zwei Spalten geordnet; die rechte Spalte
 wird mit dem Fisher-Yates-Algorithmus zufällig angeordnet und
 (in der Lösung) mit Pfeilen verbunden:
@@ -1015,9 +1019,9 @@ Die möglichen Optionen sind:
 das ändert sich daher von Minute zu Minute).
 \end{compactdesc}
 Also mit
-\code{
+\bcode
    \\begin\{matching\}[shuffle,bent,seed=13974,xsep=2cm,ysep=.6cm]
-}
+\ecode
 bekommt man für das Beispiel oben
 \begin{center}
 \begin{matching}[shuffle,bent,seed=13974,xsep=2cm,ysep=.6cm]
@@ -1168,9 +1172,10 @@ und eine \env{questions\optstar} Umgebung gibt.
 \end{questions}
 Nicht, dass das sinnvoll wäre, aber muss man mit der Warnung leben?
 \begin{solution}
-Es gibt mehrere Auswege. Man kann natürlich so was schreiben wie:\code{
+Es gibt mehrere Auswege. Man kann natürlich so was schreiben wie:
+\bcode
    \\answer (Siehe Text.)
-}
+\ecode
 und das dreimal. Die vierte \cs{answer} schreibt man wie gewohnt.
 Man kann aber auch die Kontrolle am Ende der \env{solution} Umgebung
 überspringen, indem man in der Lösung (egal wo) den Befehl \cs{NoCheck} schreibt.
@@ -1189,16 +1194,16 @@ Nein, es gibt keinen Automatismus: man muss selbst zählen! Es gibt zu viele
 Es gibt ein böses, böses Makro \cs{addbackgroundgrid}, das ein Gitter auf der
 \emph{ganzen} Seite druckt. Das Makro nimmt auch ein optionales Argument,
 das als Option an \TikZ\ weitergegeben wird, d.h.
-\code{
+\bcode
    \\addbackgroundgrid[\param{\TikZ\ Optionen}]
-}
+\ecode
 fügt den folgenden Code zum Background hinzu
-\code{
+\bcode
    \\tikz[remember picture,overlay]\{\%\newline
    \null\kern3em\\draw[gray,step=5mm,\param{\TikZ\ Optionen}]\newline
    \null\kern3em(current page.south west)grid(current page.north east);\newline
    \}
-}
+\ecode
 Damit kann man z.B.\ Farbe oder Gittergröße ändern. Das Hintergrundgitter bleibt
 bis zum Ende der aktuellen \env{worksheet} Umgebung, oder bis das Makro
 \cs{removebackgroundgrid} verwendet wird.
@@ -1209,9 +1214,9 @@ ICH HABE ES NOCH NICHT GANZ DURCHGETESTET, ALSO MIT VORSICHT GENIESSEN!
 \exercise[Vektorsummen]
 Das Makro \cs{vecsum} nimmt zwei \TikZ-Koordinaten und bildet die Summe mit Parallelogramm.
 Die Syntax ist
-\code{
+\bcode
 \\vecsum[\param{\TikZ\ Optionen}](\param{coord1})(\param{coord2})[\param{Einheit}];
-}
+\ecode
 Wird das letzte optionale Argument nicht angegeben, so sieht man nur die Vektoren. Wird
 etwas angegeben (es ist für eine Einheit gedacht), so wird die Länge der Vektoren ausgegeben.
 Die \TikZ-Optionen können Verschiebungen und Farben enthalten, aber \emph{keine} Skalierung:
@@ -1269,21 +1274,21 @@ Tu was anderes.
 Die Titel der Aufgaben/Versuche sind standardmäßig in runden Klammern und mit einem Abstand
 von \cs{enskip} von der Zahl platziert. Dies kann natürlich geändert werden, und zwar
 mit Hilfe des Makros
-\code{
+\bcode
    \\SetTitleSeparators[\param{Abstand}]\{\param{linkes Zeichen}\}\{\param{rechtes Zeichen}\}
-}
+\ecode
 Die obligatorischen Argumente sind die Zeichen links und rechts vom Titel (default runde Klammern);
 das optionale Argument ist der Abstand zwischen Nummer und Titel (default eben \cs{enskip}). Mit
-\code{%
+\bcode%
    \\SetTitleSeparators\{[\}\{\$\\rangle\$\}
-}
+\ecode
 kriegt man zum Beispiel \SetTitleSeparators{[}{$\rangle$}
 
 \exercise[Sieht blöd aus]
 Interessanter wäre zum Beispiel mit
-\code{%
+\bcode%
    \\SetTitleSeparators[]\{\\quad-{}-{}-\\quad\}\{\}
-}
+\ecode
 dann hat man \SetTitleSeparators[]{\quad---\quad}{}
 \begin{solution}
 Freilich, man könnte auch {\ttfamily\cs{SetTitleSeparators}[\cs{quad}]\{-{}-{}-\cs{quad}\}\{\}} schreiben.
@@ -1306,9 +1311,9 @@ oder was auch immer:
 Der Titel kann als optionaler Parameter angegeben werden.
 Standardmäßig ist der horizontale Rand 2\,cm und der vertikale Rand 1,5\,cm. Die Ränder
 können durch Optionen geändert werden, z.B.
-\code{
+\bcode
 \\begin\{print2\}[hmargin=3cm,vmargin=1cm]
-}
+\ecode
 Die Option \opt{margin=\param{Länge}} verwendet den gleichen Wert für beide Richtungen.
 Will man diese Optionen angeben, so muss der Titel natürlich auch mit Hilfe von \opt{title=\param{Titel}}
 angegeben werden. Mit der Option \opt{fontsize=\param{Schriftgröße}} kann man die Schriftgröße
@@ -1405,7 +1410,7 @@ und \opt{back=...} (default leer).}
 % logo=Dateiname oder leer, dann kein Logo
 Eine Klassenarbeit/Test/Wasauchimmer wird in der Umgebung \env{test} gesetzt.
 Normalerweise müssen einige Keys gesetzt werden, zum Beispiel:
-\code{
+\bcode
   \\begin\{test\}[%
   \begin{tabular}[t]{@{}l}
   number=2,\\
@@ -1416,7 +1421,7 @@ Normalerweise müssen einige Keys gesetzt werden, zum Beispiel:
   ptspost=<,\\
   logo=example-image]
   \end{tabular}
-}
+\ecode
 Hier eine kurze Beschreibung aller Keys:
 \begin{compactdesc}
 \item[\ttfamily subject=\param{Fach}] legt das Fach fest. Es gibt auch die Optionen \opt{M}, \opt{Ph} und \opt{NwT},
@@ -1467,9 +1472,9 @@ Man kann natürlich auch hier die Präfixe \cs{hard}, \cs{medium} und \cs{easy} 
 
 Die komischen Zeichen ,,>`` und ,,<`` vor/nach der Punktzahl sind hier nur als
 Beispiel gegeben. Hier wurde z.B.
-\code{
+\bcode
 \\begin\{test\}[...,ptspre=>,ptspost=<,...]
-}
+\ecode
 verwendet. Meistens nutze ich \opt{ptspre=\{vor.\ \}}
 (,,voraussichtlich``, es ist immer gut, sich Spielraum zu lassen\ldots)
 \begin{solution}
@@ -1562,11 +1567,11 @@ aus \cs{colorbox} und \env{minipage}, aber die Textbreite wird so gerechnet, das
 Breite auch den Rand berücksichtigt. Die Randgröße ist ganz normal der Wert von \cs{fboxsep}.
 Alle optionalen Argumente zu \env{minipage} können wie
 gewohnt verwendet werden:
-\code{
+\bcode
 \leavevmode
 \kern-2.5em
 \\begin\{colorminipage\}\{\param{Farbe}\}[\param{Ausrichtung}][\param{Höhe}][\param{innere Ausrichtung}]\{\param{Breite}\}
-}
+\ecode
 Beispiel: mit \verb|\begin{colorminipage}{teal!30!white}[t]{3cm}| hat man:
 \begin{colorminipage}{teal!30!white}[t]{3cm}
 Hello world, and such, for 'tis better to suffer,
@@ -1576,13 +1581,13 @@ and yet, nothing was meant by this text.\par\xdef\foo{\the\prevdepth}
 \prevdepth\foo
 Die Umgebung \env{graybox} ist ein \env{colorminipage}, bei der die Farbe auf
 \opt{lightgray} festgelegt wurde, d.h.
-\code{
+\bcode
    \\begin\{graybox\}[\param{Ausr.}][\param{Höhe}][\param{inn.\ Ausr.}]\{\param{Breite}\}
-}
+\ecode
 ist eine Abkürzung für
-\code{
+\bcode
    \\begin\{colorminipage\}\{lightgray\}[\param{Ausr.}][\param{Höhe}][\param{inn.\ Ausr.}]\{\param{Breite}\}
-}
+\ecode
 
 \subsection{Unsichtbares \cs{put}}
 Das LaTeX\ Makro \cs{put(\param{x-Shift},\param{y-Shift})\{...\}} platziert ihren
@@ -1624,9 +1629,10 @@ des Winkels immer bekommt, unabhängig davon, ob der Winkel wirklich ein rechter
 Manchmal will man einen rechten Winkel in einer 3D-Darstellung markieren, wo der
 tatsächlich gezeichnete Winkel nicht wirklich recht ist.)
 
-Als ältere Variante existiert noch das Makro\code{
+Als ältere Variante existiert noch das Makro
+\bcode
 \cs{rightangle}[\param{\TikZ\ Optionen}](\param{coord})\{\param{start angle}\}[\param{radius}]
-}
+\ecode
 plottet in einem \TikZ-Bild einen rechten Winkel (und zwar immer einen rechten Winkel).
 \begin{center}
    \begin{tikzpicture}
