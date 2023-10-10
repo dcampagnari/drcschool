@@ -8,7 +8,7 @@ LaTeX Klasse zur Herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
 - The completion file `drcschool.cwl` for TeXStudio
 - A template file `drcschool_template.tex`
 
-The compiled template `drcschool_template.pdf` embeds also these three files, so if you want you can download only this one.
+These three files are embedded in the compiled template `drcschool_template.pdf`, so you may donwnload only this one and you've got everything.
 
 ## Author
 This package is maintained by Davide Campagnari (e-mail can be found in the class file).
