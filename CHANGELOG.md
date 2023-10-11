@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2023-10-10 v1.0.5
+## 2023-10-10 [v1.0.5]
 I had a strange, useless assignment in `{cluecards}`.
 Possibly a relic of something I ended not using.
 
