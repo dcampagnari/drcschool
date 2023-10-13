@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2023-10-10 [v1.0.5]
+## 2023-10-13 v1.0.6
+- Made `\drc@header` self-contained.
+- Added check for nested questions to all question-like environments, not only `{questions}`.
+
+## 2023-10-10 v1.0.5
 I had a strange, useless assignment in `{cluecards}`.
 Possibly a relic of something I ended not using.
 
@@ -18,7 +22,7 @@ Removed history (can be now found in changelog).
 - Fixed also a mismanagement of `\starredquestionmark`.
 
 ## 2023-09-22 v1.0.1
-- Added `\lines,` similar to `\grid.`
+- Added `\lines`, similar to `\grid`.
 - Added horizontal versions of `{multchoice}` and `{multresponse}`.
 
 ## 2023-08-30 v1.0.0

@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-10-10 v1.0.5]
+\ProvidesClass{drcschool}[2023-10-13 v1.0.6]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -96,8 +96,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 % \drc@header{skip before}{skip after}{heading} is a simplified copy of
-% \@startsection; % if <skip after> is negative, then no new line after header
-\newcommand*\drc@header[3]{% #1=vertical skip before; #2=vertical skip after; #3=heading
+% \@startsection; if <skip after> is negative, then no new line after header
+\newcommand*\drc@header[3]{% #1=skip before; #2=skip after; #3=heading
    \if@noskipsec\leavevmode\fi
    \par
    \@afterindentfalse
@@ -108,13 +108,29 @@
    \fi
    \@tempskipa#2\relax
    \ifdim\@tempskipa>\z@
-      \begingroup
-      \noindent\normalsize\normalfont\bfseries\interlinepenalty\@M#3\@@par
-      \endgroup
-  \else
-      \def\@svsechd{\normalsize\normalfont\bfseries#3}%
-  \fi
-  \@xsect{#2}%
+      \noindent
+      \begingroup\normalsize\normalfont\bfseries\interlinepenalty\@M#3\@@par\endgroup
+      \par\nobreak
+      \vskip\@tempskipa
+      \@afterheading
+   \else
+      \@nobreakfalse
+      \global\@noskipsectrue
+      \everypar{%
+         \if@noskipsec
+            \global\@noskipsecfalse
+            {\setbox\z@\lastbox}%
+            \clubpenalty\@M
+            \begingroup\normalsize\normalfont\bfseries#3\endgroup
+            \unskip
+            \hskip-\@tempskipa
+         \else
+            \clubpenalty \@clubpenalty
+            \everypar{}%
+         \fi
+      }% end of \everypar
+   \fi
+   \ignorespaces
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -651,6 +667,7 @@
    \par\drc@next
 }
 \newenvironment{questions*}[1]{%
+   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
    \def\question{\leavevmode\refstepcounter{question}\h@question{#1}}%
    \start@horizontal@questions{#1}%
   }{%
@@ -767,6 +784,7 @@
 }
 % horizontal version thereof
 \newenvironment{multresponse*}[1]{%
+   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
    \def\question{%
       \leavevmode
       \check@choice
@@ -793,6 +811,7 @@
 }
 % horizontal version thereof
 \newenvironment{multchoice*}[1]{%
+   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
    \def\question{%
       \leavevmode
       \check@choice
