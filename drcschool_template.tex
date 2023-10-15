@@ -1065,9 +1065,15 @@ lll & ccc & rrr & LL=LL & CC=CC & RR=RR & Lösung hier                & a^b     
 \bottomrule
 \end{tabular}
 
-\exercise[Arbeitsblatt ohne Lösung]
-Es gibt auch eine Umgebung \env{worksheet*}, für die \emph{keine} Lösung angegeben
-wird. Ich verwende sie z.B.~wenn ich einfach einen längeren Text austeilen will.
+\exercise[Arbeitsblatt entweder mit oder ohne Lösung]
+Es gibt auch eine Sternform \env{worksheet*}, die alle Key-Value-Optionen
+annimmt, die für \env{worksheet} definiert sind, plus eine weitere: das Blatt
+wird nur einmal gedruckt, entweder mit oder ohne Lösung, was mit der Option
+\begin{compactdesc}
+\item[\opt{solution=\param{Ein-Aus-Wert}}]
+\end{compactdesc}
+gesteuert wird. Standardmäßig wird \emph{keine} Lösung gezeigt.
+Ich verwende das z.B.~wenn ich einfach einen längeren Text austeilen will.
 Freilich, dafür bräuchte man keine besondere Umgebung und man könnte einfach in
 der \opt{.tex}-Datei den Text aufschreiben. Genau so wie \env{worksheet} bietet
 \env{worksheet*} allerdings die Möglichkeit an, Titel/Name/Datum/Schriftgröße

@@ -19,15 +19,15 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-10-13 v1.0.6]
+\ProvidesClass{drcschool}[2023-10-15 v1.1.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
-\def\drcschool@fontsetup{\@firstofone}
+\newcommand*{\drcschool@fontsetup}{\@firstofone}
 \newcommand*{\NoFonts}{\def\drcschool@fontsetup{\@gobble}}
 \DeclareOption{nofonts}{\NoFonts}
 
-\def\drcschool@hyperworksheet{\endinput}
+\newcommand*{\drcschool@hyperworksheet}{\endinput}
 \newcommand*{\Hyperworksheet}{\let\drcschool@hyperworksheet\relax}
 \DeclareOption{hyperworksheet}{\Hyperworksheet}
 
@@ -73,7 +73,9 @@
 \RequirePackage[a4paper,margin=1in]{geometry}
 \RequirePackage[main=ngerman]{babel}
 \RequirePackage{scrlayer-scrpage}
-\setkomafont{pageheadfoot}{\normalfont}
+   \setkomafont{pageheadfoot}{\normalfont}
+   \pagestyle{scrheadings}
+   \ofoot[]{\thepage}
 \raggedbottom % twoside uses \flushbottom by default but I don't want/need it here
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -625,7 +627,7 @@
       \leftmargin1.1\wd\z@
    }%
    \def\question{\l@question}%
-  }{
+  }{%
    \endlist
 }
 % list question
@@ -1012,6 +1014,7 @@
 \define@key{drc@ws}{name}[true]{\drc@set@bool{@drc@ws@name}{#1}}
 \newif\if@drc@ws@date
 \define@key{drc@ws}{date}[true]{\drc@set@bool{@drc@ws@date}{#1}}
+\define@key{drc@ws}{solution}[true]{\drc@set@bool{@solution}{#1}}
 \define@key{drc@ws}{fontsize}{\KOMAoption{fontsize}{#1}}
 \define@key{drc@ws}{geometry}{\@tempswatrue\def\drc@geometry@options{{#1}}}
 
@@ -1038,20 +1041,20 @@
    \fi
    \let\exercise\exercise@ws
    \let\experiment\experiment@ws
-   \pagestyle{scrheadings}%
+%   \pagestyle{scrheadings}%
       \ihead[\if@solution\else\if@drc@ws@name Name:\fi\fi]{}%
       \ohead[\if@solution\else\if@drc@ws@date Datum:\kern4cm\fi\fi]{}%
       \ifoot[\if@solution\solutionname\fi]{\ifx\ws@title\@empty\else\ws@title\if@solution\space--- \fi\fi\if@solution\solutionname\fi}%
-      \ofoot[]{\the@fakepage}%
+%      \ofoot[]{\thepage}%
 }
 
-% scratch counter for correct page numbering
-\newcount\c@savep@ge
+% fake page number in worksheets
 \newcommand*{\drc@set@fakepage}{%
-   \c@savep@ge\c@page
-   \advance\c@savep@ge\m@ne
+   \count@\c@page
+   \advance\count@\m@ne
+   \edef\the@fakepage{\noexpand\the\noexpand\numexpr\noexpand\c@page-\the\count@\relax}%
+   \def\thepage{\the@fakepage}%
 }
-\newcommand*{\the@fakepage}{\number\numexpr\c@page-\c@savep@ge\relax}%
 
 \NewEnviron{worksheet}[1][]{%
    % generic setup
@@ -1088,8 +1091,8 @@
 % sometimes one doesn't really need a version with solution
 \newenvironment{worksheet*}[1][]{%
    \cleardoublepage
-   \drc@worksheet@setup{#1}%
    \@solutionfalse
+   \drc@worksheet@setup{#1}%
    \drc@set@fakepage
    \thispagestyle{plain}%
    \drc@reset@counters
@@ -1469,9 +1472,9 @@
    % then the solution
    \@solutiontrue
    \drc@set@fakepage
-   \pagestyle{scrheadings}%
+%   \pagestyle{scrheadings}%
    \ifoot{Schuljahr \drcschool@year\ --- \test@nr. \@test@type\ \drcschool@subject\ --- \ifdefined\drcschool@text@v\drcschool@text@v\ ---\ \fi \classname\space\@class}%
-   \ofoot[]{\the@fakepage}%
+%   \ofoot[]{\thepage}%
    \thispagestyle{empty}%
    \drc@reset@counters
    \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%

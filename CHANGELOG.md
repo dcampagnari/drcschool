@@ -1,11 +1,24 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 2023-10-13 v1.0.6
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2023-10-15 [v1.1.0]
+(*Actually* sticking to semantic versioning: additions should increase
+the minor version number, which I hadn't done in v1.0.3)
+### Added
+Added a key `solution` for worksheets. Irrelevant for `{worksheet}` but maybe useful for `{worksheet*}`.
+### Fixed
+- Simplified code for fake page numbering.
+- Correspondingly changed a bit the handling of headers/footers.
+- Missing `%` in `{questions}` (actually irrelevant *there* but I prefer it anyway).
+
+## 2023-10-13 [v1.0.6]
 - Made `\drc@header` self-contained.
 - Added check for nested questions to all question-like environments, not only `{questions}`.
 
-## 2023-10-10 v1.0.5
+## 2023-10-10 [v1.0.5]
 I had a strange, useless assignment in `{cluecards}`.
 Possibly a relic of something I ended not using.
 
@@ -306,3 +319,7 @@ Added optional number of points to `\question`.
 
 ## 2022-08-10 v0.0
 First more or less stable version.
+
+[v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
+[v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
+[v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
