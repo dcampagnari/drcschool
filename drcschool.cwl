@@ -18,6 +18,7 @@
 \CopyScheduleStyle{new}{old}#S
 \DeclareColumn[opt]{arg1%def}{arg2}{arg3}#S
 \Form#S
+\Hyperworksheet#S
 \LoadSchoolOptionFile{arg}#S
 \NewScheduleStyle[opt]{arg1}{arg2}#S
 \NoCheck#S
@@ -33,6 +34,7 @@
 \SetWorksheetOptions{arg}#S
 \TA#S
 \TeXtime#S
+\UseScheduleSyle{arg}#S
 \V#S
 \addbackgroundgrid[opt]#S
 \answer#S
@@ -75,6 +77,8 @@
 \class{arg1}#S
 \classname#S
 \crosstable{arg1}#Sm
+\deadly#S
+\deadlysymbol#S
 \difficulty{arg1}#S
 \drcput[opt](xcoord,ycoord){text}#S
 \easy#S
@@ -110,6 +114,7 @@
 \end{worksheet}#S
 \end{worksheet*}#S
 \exercise[opt]#S
+\exercisesymbol{arg}#S
 \experiment[opt]#S
 \false#S
 \fillbox
@@ -117,6 +122,8 @@
 \goal{arg1}#S
 \grid{arg1}#S
 \hard#S
+\harder#S
+\hardersymbol#S
 \hardsymbol#S
 \IfSolutionT{arg}#S
 \IfSolutionF{arg}#S
@@ -124,12 +131,14 @@
 \IfSolutionFT{arg1}{arg2}#S
 \lesson{text}[opt]#S
 \lines{arg1}#S
+\lonelyquestion#S
 \match{arg1}{arg2}#S
 \material{text}#S
 \medium#S
 \mediumsymbol#S
 \method{text}#S
 \midrule#St
+\minisolution#S
 \newblock#S
 \next#S
 \nocalculator#S

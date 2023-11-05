@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-10-15 v1.1.0]
+\ProvidesClass{drcschool}[2023-11-05 v1.2.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -30,6 +30,12 @@
 \newcommand*{\drcschool@hyperworksheet}{\endinput}
 \newcommand*{\Hyperworksheet}{\let\drcschool@hyperworksheet\relax}
 \DeclareOption{hyperworksheet}{\Hyperworksheet}
+
+\newif\if@drctikz \@drctikztrue
+\DeclareOption{notikz}{\@drctikzfalse\def\drcschool@pgfplots{\@gobble}}
+
+\newcommand*{\drcschool@pgfplots}{\@firstofone}
+\DeclareOption{nopgfplots}{\def\drcschool@pgfplots{\@gobble}}
 
 \DeclareOption*{\expandafter\PassOptionsToClass\expandafter{\CurrentOption}{scrartcl}}
 \ProcessOptions\relax
@@ -44,18 +50,8 @@
    \RequirePackage[scale=.92]{tgheros}%
    \renewcommand*{\familydefault}{\sfdefault}%
    \renewcommand*{\rmdefault}{\sfdefault}%
-   \RequirePackage[nosymbolsc]{newtxsf}%
+   \RequirePackage[noSTIXops]{newtxsf}%
    \renewcommand*{\ttdefault}{ntxtt}%
-   \DeclareMathSymbol{0}{\mathord}{operators}{48}%
-   \DeclareMathSymbol{1}{\mathord}{operators}{49}%
-   \DeclareMathSymbol{2}{\mathord}{operators}{50}%
-   \DeclareMathSymbol{3}{\mathord}{operators}{51}%
-   \DeclareMathSymbol{4}{\mathord}{operators}{52}%
-   \DeclareMathSymbol{5}{\mathord}{operators}{53}%
-   \DeclareMathSymbol{6}{\mathord}{operators}{54}%
-   \DeclareMathSymbol{7}{\mathord}{operators}{55}%
-   \DeclareMathSymbol{8}{\mathord}{operators}{56}%
-   \DeclareMathSymbol{9}{\mathord}{operators}{57}%
    \RequirePackage[T1]{fontenc}%
    \RequirePackage{microtype}%
    \def\@sqrt[##1]{\root\uproot{2}\leftroot{1}##1\of}% font correction for roots
@@ -70,12 +66,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% LANGUAGE AND PAGE SETUP
+\columnsep24\p@
 \RequirePackage[a4paper,margin=1in]{geometry}
 \RequirePackage[main=ngerman]{babel}
 \RequirePackage{scrlayer-scrpage}
    \setkomafont{pageheadfoot}{\normalfont}
    \pagestyle{scrheadings}
-   \ofoot[]{\thepage}
+   \ofoot[]{\drc@page}
+   \newcommand*{\drc@page}{\thepage}
 \raggedbottom % twoside uses \flushbottom by default but I don't want/need it here
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,16 +88,16 @@
 \RequirePackage[table]{xcolor}
 \RequirePackage{longtable}
 \RequirePackage{icomma}
-\RequirePackage{tikz}
-\RequirePackage{pgfplots}
+\if@drctikz\@xp\@firstofone\else\@xp\@gobble\fi{\RequirePackage{tikz}}
+\drcschool@pgfplots{\RequirePackage{pgfplots}}
 \IfFileExists{drcmath.sty}{\RequirePackage[arrowvec,noamssymb]{drcmath}}{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-% \drc@header{skip before}{skip after}{heading} is a simplified copy of
-% \@startsection; if <skip after> is negative, then no new line after header
-\newcommand*\drc@header[3]{% #1=skip before; #2=skip after; #3=heading
+% \drc@heading{skip before}{skip after}{heading} is a simplified copy of
+% \@startsection; if <skip after> is negative, then no new line after heading
+\newcommand*\drc@heading[3]{% #1=skip before; #2=skip after; #3=heading
    \if@noskipsec\leavevmode\fi
    \par
    \@afterindentfalse
@@ -175,25 +173,19 @@
 \newcommand*{\@namegdef}[1]{\expandafter\gdef\csname#1\endcsname}
 %\newcommand*{\@namexdef}[1]{\expandafter\xdef\csname#1\endcsname} % --> already in xcolor.sty !!
 \newcommand{\g@addto@name}[1]{\expandafter\g@addto@macro\csname#1\endcsname}
-% simpler version of KoMa bools
-\def\drc@set@bool#1#2{% sets boolean #1 to simple switch #2 (yes/true/on/false/no/off)
-  \Ifstr{#2}{}{\csname#1true\endcsname}{%
-    \Ifstr{#2}{true}{\csname#1true\endcsname}{%
-      \Ifstr{#2}{on}{\csname#1true\endcsname}{%
-        \Ifstr{#2}{yes}{\csname#1true\endcsname}{%
-          \Ifstr{#2}{false}{\csname#1false\endcsname}{%
-            \Ifstr{#2}{off}{\csname#1false\endcsname}{%
-              \Ifstr{#2}{no}{\csname#1false\endcsname}{%
-                \ClassError{drcschool}{Unknown value `#2' for boolean key}%
-                           {A boolean key admits true/yes/on and false/no/off.\MessageBreak I assume you wanted false.}%
-                \csname#1false\endcsname
-              }%
-            }%
-          }%
-        }%
+\newcommand*{\If@val@in@list}[2]{%
+   \in@{,#1,}{,#2,}%
+   \ifin@\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
+}
+% usage: \drc@key@to@bool{<key>}{<bool>}{<simple switch>}
+\newcommand*{\drc@key@to@bool}[3]{%
+   \If@val@in@list{#3}{true,yes,on,show}{\csname#2true\endcsname}{%
+      \If@val@in@list{#3}{false,no,off,hide}{\csname#2false\endcsname}{%
+         \ClassError{drcschool}{Unknown value `#3' for boolean key `#1'.\MessageBreak I assume you wanted `#1=true'}%
+                               {A boolean key admits true/yes/on/show and false/no/off/hide.}%
+         \csname#2true\endcsname
       }%
-    }%
-  }%
+   }%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -280,11 +272,16 @@
    \DeclareColumn{\material}{Material}{8}%
 }
 \newcommand*{\drc@style}{default}
-\newcommand*{\SetScheduleStyle}[1]{%
+\newcommand*{\UseScheduleStyle}[1]{%
    \@ifundefined{drc@style@#1}%
       {\ClassError{drcschool}{Undefined schedule style}%
                              {I don't know the schedule style `#1'\MessageBreak so I'll keep using the default one.}}%
       {\def\drc@style{#1}}%
+}
+\newcommand*{\SetScheduleStyle}{%
+   \ClassWarning{drcschool}{Deprecated command \string\SetScheduleStyle.\MessageBreak
+                            Use \string\UseScheduleStyle\space instead}%
+   \UseScheduleStyle
 }
 \newcommand*{\CopyScheduleStyle}[1]{%
    \@ifundefined{drc@style@#1}%
@@ -351,7 +348,7 @@
 }
 
 \newif\if@schedule@title \@schedule@titletrue
-\define@key{drc@schedule}{title}[true]{\drc@set@bool{@schedule@title}{#1}}
+\define@key{drc@schedule}{title}[true]{\drc@key@to@bool{title}{@schedule@title}{#1}}
 \define@key{drc@schedule}{block}{\@tempswafalse\def\drc@block{{#1}}}
 \define@key{drc@schedule}{duration}{\def\drc@duration{#1}}
 \define@key{drc@schedule}{start}{\@tempswatrue\def\drc@start{{#1}}}
@@ -462,19 +459,47 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% DIFFICULTY SYMBOLS
-\newcommand*{\difficulty@symbol}[1]{%
+\newcommand*{\difficulty@symbol@tikz}[1]{%
    \leavevmode
    \hbox{%
       \normalfont\normalsize
       \dimen@.5\fontcharht\font`\A
       \tikz[x=\dimen@,y=\dimen@]{#1}%
    }%
-}
-\newcommand*{\easysymbol}{\difficulty@symbol{\draw[gray,thick](0,0)circle(1);}}
-\newcommand*{\mediumsymbol}{\difficulty@symbol{\draw[gray,thick](0,0)circle(1);\fill[gray](-1,0)--(1,0)arc(0:-180:1);}}
-\newcommand*{\hardsymbol}{\difficulty@symbol{\filldraw[gray](0,0)circle(1);}}
+}%
+\newcommand*{\easysymbol}{\difficulty@symbol@tikz{\draw[gray,thick](0,0)circle(1);}}
+\newcommand*{\mediumsymbol}{\difficulty@symbol@tikz{\draw[gray,thick](0,0)circle(1);\fill[gray](-1,0)--(1,0)arc(0:-180:1);}}
+\newcommand*{\hardsymbol}{\difficulty@symbol@tikz{\filldraw[gray,thick](0,0)circle(1);}}
+\newcommand*{\hardersymbol}{\difficulty@symbol@tikz{\filldraw[thick](0,0)circle(1);}}
+\newcommand*{\deadlysymbol}{%
+   \leavevmode
+   \hbox{%
+      \normalfont\normalsize
+      \begin{tikzpicture}[scale=.8,baseline=-1ex]
+      \begin{scope}[yshift=-.5ex]
+      \draw[darkgray,line width=.5ex] (20:1.95ex)--(20:-1.8ex) (-20:1.8ex)--(-20:-1.95ex);
+      \fill[darkgray](20:1.95ex)circle(.4ex) (20:-1.8ex)circle(.4ex) (-20:1.8ex)circle(.4ex) (-20:-1.95ex)circle(.4ex);
+      \end{scope}
+      \fill[darkgray,draw=white,line width=.1ex,rounded corners=.1ex] (230:1.2ex)arc(230:-50:1.2ex)--(.5ex,-1.6ex)--(-.5ex,-1.6ex)--cycle;
+      \fill[white](-.45ex,0)circle(.35ex) (.45ex,0)circle(.35ex);
+      \end{tikzpicture}%
+   }%
+}%
+
+\if@drctikz\else% if no tikz then fontawesome5 variants
+    \newcommand*{\difficulty@symbols@fa}[3]{%
+       \setbox\drc@box=\hbox{\resizebox{!}{\fontcharht\font`A}{\usefont{U}{fontawesomefree#1}{#2}{n}#3}}%
+       \raise\dp\drc@box\box\drc@box
+    }%
+    \renewcommand*{\easysymbol}{\textcolor{gray}{\difficulty@symbols@fa0{regular}{\char187}}}%
+    \renewcommand*{\mediumsymbol}{\textcolor{gray}{\difficulty@symbols@fa0{solid}{\rotatebox[origin=c]{90}{\char3}}}}%
+    \renewcommand*{\hardsymbol}{\textcolor{gray}{\difficulty@symbols@fa0{solid}{\char187}}}%
+    \renewcommand*{\hardersymbol}{\leavevmode{\difficulty@symbols@fa0{solid}{\char187}}}%
+    \renewcommand*{\deadlysymbol}{\textcolor{darkgray}{\usefont{U}{fontawesomefree2}{solid}{n}\char254}}%
+\fi
+
 % for backward compatibility
-\newcommand*{\difficulty}[1]{\ifcase#1\relax\easysymbol\or\mediumsymbol\else\hardsymbol\fi}
+\newcommand*{\difficulty}[1]{\ifcase#1\relax\easysymbol\or\mediumsymbol\or\hardsymbol\or\hardersymbol\else\deadlysymbol\fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -495,12 +520,17 @@
 
 \newcommand*{\exercise}{%
    \ClassError{drcschool}{Lonely \string\exercise}%
-              {An \string\exercise\space should appear only within a test,\MessageBreak a worksheet or similar.}%
+              {An \string\exercise\space should appear only within a {test},\MessageBreak a {worksheet} or similar.}%
 }
 % difficulty versions
-\newcommand*{\hard}{}   \def\hard\exercise{\def\drcschool@difficulty{\leavevmode\llap{\hardsymbol\kern.5em}}\exercise}
-\newcommand*{\medium}{} \def\medium\exercise{\def\drcschool@difficulty{\leavevmode\llap{\mediumsymbol\kern.5em}}\exercise}
 \newcommand*{\easy}{}   \def\easy\exercise{\def\drcschool@difficulty{\leavevmode\llap{\easysymbol\kern.5em}}\exercise}
+\newcommand*{\medium}{} \def\medium\exercise{\def\drcschool@difficulty{\leavevmode\llap{\mediumsymbol\kern.5em}}\exercise}
+\newcommand*{\hard}{}   \def\hard\exercise{\def\drcschool@difficulty{\leavevmode\llap{\hardsymbol\kern.5em}}\exercise}
+\newcommand*{\harder}{} \def\harder\exercise{\def\drcschool@difficulty{\leavevmode\llap{\hardersymbol\kern.5em}}\exercise}
+\newcommand*{\deadly}{} \def\deadly\exercise{\def\drcschool@difficulty{\leavevmode\vbox to\z@{\vss\llap{\deadlysymbol\kern.5em}}}\exercise}
+% customizable
+\newcommand*{\exercisesymbol}[1]{\def\drcschool@difficulty{\leavevmode\llap{#1\kern.5em}}}
+
 % exercise in worksheet
 \newcommand*{\exercise@ws}{%
    \@ifstar{\def\drc@ex@name{\starredexercisename}\def\drcschool@extra{\starredexercisemark}\exercise@ws@}%
@@ -508,8 +538,9 @@
 }
 \newcommand*{\exercise@ws@}[1][]{%
    \refstepcounter{exercise}%
+   \gdef\s@luti@n{0}% no solution yet
    \if\relax\detokenize{#1}\relax\def\drc@next{}\else\def\drc@next{\drc@title@sep\drc@title@L#1\drc@title@R}\fi
-   \drc@header{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\drcschool@difficulty\drc@ex@name~\theexercise\drcschool@extra\autodot\drc@next}%
+   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\drcschool@difficulty\drc@ex@name~\theexercise\drcschool@extra\autodot\drc@next}%
    \reset@exercise@format
 }
 % exercise in test (similar to exercise in worksheet but increases number of points)
@@ -522,8 +553,9 @@
       \if@solution\advance\drcschool@pts#1\p@\fi
    \fi
    \refstepcounter{exercise}%
+   \gdef\s@luti@n{0}% no solution yet
    \dimen@#1\p@
-   \drc@header{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{%
+   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{%
       \drcschool@difficulty
       \drc@ex@name~\theexercise\drcschool@extra\autodot\drc@title@sep
       \drc@title@L\drcschool@pts@pre\drc@strip@pt\dimen@\drcschool@pts@post\ Punkt\ifdim\dimen@=\p@\else e\fi\drc@title@R
@@ -541,7 +573,7 @@
    \refstepcounter{experiment}%
    \setcounter{question}{0}% the counter \c@question is reset by \exercise, so I have to do this manually...
    \if\relax\detokenize{#1}\relax\def\drc@next{}\else\def\drc@next{\drc@title@L#1\drc@title@R}\fi
-   \drc@header{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\experimentname~\theexperiment\autodot\drc@title@sep\drc@next}%
+   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\experimentname~\theexperiment\autodot\drc@title@sep\drc@next}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -566,12 +598,29 @@
       \c@answer`#1\relax
       \advance\c@answer-96
    \fi
-   \drc@header{.2ex\@plus.2ex\@minus.2ex}{-1em}{\the@answer.}%
+   \drc@heading{.2ex\@plus.2ex\@minus.2ex}{-.5em}{\the@answer.}%
 }
 \newcommand*{\solutionname}{Lösung}
 \NewEnviron{solution}{%
-   \ifdefined\s@luti@n\ClassError{drcschool}{Nested solutions}{This will end badly.}\else\def\s@luti@n{\relax}\fi
+   \ifdefined\s@lution
+      \ClassError{drcschool}{Nested solutions}{A solution's solution isn't meaningful.}%
+   \else
+      \def\s@lution{\relax}%
+   \fi
+   \ifnum1=\s@luti@n\relax
+      \ClassError{drcschool}{Multiple solutions}%
+                 {Exercise \the\c@exercise\space already has a solution.}%
+   \fi
    \if@solution\@xp\drcschool@solution\fi
+}
+\newcommand*{\drcschool@solution}{%
+   \def\NoCheck{\let\drc@check@answers\relax}%
+   \def\answer{\@answer}%
+   \drc@heading{.5ex\@plus.4ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\solutionname}%
+   \BODY
+   \drc@check@answers
+   \global\def\s@luti@n{1}%
+   \par
 }
 \newcommand*{\drc@check@answers}{%
    \ifnum\c@answer=\c@question\else
@@ -580,18 +629,22 @@
                                   but \ifnum\c@answer=0no\else\the\c@answer\fi\space answer\ifnum\c@answer>1s\fi}%
    \fi
 }
-\newcommand*{\drcschool@solution}{%
-   \def\NoCheck{\let\drc@check@answers\relax}%
-   \def\answer{\@answer}%
-   \drc@header{.5ex\@plus.4ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\solutionname}%
-   \BODY
-   \drc@check@answers
+
+% "mini" inline solution based on \signed from the TeXbook
+\newcommand*{\minisolution}[2][\solutionname\hintsep]{%
+   \begingroup
+   \unskip\nobreak\hfil
+   \penalty50
+   \hskip1em\hbox{}\nobreak\hfil\hbox{[\,{\itshape#1~#2}\,]}%
+   \parfillskip\z@
+   \finalhyphendemerits\z@
    \par
+   \endgroup
 }
 
-\newcommand*{\shortsolution}{\@ifstar\shortsolution@nopar\shortsolution@par}
-\newcommand*{\shortsolution@par}{\if@solution\par\noindent{\bfseries\solutionname}\space\ignorespaces\@xp\@firstofone\else\@xp\@gobble\fi}
-\newcommand*{\shortsolution@nopar}{\if@solution\textbf{\solutionname}\space\ignorespaces\@xp\@firstofone\else\@xp\@gobble\fi}
+%\newcommand*{\shortsolution}{\@ifstar\shortsolution@nopar\shortsolution@par}
+%\newcommand*{\shortsolution@par}{\if@solution\par\noindent{\bfseries\solutionname}\space\ignorespaces\@xp\@firstofone\else\@xp\@gobble\fi}
+%\newcommand*{\shortsolution@nopar}{\if@solution\textbf{\solutionname}\space\ignorespaces\@xp\@firstofone\else\@xp\@gobble\fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -603,28 +656,67 @@
 % \question is by default an error; it gets reset by {questions} & Co.
 \newcommand*{\question}{%
    \ClassError{drcschool}{Stray \string\question}%
-              {A \string\question\space should appear only within a {questions}\MessageBreak{multchoice} or {multresponse} environment.}%
+              {A \string\question\space should appear only within a {questions}\MessageBreak
+               {multchoice} or {multresponse} environment.\MessageBreak
+              Maybe you want to use \string\lonelyquestion.}%
 }
 \newcommand*{\starredquestionmark}{*}
 \newcommand*{\drc@qst@extra}{}
 \renewcommand*{\thequestion}{\@alph\c@question}
 \newcommand*{\the@question}{\leavevmode\llap{\bfseries\drc@qst@extra}\thequestion}
+% if someone *really* needs it anywhere
+\newcommand*{\lonelyquestion}{%
+   \ClassError{drcschool}{Stray \string\lonelyquestion}%
+              {A \string\lonelyquestion\space can appear only within a {test} or {worksheet}.}%
+}
+\newcommand*{\lonelyquestion@}{%
+   \ifdefined\s@lution
+      \ClassError{drcschool}{Question in solution}%
+                            {A \string\lonelyquestion\space environment cannot appear\MessageBreak within a {solution} environment.}%
+   \fi
+   \leavevmode
+   \refstepcounter{question}%
+   \@ifstar{%
+      \def\drc@qst@extra{\starredquestionmark}%
+      \@namexdef{qst\the\c@worksheet.\the\c@exercise.\the\c@question mark}{\unexpanded\expandafter{\starredquestionmark}}%
+      \hb@xt@1.5em{\bfseries\the@question.\hfil}%
+      \qst@pts
+     }{%
+      \def\drc@qst@extra{}%
+      \@namegdef{qst\the\c@worksheet.\the\c@exercise.\the\c@question mark}{}%
+      \hb@xt@1.5em{\bfseries\the@question.\hfil}%
+      \qst@pts
+   }%
+}
+
+% all question-like environments must do some checks, so let us define them here
+\newcommand*{\drc@questions@check}{%
+   \ifdefined\questi@ns
+      \ClassError{drcschool}{Nested questions}%
+                            {{question}-like environments must be nested.}
+   \else
+      \def\questi@ns{\relax}%
+   \fi
+   \ifdefined\s@lution
+      \ClassError{drcschool}{Questions in solution}%
+                            {The {\@currenvir} environment should not appear\MessageBreak within a {solution} environment.}%
+   \fi
+}
 % "normal" questions, based on list
 \newenvironment{questions}{%
-   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
-   \list{\thequestion.}{%
+   \drc@questions@check
+   \list{\thequestion}{%
       \@nmbrlisttrue
       \def\@listctr{question}%
-      \def\makelabel##1{{\bfseries\llap{\drc@qst@extra}##1}\hss}%
+      \def\makelabel##1{{\bfseries\llap{\drc@qst@extra}##1.}\hss}%
       \def\drc@qst@extra{}%
       \topsep\z@
       \partopsep\z@
       \itemsep\z@
       \parsep\z@
-      \setbox\z@=\hbox{\bfseries m.}%
-      \labelwidth\wd\z@
-      \labelsep.1\wd\z@
-      \leftmargin1.1\wd\z@
+      \settowidth{\labelwidth}{\bfseries m.}%
+      \leftmargin\labelwidth
+      \advance\leftmargin\labelsep
    }%
    \def\question{\l@question}%
   }{%
@@ -647,19 +739,31 @@
 \newcommand*{\qst@pts}[1][]{%
    \if\relax\detokenize{#1}\relax\else
       \dimen@#1\p@
-      \textbf{(\drc@strip@pt\dimen@~Punkt\ifdim\dimen@=\p@\else e\fi)}
+      \textbf{(\drc@strip@pt\dimen@~Punkt\ifdim\dimen@=\p@\else e\fi)}\space\ignorespaces
    \fi
 }
 % horizontal questions, based on a tabular
 \newcount\c@qst@col
-\newcommand*{\start@horizontal@questions}[1]{%
+\newdimen\drc@hqst@lastdepth
+\newdimen\drc@hqst@xvspace
+\define@key{drc@hqst}{arraystretch}{\def\arraystretch{#1}}
+\define@key{drc@hqst}{extrarowheight}{\extrarowheight#1\relax\drc@hqst@lastdepth#1\relax}
+\define@key{drc@hqst}{tabcolsep}{\tabcolsep#1\relax}
+\define@key{drc@hqst}{lastdepth}{\drc@hqst@lastdepth#1\relax}
+\define@key{drc@hqst}{extrarowdepth}{\drc@hqst@xvspace#1\relax}
+\newcommand*{\start@horizontal@questions}[2]{% #1=nr of columns #2=key/val
+   \drc@questions@check
    \global\c@qst@col\z@
+   \drc@hqst@lastdepth\z@
+   \drc@hqst@xvspace\z@
+   \setkeys{drc@hqst}{#2}%
    \dimen@\dimexpr\linewidth/#1+2\tabcolsep/#1-1.5em\relax
    \advance\dimen@-2\tabcolsep
    \setbox\drc@box=\vbox\bgroup\hsize\linewidth\noindent
    \tabular[t]{@{}*{#1}{p{1.5em}@{}p{\dimen@}}@{}}%
 }
 \newcommand*{\stop@horizontal@questions}{%
+   \\[\drc@hqst@lastdepth]
    \endtabular
    \par
    \xdef\drc@next{\noexpand\prevdepth\the\prevdepth}%
@@ -668,10 +772,9 @@
    \box\drc@box
    \par\drc@next
 }
-\newenvironment{questions*}[1]{%
-   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
-   \def\question{\leavevmode\refstepcounter{question}\h@question{#1}}%
-   \start@horizontal@questions{#1}%
+\newenvironment{questions*}[2][]{%
+   \def\question{\leavevmode\refstepcounter{question}\h@question{#2}}%
+   \start@horizontal@questions{#2}{#1}%
   }{%
    \stop@horizontal@questions
    \@endparenv
@@ -696,7 +799,7 @@
          \def\drc@next{&\textbf{\the@question.}&}%
          \global\advance\c@qst@col\@ne
       \else
-         \def\drc@next{\\\textbf{\the@question.}&}%
+         \def\drc@next{\\[\drc@hqst@xvspace]\textbf{\the@question.}&}%
          \global\c@qst@col\@ne
       \fi
    \fi
@@ -709,10 +812,13 @@
 \newcommand*{\hintsep}{: }
 \newenvironment{hint}[1][\hintname\hintsep]{%
    \vspace\p@\par\nobreak\@afterheading\small
-   \list{\itshape#1}{\topsep\z@
-                     \settowidth{\labelwidth}{\itshape#1}%
-                     \leftmargin\labelwidth
-                     \advance\leftmargin\labelsep}%
+   \list{\itshape#1}{%
+      \topsep\z@
+      \def\makelabel##1{##1\hfil}%
+      \settowidth{\labelwidth}{\itshape#1}%
+      \leftmargin\labelwidth
+      \advance\leftmargin\labelsep
+   }%
    \item\relax
   }{\endlist}
 
@@ -734,6 +840,19 @@
 \newcommand*{\radiobutton}{\radiobutton@}
 \newcommand*{\radiobutton@}{\leavevmode\@ifstar{\radio@button{\if@solution\fill(0,0)circle(.45ex);\fi}}{\radio@button{}}}
 \newcommand*{\radio@button}[1]{\tikz[baseline=-.6ex]{\draw[line width=.15ex](0,0)circle(.75ex);#1}}
+
+\if@drctikz\else% if no TikZ then use fontawesome5
+    \renewcommand*{\radiobutton@}{\leavevmode\@ifstar{\if@solution\radiobutton@checked\else\radiobutton@empty\fi}{\radiobutton@empty}}
+    \newcommand*{\radiobutton@empty}{\hbox{\m@th$\vcenter{\hbox{\resizebox{!}{1.4ex}{\usefont{U}{fontawesomefree0}{regular}{n}\char187}}}$}}
+    \newcommand*{\radiobutton@checked}{%
+       \bgroup
+       \ooalign{%
+          \radiobutton@empty\cr
+          \hidewidth$\m@th\vcenter{\hbox{\resizebox{!}{.8ex}{\usefont{U}{fontawesomefree0}{solid}{n}\char187}}}$\hidewidth
+       }%
+       \egroup
+    }%
+\fi
 
 \newif\if@choice
 \newcommand*{\check@choice}{%
@@ -786,7 +905,6 @@
 }
 % horizontal version thereof
 \newenvironment{multresponse*}[1]{%
-   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
    \def\question{%
       \leavevmode
       \check@choice
@@ -795,8 +913,8 @@
       \h@question{#1}%
    }%
    \def\choice{\@ifstar{\@choice{\checkbox*}{\@choicetrue}}{\@choice{\checkbox}{}}}%
-   \start@horizontal@questions{#1}%
    \global\@choicetrue% for the first question
+   \start@horizontal@questions{#1}{}%
   }{%
    \check@choice
    \stop@horizontal@questions
@@ -813,7 +931,6 @@
 }
 % horizontal version thereof
 \newenvironment{multchoice*}[1]{%
-   \ifdefined\questi@n\ClassError{drcschool}{Nested questions}{This is really bad.}\else\def\questi@n{\relax}\fi
    \def\question{%
       \leavevmode
       \check@choice
@@ -822,8 +939,8 @@
       \h@question{#1}%
    }%
    \def\choice{\@ifstar{\@choice{\radiobutton*}{\check@choices}}{\@choice{\radiobutton}{}}}%
-   \start@horizontal@questions{#1}%
    \global\@choicetrue% for the first question
+   \start@horizontal@questions{#1}{}%
   }{%
    \check@choice
    \stop@horizontal@questions
@@ -942,15 +1059,27 @@
 \newcommand*{\drc@shuffle@left}{\drc@shuffle@{\drc@match@seed}{L}}
 \newcommand*{\drc@shuffle@right}{\drc@shuffle@{\drc@match@seed}{R}}
 \newcommand*{\drc@shuffle@both}{\drc@shuffle@{\drc@match@seed}{L}\drc@shuffle@{\numexpr\drc@match@seed+2011\relax}{R}}
+%\newcommand*{\drc@shuffle@}[2]{% Fisher--Yates algorithm
+%   \pgfmathsetseed{#1}%
+%   \foreach \x in {1,...,\the\numexpr\count@-1\relax} {%
+%      \pgfmathrandominteger{\y}{\x}{\the\count@}%
+%      \edef\temp{\csname drc@match@#2\x\endcsname}%
+%      \global\@xp\edef\csname drc@match@#2\x\endcsname{\csname drc@match@#2\y\endcsname}%
+%      \global\@xp\edef\csname drc@match@#2\y\endcsname{\temp}%
+%   }%
+%}
+\ExplSyntaxOn% use kernel random number generator
 \newcommand*{\drc@shuffle@}[2]{% Fisher--Yates algorithm
-   \pgfmathsetseed{#1}%
-   \foreach \x in {1,...,\the\numexpr\count@-1\relax} {%
-      \pgfmathrandominteger{\y}{\x}{\the\count@}%
-      \edef\temp{\csname drc@match@#2\x\endcsname}%
-      \global\@xp\edef\csname drc@match@#2\x\endcsname{\csname drc@match@#2\y\endcsname}%
-      \global\@xp\edef\csname drc@match@#2\y\endcsname{\temp}%
+   \sys_gset_rand_seed:n{#1}
+   \foreach \x in {1,...,\the\numexpr\count@-1\relax} {
+      \edef\y{\int_rand:nn{\x}{\count@}}
+      \edef\temp{\csname drc@match@#2\x\endcsname}
+      \global\@xp\edef\csname drc@match@#2\x\endcsname{\csname drc@match@#2\y\endcsname}
+      \global\@xp\edef\csname drc@match@#2\y\endcsname{\temp}
    }%
 }
+\ExplSyntaxOff
+
 \newcommand*{\match}[2]{%
    \ClassError{drcschool}{Stray \string\match}{The macro \string\match\space makes sense only within a {matching} environment.}%
 }
@@ -982,6 +1111,13 @@
    \end{tikzpicture}%
 }
 
+\if@drctikz\else
+   \renewenvironment{matching}{%
+      \ClassError{drcschool}{No environment {matching} without tikz}{Remove the `notikz' option.}%
+      \def\match{\@gobbletwo}%
+  }{}
+\fi
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1011,12 +1147,17 @@
 
 \define@key{drc@ws}{title}{\def\ws@title{#1}}
 \newif\if@drc@ws@name
-\define@key{drc@ws}{name}[true]{\drc@set@bool{@drc@ws@name}{#1}}
+\define@key{drc@ws}{name}[true]{\drc@key@to@bool{name}{@drc@ws@name}{#1}}
 \newif\if@drc@ws@date
-\define@key{drc@ws}{date}[true]{\drc@set@bool{@drc@ws@date}{#1}}
-\define@key{drc@ws}{solution}[true]{\drc@set@bool{@solution}{#1}}
+\define@key{drc@ws}{date}[true]{\drc@key@to@bool{name}{@drc@ws@date}{#1}}
+\define@key{drc@ws}{solution}[true]{\drc@key@to@bool{name}{@solution}{#1}}
 \define@key{drc@ws}{fontsize}{\KOMAoption{fontsize}{#1}}
 \define@key{drc@ws}{geometry}{\@tempswatrue\def\drc@geometry@options{{#1}}}
+%\newcommand*{\drc@ws@startmulticol}{\relax}\newcommand*{\drc@ws@stopmulticol}{\relax}
+%\define@key{drc@ws}{multicol}[2]{%
+%   \def\drc@ws@startmulticol{\def\@currenvir{multicols}\columnsep2em\multicols{#1}}
+%   \def\drc@ws@stopmulticol{\endmulticols\def\@currenvir{worksheet*}}%
+%}
 
 \newcommand*{\drc@default@ws@options}{name=false,date=true}
 \newcommand*{\SetWorksheetOptions}[1]{\gdef\drc@default@ws@options{#1}}
@@ -1041,6 +1182,7 @@
    \fi
    \let\exercise\exercise@ws
    \let\experiment\experiment@ws
+   \let\lonelyquestion\lonelyquestion@
 %   \pagestyle{scrheadings}%
       \ihead[\if@solution\else\if@drc@ws@name Name:\fi\fi]{}%
       \ohead[\if@solution\else\if@drc@ws@date Datum:\kern4cm\fi\fi]{}%
@@ -1053,7 +1195,7 @@
    \count@\c@page
    \advance\count@\m@ne
    \edef\the@fakepage{\noexpand\the\noexpand\numexpr\noexpand\c@page-\the\count@\relax}%
-   \def\thepage{\the@fakepage}%
+   \def\drc@page{\the@fakepage}%
 }
 
 \NewEnviron{worksheet}[1][]{%
@@ -1069,7 +1211,11 @@
    \let\label\@gobble
    \let\label@in@display\@gobble
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]\@afterindentfalse\@afterheading
+   \else
+      \drc@print@wstitle
+   \fi
    \BODY
    \clearpage
    \removebackgroundgrid
@@ -1081,7 +1227,11 @@
    \thispagestyle{plain}%
    \drc@reset@counters
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]\@afterindentfalse\@afterheading
+   \else
+      \drc@print@wstitle
+   \fi
    \BODY
    \clearpage
    \drc@ws@end
@@ -1097,7 +1247,11 @@
    \thispagestyle{plain}%
    \drc@reset@counters
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]\@afterindentfalse\@afterheading
+   \else
+      \drc@print@wstitle
+   \fi
   }{%
    \clearpage
    \drc@ws@end
@@ -1315,6 +1469,12 @@
    \clearpage\aftergroup\restoregeometry
 }
 
+\if@drctikz\else
+   \renewenvironment{cluecards}[1][]{%
+      \ClassError{drcschool}{No environment {cluecards} without tikz}{Remove the `notikz. option.}%
+     }{}%
+\fi
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1403,6 +1563,7 @@
 \define@key{drc@test}{nr}{\gdef\test@nr{#1}}
 \define@key{drc@test}{number}{\gdef\test@nr{#1}}
 \define@key{drc@test}{class}{\gdef\@class{#1}}
+\define@key{drc@test}{class*}{\def\class@exam{#1}}
 \define@key{drc@test}{type}{\gdef\@test@type{#1}}
 \define@key{drc@test}{date}{\gdef\@date{#1}}
 \define@key{drc@test}{schoolyear}{\gdef\drcschool@year{#1}}
@@ -1426,12 +1587,12 @@
    \fi
 }
 
-\newcommand*{\drc@print@testheader}{%
+\newcommand*{\drc@print@test@headline}{%
    \begin{center}
    \setbox\drc@box=\hbox{\vbox{\hbox{Schuljahr \drcschool@year}\hbox{\@date}}}%
    \leavevmode\drc@logo
    \vbox{%
-      \hbox{\classname\space\@class}%
+      \hbox{\class@exam}%
       \hbox{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\space---\space\drcschool@text@v\fi}%
    }\hfill\box\drc@box\\[1ex]
    \renewcommand*{\arraystretch}{2}%
@@ -1454,8 +1615,10 @@
    \cleardoublepage
    \stepcounter{worksheet}%
    \drcschool@pts\z@
+   \def\class@exam{\classname\space\@class}%
    \setkeys{drc@test}{#1}%
    \let\exercise\exercise@test
+   \let\lonelyquestion\lonelyquestion@
    % version for pupils
    \@solutionfalse
    \drc@set@fakepage
@@ -1465,7 +1628,7 @@
    \let\label\@gobble
    \let\label@in@display\@gobble
    \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi}{KA.\the\c@worksheet.T}%
-   \drc@print@testheader
+   \drc@print@test@headline
    \BODY
    \cleardoublepage
    \endgroup
@@ -1478,7 +1641,7 @@
    \thispagestyle{empty}%
    \drc@reset@counters
    \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%
-   \drc@print@testheader
+   \drc@print@test@headline
    \BODY
    \immediate\write\@auxout{\global\string\@namedef{drcschool@test\the\c@worksheet @pts}{\drc@strip@pt\drcschool@pts}}%
    \clearpage
@@ -1498,45 +1661,59 @@
 }
 \newcommand*{\removebackgroundgrid}{\let\drcschool@bg\relax}
 \newcommand*{\addbackgroundgrid}[1][]{\def\drcschool@bg{\drcschool@bg@grid{#1}}}
-\newcommand*{\drcschool@bg@grid}[1]{%
-   \tikz[remember picture,overlay]{\draw[gray,step=5mm,#1](current page.south west)grid(current page.north east);}%
-}
-
+\if@drctikz
+   \newcommand*{\drcschool@bg@grid}[1]{%
+      \tikz[remember picture,overlay]{\draw[gray,step=5mm,#1](current page.south west)grid(current page.north east);}%
+   }
+\else
+   \newcommand*{\drcschool@bg@grid}[1]{%
+      \ClassWarningNoLine{drcschool}{Sorry, no background grid available without the tikz package.\MessageBreak
+                                     Consider removing the class option `notikz'.}%
+   }
+\fi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% TIKZ & PGFPLOTS
+\newenvironment{plot}[1][]{%
+   \ClassError{drcschool}{No environment {plot} without package pgfplots}
+                         {Either load the class with option `pgfplots'\MessageBreak
+                          or load pgfplots manually.}%
+  }{}
+
+\drcschool@pgfplots{% \@gobble or \@firstofone
+    \pgfplotsset{%
+       compat=1.16,% not the newest but decent
+       grid style=gray,%
+       axis line style=thick,%
+       no markers,%
+       x=1cm,%
+       y=1cm,%
+       xlabel style={right},%
+       ylabel style={right},%
+       xlabel={$x$},%
+       ylabel={$y$},
+       grid=both,%
+       samples=50,%
+       axis lines=middle,%
+       xtick={-10,-9,...,10},%
+       minor x tick num={1},%
+       ytick={-10,-9,...,10},%
+       minor y tick num={1},%
+       major tick style={very thick,black},%
+       minor tick style={draw=none}
+    }
+}
+
+\AtBeginDocument{\@ifpackageloaded{pgfplots}{\renewenvironment{plot}[1][]{\tikzpicture\axis[#1]}{\endaxis\endtikzpicture}}{}}
+
+\if@drctikz\else
+   \def\tikzset{\@gobble}
+   \def\usetikzlibrary{\@gobble}
+\fi
+
 \tikzset{>=latex}
 \usetikzlibrary{arrows.meta,patterns,calc,angles}
-
-\pgfplotsset{%
-   compat=1.16,% not the newest but decent
-   grid style=gray,%
-   axis line style=thick,%
-   no markers,%
-   x=1cm,%
-   y=1cm,%
-   xlabel style={right},%
-   ylabel style={right},%
-   xlabel={$x$},%
-   ylabel={$y$},
-   grid=both,%
-   samples=50,%
-   axis lines=middle,%
-   xtick={-10,-9,...,10},%
-   minor x tick num={1},%
-   ytick={-10,-9,...,10},%
-   minor y tick num={1},%
-   major tick style={very thick,black},%
-   minor tick style={draw=none}
-}
-
-\newenvironment{plot}[1][]{%
-   \tikzpicture
-   \axis[#1]%
-  }{%
-   \endaxis\endtikzpicture
-}
 
 \newcommand*{\right@ngle}{}
 \newcommand*{\right@ngl@}{}
@@ -1640,6 +1817,10 @@
    }%
 }
 
+\if@drctikz\else
+   \long\def\drc@grid@#1(#2,#3)#4{\ClassError{drcschool}{\string\grid\space unavailable without tikz}{Remove the `notikz' option.}}
+   \long\def\drc@lines@#1(#2,#3)#4{\ClassError{drcschool}{\string\lines\space unavailable without tikz}{Remove the `notikz' option.}}
+\fi
 % CALCULATOR ICONS
 \newcommand*{\calculator}[1][]{\calc@icons{#1}{}}%
 \newcommand*{\nocalculator}[1][]{\calc@icons{#1}{\draw[very thick](0,0)--(.7,1)(0,1)--(.7,0);}}%
@@ -1654,6 +1835,10 @@
    \fill[white](.1,.3)rectangle++(.1,.1) (.3,.3)rectangle++(.1,.1) (.5,.3)rectangle++(.1,.1) ;
    \fill[white](.1,.1)rectangle++(.1,.1) (.3,.1)rectangle++(.1,.1) (.5,.1)rectangle++(.1,.1) ;
 }
+\if@drctikz\else
+   \renewcommand*{\calculator}[1][]{\ClassWarningNoLine{drcschool}{\string\calculator\space unavailable without tikz}}
+   \renewcommand*{\nocalculator}[1][]{\ClassWarningNoLine{drcschool}{\string\nocalculator\space unavailable without tikz}}
+\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1688,7 +1873,7 @@
            \cr\noalign{\hrule\@height.7\p@}\@tempa\cr\noalign{\hrule}\bar\@tempa\cr\noalign{\hrule\@height.7\p@}\strut\crcr}}%
      \vbox{%
         \def\\{\drc@CT@cr}%
-        \ialign{
+        \ialign{%
            \vrule\@width.7\p@\@arstrut\hb@xt@\drc@gdima{\hfil$##$\hfil}&
            \vrule            \@arstrut\hb@xt@\drc@gdima{\hfil$##$\hfil}&
            \vrule\@width.7\p@\@arstrut\hb@xt@\drc@gdima{\hfil$##$\hfil}\cr
@@ -1726,7 +1911,9 @@
    \hbox to\z@{\if#2r\hbox to\linewidth{\hfill\box\z@}\hss\else\hss\box\z@\kern1em\fi}%
    \@ifstar{\kern\parindent\ignorespaces}{\ignorespaces}%
 }
-
+\if@drctikz\else
+   \def\wrap@tikz@#1[#2]#3{\ClassWarningNoLine{drcschool}{Macro \string\wraptikz\space unavailable without tikz}}
+\fi
 \newcommand*{\drcput}[1][r]{%
    \@killglue
    \@expandtwoargs\drc@put{\if#1r\relax\else\hss\fi}{\if#1l\relax\else\hss\fi}%
@@ -1946,7 +2133,11 @@
    \let\label\@gobble
    \let\label@in@display\@gobble
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]%
+   \else
+      \drc@print@wstitle
+   \fi
    \BODY
    \clearpage
    \removebackgroundgrid
@@ -1958,7 +2149,11 @@
    \thispagestyle{plain}%
    \drc@reset@counters
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]%
+   \else
+      \drc@print@wstitle
+   \fi
    \BODY
    \clearpage
    \drc@ws@end
@@ -1974,7 +2169,11 @@
    \thispagestyle{plain}%
    \drc@reset@counters
    \drc@add@bookmark
-   \drc@print@wstitle
+   \if@twocolumn
+      \@topnewpage[\drc@print@wstitle]%
+   \else
+      \drc@print@wstitle
+   \fi
   }{%
    \clearpage
    \drc@ws@end

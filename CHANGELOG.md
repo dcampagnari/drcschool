@@ -2,10 +2,47 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 2023-11-05 [v1.2.0]
+### Added
+- Exercises can now be also `\harder` or `\deadly` `:-)`
+- In fact, there is a generic macro `\exercisesymbol` which puts whatever
+  one wants in front of the exercise heading, not only one of the
+  difficulty symbols.
+- Added *mild* support for two columns. Basically, `worksheet` and
+  `worksheet*` (as well as their `hyper...` variants) set the title
+  always in one column even if two columns are used.
+- Checks for nested or multiple solutions.
+- Added possibility of not loading `tikz` and `pgfplots`.
+- Added keys for customization of the `{tabular}` behind the
+  `{questions*}` environment.
+- Added `\lonelyquestion`.
+### Changed
+- Changed internal coding of boolean keys, now based on the kernel
+  macro `\in@` intead of KoMa's `\Ifstr`.
+- Reimplemented `{matching}` using the kernel's `\int_random:nn`
+  instead of `\pgfmathrandominteger` (faster).
+- I was redefining math figures by hand but it turns out `newtxsf`
+  has a (not really well-documented) option `noSTIXops` for that.
+- Removed `nosymbolsc` option from `newtxsf`. Since the default
+  setup is a complete font setup and both AMS sybols are summarized
+  in a single math family there is no need to spare a (otherwise
+  precious) math alphaet.
+- Renamed a couple of internal macros.
+### Fixed (?)
+- Fixed a small bug in the handling of lists `{questions}` and `{hint}`.
+- Horizontal-style questions were partly missing the check for nested questions.
+- Fixed spurious space in `\qst@pts`.
+- Missing `%` in `\crosstable`. (After `\ialign{` so not *really*
+  necessary but better safe than sorry.)
+- The simplified code for fake page numbering introduced in [v1.1.0] was
+  actually buggy and led to `hyperref` warnings which I clearly missed.
+- The difficulty symbols for hard/harder used `\filldraw` *without* the
+  option `thick`, leading to slightly smaller symbols.
 
 ## 2023-10-15 [v1.1.0]
-(*Actually* sticking to semantic versioning: additions should increase
+(From now on *actually* sticking to semantic versioning: additions should increase
 the minor version number, which I hadn't done in v1.0.3)
 ### Added
 Added a key `solution` for worksheets. Irrelevant for `{worksheet}` but maybe useful for `{worksheet*}`.
@@ -320,6 +357,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v1.2.0]: https://github.com/dcampagnari/drcschool/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
 [v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
