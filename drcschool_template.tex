@@ -1,7 +1,9 @@
 % !TEX spellcheck = de_DE
 \documentclass[hyperworksheet]{drcschool}
-% Die Klassenoption `nofonts' beeinflusst die Schriftart nicht.
-% Die Klassenoption `hyperworksheet' lädt hyperref und definiert ein ausfüllbares Arbeitsblatt.
+% Die Klassenoption `nofonts` beeinflusst die Schriftart nicht.
+%                   `notikz` lädt TikZ nicht.
+%                   `nopgfplots` lädt pgfplots nicht.
+%                   `hyperworksheet` lädt hyperref und definiert ausfüllbare Arbeitsblätter.
 % Alle andere Optionen werden an die zu Grunde liegende Klasse scrartcl weitergegeben.
 
 % Titel und Klasse sind notwendig für die {schedule} Umgebung
@@ -11,29 +13,60 @@
 % Datum ist eigentlich nur für Klassenarbeit relevant
 \date{30.\ Februar 1712}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   !! Dieser Teil ist NUR für diese Dokumentation !!                           %
-\newcommand*{\bcode}{%                                                          %
-   \vskip.5ex\begingroup                                                        %
-   \parindent0pt\advance\leftskip4em\ttfamily                                   %
-   \def\\{\textbackslash}\def\nl{\newline}                                      %
-}                                                                               %
-\newcommand*{\ecode}{\par\endgroup\vskip.5ex\csname @doendpe\endcsname}         %
-\newcommand*{\cs}[1]{\textup{\ttfamily\textbackslash#1}}                        %
-\newcommand*{\str}[1]{\textup{\ttfamily\string#1}}                              %
-\newcommand*{\marg}[1]{\textup{\ttfamily\{#1\}}}                                %
-\newcommand*{\oarg}[1]{\textup{\ttfamily[#1]}}                                  %
-\newcommand*{\pkg}[1]{\textup{\ttfamily#1}}                                     %
-\newcommand*{\opt}[1]{\textup{\ttfamily#1}}                                     %
-\newcommand*{\env}[1]{\textup{\ttfamily\{#1\}}}                                 %
-\newcommand*{\param}[1]{\mbox{\normalfont$\langle$\textit{#1}$\rangle$}}        %
-\newcommand*{\optstar}{\mbox{\ttfamily$\langle$*$\rangle$}}                     %
-\newcommand*{\TikZ}{\textup{Ti\textit{k}Z}}                                     %
-\usepackage{embedfile}                                                          %
-   \embedfile{\jobname.tex}                                                     %
-   \embedfile{drcschool.cls}                                                    %
-   \embedfile{drcschool.cwl}                                                    %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   !! Dieser Teil ist NUR für diese Dokumentation !!                      %
+\makeatletter                                                              %
+\newcommand*{\bcode}{%                                                     %
+   \vskip.5ex\begingroup                                                   %
+   \parindent\z@\advance\leftskip4em\ttfamily                              %
+   \def\\{\textbackslash}\def\nl{\newline}%                                %
+}                                                                          %
+\newcommand*{\ecode}{\par\endgroup\vskip.5ex\@doendpe}                     %
+\newcommand*{\cs}[1]{\textup{\ttfamily\textbackslash#1}}                   %
+\newcommand*{\str}[1]{\textup{\ttfamily\string#1}}                         %
+\newcommand*{\marg}[1]{\textup{\ttfamily\{#1\}}}                           %
+\newcommand*{\oarg}[1]{\textup{\ttfamily[#1]}}                             %
+\newcommand*{\pkg}[1]{\textup{\ttfamily#1}}                                %
+\newcommand*{\opt}[1]{\textup{\ttfamily#1}}                                %
+\newcommand*{\env}[1]{\textup{\ttfamily\{#1\}}}                            %
+\newcommand*{\param}[1]{\mbox{\normalfont$\langle$\textit{#1}$\rangle$}}   %
+\newcommand*{\optstar}{\mbox{\ttfamily$\langle$*$\rangle$}}                %
+\newcommand*{\TikZ}{\textup{Ti\textit{k}Z}}                                %
+\newcommand*{\onlytikz}{%                                                  %
+   \textcolor{red}{%                                                       %
+      \vtop{%                                                              %
+         \vbox{%                                                           %
+            \vss                                                           %
+            \hrule height\p@                                               %
+            \kern2\p@                                                      %
+            \hbox{\normalfont\normalsize! \TikZ\ !}%                       %
+         }%                                                                %
+         \kern2\p@                                                         %
+         \hrule height\p@                                                  %
+      }%                                                                   %
+   }%                                                                      %
+}                                                                          %
+\newcommand*{\withtikz}{%                                                  %
+   \textcolor{teal}{%                                                      %
+      \vtop{%                                                              %
+         \vbox{%                                                           %
+            \vss                                                           %
+            \hrule height\p@                                               %
+            \kern2\p@                                                      %
+            \hbox{\normalfont\normalsize( \TikZ\ )}%                       %
+         }%                                                                %
+         \kern\p@                                                          %
+         \hrule height\p@                                                  %
+      }%                                                                   %
+   }%                                                                      %
+}                                                                          %
+\makeatother                                                               %
+\usepackage{lipsum}                                                        %
+\usepackage{embedfile}                                                     %
+   \embedfile{\jobname.tex}                                                %
+   \embedfile{drcschool.cls}                                               %
+   \embedfile{drcschool.cwl}                                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
@@ -58,16 +91,21 @@ In dieser PDF-Datei sind folgende Dateien eingebettet:
 \item[\ttfamily drcschool\textunderscore template.tex] Der Quellcode dieser Dokumentation.
 \item[\ttfamily drcschool.cwl] Die \opt{cwl}-Datei für \TeX Studio, damit sich der Editor
 nicht ständig über nicht-definierte Befehle ärgert. Das muss natürlich an der
-richtigen Stelle platziert werden: Unter Windows~10 ist es bei mir in\\[.5ex]
-\hspace*{2em}\texttt{C:\textbackslash Users\textbackslash\param{User}\textbackslash
-    AppData\textbackslash Roaming\textbackslash texstudio\textbackslash completion\textbackslash user}\\[.5ex]
-während unter Linux bei\\[.5ex]
-\hspace*{2em}\texttt{\textasciitilde/.config/texstudio/completion/user/}\\[.5ex]
+richtigen Stelle platziert werden: Unter Windows~10 in
+\bcode
+C:\\Users\\\param{User}\\AppData\\Roaming\\texstudio\\completion\\user
+\ecode
+während unter Linux bei
+\bcode
+\textasciitilde/.config/texstudio/completion/user/
+\ecode
 (Aber dafür gebe ich keine Garantie.)
 Ob (und gegebenenfalls wie) das für andere
 \LaTeX-Editoren geht, weiß ich ehrlich gesagt nicht. Eine mögliche Lösung für
-\TeX works kann unter\\[.5ex]
-\hspace*{2em}\texttt{https://tex.stackexchange.com/q/118038}\\[.5ex]
+\TeX works kann unter
+\bcode
+\url{https://tex.stackexchange.com/q/118038}
+\ecode
 gefunden werden, ist aber relativ alt (2013). Keine Gewähr!
 \end{compactdesc}
 
@@ -79,50 +117,64 @@ Die Klasse wird ganz normal mittels
 geladen. Zu Grunde liegt die \KOMAScript-Klasse \pkg{scrartcl}, deren
 entsprechende Optionen als Optionen zu \pkg{drcschool} weitergegeben werden können.
 
-Es gibt zwei \emph{eigene} Optionen: \opt{nofonts} und \opt{hyperworksheet}.
-Die zweite Option beschreibe ich am Ende dieses Dokumentes
-(s.~Abschnitt~\ref{sec:hy}). Die erste hebt die Standardeinstellung für die
-Schriftart aus. Standardmäßig wird eine serifenlose Schrift gewählt:\footnote{%
-   Für die Neugierigen: \pkg{tgheros} mit \pkg{newtxsf}, plus einige persönlichen Vorlieben
-   (ich mag die Ziffern von \pkg{newtxsf} nicht).}
-Der aktuelle Stand der Forschung scheint zu sein, dass Kinder mit LRS serifenlose
-Schriften besser finden. (Zugegeben, für Kinder \emph{ohne} LRS ist es andersrum\ldots)
-Soll jemand meine Standardeinstellung nicht mögen,\footnote{%
-   ,,\texttt{drc}`` ist eine Abkürzung für meinen Namen (,,\texttt{r}`` steht für meinen
-   zweiten Vornamen, nicht für den Doktortitel). Also ja, ich gestalte die
-   Klasse so, dass sie \emph{mir} gefällt. Dass andere sie nützlich finden, ist nur ein
-   netter Nebeneffekt~\texttt{;-)}}
-so kann die Klasse mit der Option \opt{nofonts} geladen werden; daraufhin kann jede/r
-sämtliche Lieblingsschriftarten auf gewohnte Weise laden.
+Es gibt einige wenige eigene Optionen:
+\begin{compactdesc}
+\item[\opt{nofonts}] Dies hebt die Standardeinstellung für die
+   Schriftart aus; standardmäßig wird eine serifenlose Schrift gewählt.\footnote{%
+      Für die Neugierigen: \pkg{tgheros} mit \pkg{newtxsf}, plus einige persönliche Vorlieben.}
+   Der aktuelle Stand der Forschung scheint zu sein, dass Kinder mit LRS serifenlose
+   Schriften besser finden. (Zugegeben, für Kinder \emph{ohne} LRS ist es andersrum\ldots)
+   Soll jemand meine Standardeinstellung nicht mögen,\footnote{%
+      ,,\texttt{drc}`` ist eine Abkürzung für meinen Namen (,,\texttt{r}`` steht hierbei
+      für meinen zweiten Vornamen, nicht für den Doktortitel --- auf se einem Egotrip bin ich nicht\ldots).
+      Also ja, ich gestalte die Klasse so, dass sie \emph{mir} gefällt.
+      Dass andere sie nützlich finden, ist nur ein netter Nebeneffekt~\texttt{;-)}}
+   so kann die Klasse mit der Option \opt{nofonts} geladen werden; daraufhin kann jede/r
+   sämtliche Lieblingsschriftarten auf gewohnte Weise laden.
+\item[\opt{notikz}] Einige Features der Klasse hängen von \TikZ\ ab. Das bedeutet allerdings,
+   dass das Kompilieren einer einfachen ,,Hello world`` Datei verhältnismäßig lange dauern kann,
+   denn \TikZ\ ist ein ziemlich großes Paket. Mit dieser Option kann das Laden von \TikZ\ verhindert werden.
+\item[\opt{nopgfplots}] Das Gleiche gilt ähnlich für \pkg{pgfplots}. Will man die \TikZ-Fähigkeiten
+   haben aber braucht man keine Funktionen plotten, so kann man diese Option verwenden
+   und sich das Laden von \pkg{pgfplots} ersparen.
+\item[\opt{hyperworksheet}] Aktiviert die Umgebung für ausfüllbare PDF-Dateien (s.~Abschnitt~\ref{sec:hy}).
+\end{compactdesc}
 
 \section{Abhängigkeiten}
 Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\medskip\noindent
 \begin{compactdesc}
-\item[Schrift- und Sprachpaketen] \pkg{fontenc} mit Option \opt{T1}, \pkg{microtype}, \pkg{babel} mit Option \opt{ngerman}.
+\item[Schriften] \pkg{fontenc} mit Option \opt{T1}, \pkg{microtype}, \pkg{tgheros} und \pkg{newtxsf}.
+   Diese werden nicht geladen
+   \begin{compactitem}
+   \item wenn die Klassenoption \opt{nofonts} verwendet wird (bzw.~wenn man
+   \verb=\NoFonts= in einer Konfigurationsdatei verwendet, siehe
+   Abschnitt~\ref{sec:anpassungen}), oder
+   \item wenn man Lua\TeX\ oder X\lower.5ex\hbox{\reflectbox{E}}\kern-.16em\TeX\
+         verwendet.
+   \end{compactitem}
+   Einige Symbole werden aus \pkg{fontawesome} und \pkg{fontawesome5} genommen
+   (jedoch nur einzeln importiert, die Pakete selbst werden nicht geladen).
+\item[Sprache] \pkg{babel} mit Option \opt{ngerman}.
 \item[Tabellen] \pkg{tabularx}, \pkg{booktabs}, \pkg{colortbl}, \pkg{longtable}.
 \item[Seitenmanagement] \pkg{scrlayer-scrpage}, \pkg{geometry}.
 \item[Verschiedenes] \pkg{amsgen}, \pkg{environ}\footnote{%
    Seit 2018 bietet \pkg{xparse} ein \opt{b}-Argument für Umgebungen, die den gesamten Inhalt
    sammeln sollen; seit 2020 ist \pkg{xparse} außerdem im \LaTeX-Kernel integriert. Da aber
    auf meinem Büro-Rechner noch TeX Live~2017 läuft, muss ich bei \pkg{environ} bleiben.},
- \pkg{paralist}, \pkg{icomma}, \pkg{tikz}, \pkg{pgfplots}.
+   \pkg{paralist}, \pkg{icomma}, \pkg{tikz},\footnote{Es sei denn, die Klasse wurde mit der Option \opt{notikz} geladen.}
+    \pkg{pgfplots}.\footnote{Es sei denn, die Klasse wurde mit der Option \opt{nopgfplots} oder \opt{notikz} geladen.}
 \end{compactdesc}
 Die Verwendung von \pkg{geometry} mit einer \KOMAScript-Klasse ist etwas
 ungewöhnlich, war aber aus \TeX nischen Gründen nötig. Dies bedeutet allerdings,
 dass die Fähigkeiten von \pkg{typearea} nicht wirklich verwendet werden können.
 
-Ach ja: Ich konnte mich noch nie mit Unicode-Engines anfreunden, daher habe ich
-gar nichts damit getestet\ldots\ das Einzige, was problematisch sein könnte,
-sind eben die Schriftarten, und genau das überprüft die Klasse: Wird das
-Dokument mit Lua\TeX\ oder X\lower.5ex\hbox{\reflectbox{E}}\kern-.16em\TeX\
-kompiliert, so wird automatisch die Option \opt{nofonts} verwendet und keine
-Änderung an der Schriftart vorgenommen.
-
 \begin{description}
 \item[Bemerkung]
 Das geübte Auge wird sehen, dass ich Einiges ermöglicht habe, was eigentlich
-nicht der normalen \LaTeX-Syntax entspricht. Es gibt beispielsweise Umgebungen, die auch
-als Makro mit Argumenten funktionieren können. Dies ist \emph{sehr schlechter} \TeX-Stil,
+nicht der normalen \LaTeX-Syntax entspricht.
+% Es gibt beispielsweise Umgebungen, die auch
+%als Makro mit Argumenten funktionieren können.
+Dies ist \emph{sehr schlechter} \TeX-Stil,
 ist aber aus ,,geschichtlichen`` Gründen gewachsen: Diese Klasse ist während ihrer Nutzung
 entstanden und daher haben sich einige im Feuer des Gefechtes getroffenen
 Erstentscheidungen als ungünstig erwiesen. Aus Kompatibilitätsgründen habe
@@ -274,7 +326,7 @@ kann mittels \cs{SetDuration} geändert werden,~d.h.
 \end{verbatim}
 legt grundsätzlich die Dauer eines Blocks auf 45~Minuten fest.
 
-Im obigen Beispiel wurde die Umgebung mit dem optionalen Argumenten \opt{1} gestartet.
+Im obigen Beispiel wurde die Umgebung mit dem optionalen Argumenten \opt{2} gestartet.
 Das optionale Argument kann verschiedene Formen annehmen:
 \begin{itemize}
 \item Es kann eine Zahl sein, welche den Block/die Blöcke identifiziert,
@@ -381,7 +433,7 @@ Wie kann man diesen Stil verwenden? Dazu gibt es zwei Möglichkeiten. Man kann
 entscheiden, dass dieser Stil grundsätzlich angewandt werden soll, indem man in der
 Präambel
 \begin{verbatim}
-    \SetScheduleStyle{simple}
+    \UseScheduleStyle{simple}
 \end{verbatim}
 schreibt. Alternativ kann man im optionalen Argumenten der Umgebung \env{schedule}
 \opt{style=\param{Name}} angeben. So ergibt zum Beispiel
@@ -424,7 +476,7 @@ Natürlich kann man auch die Standardeinstellung ändern. Neben \cs{NewScheduleS
 existiert \cs{RenewScheduleStyle}, und man könnte mit
 \begin{verbatim}
     \RenewScheduleStyle{default}{%
-       \DeclareColumn[\vskip-\baselineskip\def\\{\newline}\let\time\TeXtime]%
+       \DeclareColumn[\def\\{\newline}\let\time\TeXtime]%
            {\content}{Inhalt}{8}%
        \DeclareColumn{\notes}{Anmerkungen}{3}%
     }
@@ -453,7 +505,7 @@ mit Hilfe von \cs{SetBlockStart} festgelegt werden. Vordefiniert sind
 \end{verbatim}
 und die kann man natürlich nach Belieben umdefinieren.
 
-\section{Individuelle Anpassungen speichern}
+\section{Individuelle Anpassungen speichern}\label{sec:anpassungen}
 Es ist mir klar, dass jede Schule andere Uhrzeiten hat; und es ist mir auch klar,
 dass es lästig wäre, eigene \cs{SetDuration} und \cs{SetBlockStart} in jede
 Datei zu schreiben. Natürlich kann man alle Einstellungen in eine Datei \opt{meinemacros.tex}
@@ -487,11 +539,11 @@ Um das alles zu machen, schreibt sie die Datei \texttt{drcschool.cfg}
    \SetBlockStart{7}{14:55}
    \SetBlockStart{8}{15:50}
    \NewScheduleStyle{simple}{%
-      \DeclareColumn[\vskip-\baselineskip\def\\{\newline}\let\time\TeXtime]%
+      \DeclareColumn[\def\\{\newline}\let\time\TeXtime]%
           {\content}{Inhalt}{8}%
       \DeclareColumn{\notes}{Anmerkungen}{3}%
    }
-   \SetScheduleStyle{simple}
+   \UseScheduleStyle{simple}
    \NoFonts
    \RequirePackage{newtxtext,newtxmath}
 \end{verbatim}
@@ -562,6 +614,12 @@ der Klasse erstellt werden können:
       Punktzahlen anzugeben.
 \end{itemize}
 
+\begin{description}
+\item[Anmerkung] Features, die \emph{nur} mit \TikZ\ funktionieren, werden mit
+\onlytikz\ markiert. Features, die auch ohne \TikZ\ funktionieren aber leicht
+anders aussehende Ergebnisse liefern, werden mit \withtikz\ markiert.
+\end{description}
+
 \begin{worksheet}[Titel des Arbeitsblatts]
 \begin{colorminipage}{red!30!white}{\linewidth}
 \centerline{\vrule width0pt height2ex depth1ex\bfseries!! Caveat emptor !!}
@@ -613,7 +671,8 @@ Innerhalb einer Aufgabe können einzelne Teilaufgaben mit Hilfe der Umgebung
 \begin{hint}
 Hier ein kleiner Hinweis.
 \end{hint}
-\question Bla bla bla bla bla bla bla
+\question Am Ende einer einzelnen Frage (oder einer Aufgabe, falls es keine Fragen gibt)
+   kann man eine kurze Lösung mit Hilfe von \cs{minisolution} angeben.\minisolution{43}
 \end{questions}
 Die Umgebung kann unterbrochen werden; wenn sie nochmal startet, läuft der Zähler
 weiter:
@@ -647,19 +706,21 @@ Am Ende der \env{solution} Umgebung wird überprüft, ob die Anzahl der \cs{answ
 der Anzahl der \cs{question}s entspricht; falls nicht (wie in diesem Fall) wird eine Warnung herausgegeben.
 \end{solution}
 
+\exercisesymbol{\withtikz}
 \exercise[Multiple-Choice-Quiz]
 Es stehen die Symbole \cs{checkbox} (\checkbox) und \cs{radiobutton} (\radiobutton)
 zur Verfügung. Beide haben eine Sternform \cs{checkbox*} (\checkbox*) und
 \cs{radiobutton*} (\radiobutton*), die die richtige (bzw.~anzukreuzende) Antwort
 in der Variante mit Lösung druckt.
 
-Auf diesen Symbolen bauen zwei Umgebungen für Multiple-Choice-Aufgaben. Eine
+Auf diese Symbolen bauen zwei Umgebungen für Multiple-Choice-Aufgaben. Eine
 verwendet die runden Radiobuttons, die andere dagegen die eckigen Auswahlkasten.
-Typischerweise werden die Radiobuttons verwendet, wenn \emph{nur eine} Lösung korrekt ist, und
-die Auswahlkasten, wenn mehrere Antworten möglich sind. Um das Ganze schön verwirrend
-zu machen, habe ich mich entschieden, für die beiden Umgebungen die \emph{englischen} Namen
-zu verwenden. Was im Deutschen als ,,Single-Choice`` bezeichnet wird, ist auf Englisch
-,,\emph{multiple choice}``; und was auf Deutsch ,,Multiple-Choice`` ist, heißt auf Englisch
+Typischerweise werden die Radiobuttons verwendet, wenn \emph{nur eine} Lösung
+korrekt ist, und die Auswahlkasten, wenn mehrere Antworten möglich sind. Um das
+Ganze schön verwirrender zu machen, habe ich mich entschieden, für die beiden
+Umgebungen die \emph{englischen} Namen zu verwenden. Was im Deutschen als
+,,Single-Choice`` bezeichnet wird, ist auf Englisch ,,\emph{multiple choice}``;
+und was auf Deutsch ,,Multiple-Choice`` ist, heißt auf Englisch
 ,,\emph{multiple response}``.
 
 Entsprechend ihrer gemeinten Nutzung geben beide Umgebungen eine Warnung,
@@ -707,14 +768,16 @@ einen Leerraum lassen: Man vergleiche
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[Horizontale Auflistungen]
+\begin{worksheet}[Horizontale Auflistungen und Wahr-Falsch-Tabellen]
 
 In Mathe-Büchern werden üblicherweise Teilaufgaben horizontal aufgelistet. Ankreuzaufgaben
-mit relativ kurzen Texten könnten auch platzsparender sein und auf Spalten verteilt werden.
-Zu diesem Zwecke gibt es jeweils eine Sternform \env{questions*}, \env{multresponse*} und
-\env{multchoice*}: diese erwarten die Anzahl der Spalten als obligatorisches Argument.
+In Mathe-Büchern werden Teilaufgaben üblicherweise horizontal aufgelistet.
+Ankreuzaufgaben mit relativ kurzen Texten könnten auch platzsparender auf
+Spalten verteilt werden. Zu diesem Zwecke gibt es jeweils eine Sternform
+\env{questions*}, \env{multresponse*} und \env{multchoice*}: diese erwarten
+die Anzahl der Spalten als obligatorisches Argument.
 
-\exercise[Kurzfragen wie im Lambacher-Schweizer]
+\exercise[Fragen wie im Lambacher-Schweizer]
 Zum Beispiel, mit \cs{begin\{questions*\}\{4\}} bekommt man
 \begin{questions*}{4}
 \question AAA
@@ -737,8 +800,8 @@ Die Sternform \cs{question*} funktioniert selbstverständlich auch hier.
 Sowohl \env{questions} als auch \env{questions*} nutzen denselben Zähler, so
 dass beide in einer Aufgabe zusammen verwendet werden können:
 \begin{questions}
-\question Text einer ,,normalen`` Aufgabe, die in einer gewöhnliche Liste gesetzt wird.
-\question Text einer weiteren ,,normalen`` Aufgabe, die in einer gewöhnliche Liste gesetzt wird.
+\question Text einer ,,normalen`` Aufgabe, die in einer gewöhnlichen Liste gesetzt wird.
+\question Text einer weiteren ,,normalen`` Aufgabe, die in einer gewöhnlichen Liste gesetzt wird.
 \end{questions}
 
 \exercise[Ankreuzaufgaben]
@@ -781,49 +844,54 @@ sowie mit \env{multresponse*}
    \choice C
 \end{multresponse*}
 
-\begin{description}
-\item[Bemerkung:]
-Alle diese horizontalen Auflistungen sind letztendlich Tabellen, und entsprechend
-kann zwischen den Zeilen \emph{kein Seitenumbruch} erfolgen. Ich habe auch nicht
-vor, in nächster Zeit die Möglichkeit eines Seitenumbruchs zuzulassen, denn ich
-finde sie nicht wirklich sinnvoll. (Na gut, bei Ankreuzfragen vielleicht schon\ldots)
-\end{description}
-
-\end{worksheet}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{worksheet}[Schwierigkeitssymbole und Wahr-Falsch-Tabellen]
-
-\hard\exercise
-Schwere Aufgaben können mit \cs{hard}\cs{exercise} erzeugt werden. Die Schwierigkeitssymbole
-sind denen aus dem Lambacher-Schweizer nachempfunden.
-
-\medium\exercise[Bla]
-Mittelschwere Aufgaben kommen aus \cs{medium}\cs{exercise[Bla]}.
-
-Zur Verfügung stehen auch die Symbole \cs{calculator} \calculator\
-und \cs{nocalculator} \nocalculator. Diese nehmen \TikZ-Optionen als
-optionales Argument:
-\begin{tabular}[t]{l@{\space\textrightarrow\space}l}
-\cs{calculator[scale=1.5]}  & \calculator[scale=1.5] \\
-\cs{nocalculator[baseline]} & \nocalculator[baseline]
-\end{tabular}\par\noindent
-(Standardmäßig liegen die Symbole etwas unter der Baseline).
-
-\easy\exercise
-Eine einfache Aufgabe kriegt man mit \cs{easy}\cs{exercise}.
-
-Bitte beachten: Die drei Makros \cs{hard}, \cs{medium}
-und \cs{easy} dürfen \emph{nur} vor dem Befehl \cs{exercise}
-verwendet werden. Der Code
+\exercise[Tabellenabstände verfeinern]
+Alle diese horizontalen Auf{}listungen sind letztendlich Tabellen, und entsprechend
+kann zwischen den Zeilen \emph{kein Seitenumbruch} erfolgen.\footnote{%
+   Ich habe auch nicht vor, in nächster Zeit die Möglichkeit eines
+   Seitenumbruchs zuzulassen, denn ich finde es nicht wirklich sinnvoll.
+   (Na gut, bei Ankreuzfragen vielleicht schon\ldots)
+} Es kann allerdings auch so etwas passieren:
+\begin{questions*}{4}
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\end{questions*}
+Suboptimal eben\ldots\ Man könnte das Ergebnis verbessern, wenn man \cs{extrarowheight}
+ändern könnte, oder wenn man neue Zeilen mit \str\\\oarg{\param{Länge}} machen könnte,
+aber all dies ist ,,versteckt`` hinter der Umgebung. Dafür gibt es eine Schnittstelle:
 \bcode
-   \\hard\\SomeOtherMacro
+\\begin\{questions*\}[\param{Key-Value-Liste}]\{\param{Anzahl der Spalten}\}
 \ecode
-wird einen Fehler erzeugen.
-Will man die Symbole irgendwo haben, so gibt es dafür die Befehle
-\cs{easysymbol} (\easysymbol), \cs{mediumsymbol} (\mediumsymbol), und \cs{hardsymbol} (\hardsymbol).
+mit folgenden Keys:
+\begin{compactdesc}
+\item[\opt{extrarowheight=\param{Länge}}] setzt \cs{extrarowheight}
+\item[\opt{arraystretch=\param{Zahl}}] setzt \cs{arraystretch}
+\item[\opt{tabcolsep=\param{Länge}}] setzt \cs{tabcolsep}
+\item[\opt{extrarowdepth=\param{Länge}}] führt \str\\\oarg{\param{Länge}} bei jeder neuen Zeile ein
+\item[\opt{lastdepth=\param{Länge}}] führt \str\\\oarg{\param{Länge}} nach der \emph{letzten} Zeile ein.
+\end{compactdesc}
+Die letzten Zeile muss leicht anders betrachtet werden. In der Tat, mit der Option \opt{extrarowheight}
+wird auch dieser Parameter fixiert. Setzt man das obige Beispiel mit
+\bcode
+\\begin\{questions*\}[extrarowdepth=2ex,extrarowheight=1.5ex]\{4\}
+\ecode
+so kriegt man
+\begin{questions*}[extrarowdepth=2ex,extrarowheight=1.5ex]{4}
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\question $\dfrac{48}{12}$
+\end{questions*}
+was etwas besser aussieht. Es gibt natürlich keine allgemeine Regel, welche
+Kombination aus Längen und Streckfaktor am Besten aussieht. Da muss man leider
+etwas herumprobieren.
 
 \exercise[Wahr-Falsch-Tabelle]
 Eine wahr/falsch Tabelle wird mittels der Umgebung \env{TF} erzeugt: Dies ist im Grunde
@@ -847,6 +915,71 @@ Aussage A \true
 Aussage B \false
 \end{TF}
 
+\end{worksheet}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{worksheet}[\texorpdfstring{\leavevmode\llap{\withtikz\quad}}{}Schwierigkeitssymbole und sonstige Teilaufgaben]
+
+\easy\exercise
+Eine einfache Aufgabe kriegt man mit \cs{easy}\cs{exercise}.
+
+\medium\exercise[Bla]
+Mittelschwere Aufgaben kommen aus \cs{medium}\cs{exercise[Bla]}. Natürlich kann man auch
+einen Titel angeben.
+
+\hard\exercise
+Schwere Aufgaben können mit \cs{hard}\cs{exercise} erzeugt werden.
+Die Schwierigkeitssymbole sind denen aus dem Lambacher-Schweizer
+nachempfunden.
+
+\harder\exercise[Noch härter]
+Nicht im Lambacher-Schweizer aber trotzdem da: noch schwierigere Aufgaben
+können mit Hilfe von \cs{harder}\cs{exercise} erstellt werden. Und ja, es
+gibt auch (eher zum Spaß)\ldots
+
+\deadly\exercise
+\ldots\ auch \cs{deadly}\cs{exercise} \texttt{;-)} Falls \TikZ\ nicht verwendet
+wird, stehen die Symbole noch zur Verfügung aber sehen etwas anders aus (sie
+werden dann aus \pkg{fontawesome5} genommen).
+
+\exercisesymbol{$\heartsuit\varheartsuit\heartsuit$}
+\exercise[Putzig, gell?]
+Mit dem Makro \cs{exercisesymbol\{...\}} kann man einen beliebigen Inhalt neben
+der Überschrift. Das betrifft allerdings nur die unmittelbar darauf{}folgende Aufgabe.
+\begin{solution}
+Bitte beachten: Die Makros \cs{easy}, \ldots, \cs{hardest} dürfen \emph{nur}
+vor dem Befehl \cs{exercise} verwendet werden. Der Code
+\bcode
+   \\hard\\SomeOtherMacro
+\ecode
+erzeugt einen Fehler.
+Will man die Symbole irgendwo haben, so gibt es dafür die Befehle
+\cs{easysymbol} (\easysymbol), \cs{mediumsymbol} (\mediumsymbol), \cs{hardsymbol} (\hardsymbol),
+\cs{hardersymbol} (\hardersymbol), \cs{deadlysymbol} (\deadlysymbol).
+Aus Kompatibilitätsgründen gibt es noch das Makro \cs{difficulty\{\param{Zahl}\}},
+das eine Zahl von~0 bis~4 annimmt.
+\end{solution}
+
+\exercise[,,Die bereitgestellten Features sing gut, aber\ldots]
+\ldots\ aber ich möchte eine Frage haben, die nicht in \env{questions} \& Co.\ auftaucht``.
+
+Gut, das kann ich sogar verstehen. Das Makro \cs{question} funktioniert nur in
+\env{questions} oder in \env{mult...} Umgebungen, was letztendlich Listen sind.
+Die entsprechenden Sternformen sind Tabellen. Beides ist nicht 100\% flexibel,
+das gebe ich zu. Versucht man, das Makro \cs{question} irgendwo zu verwenden,
+so kriegt man einen Fehler.
+
+Will man eine \cs{question} einfach so haben, so kann man \cs{lonelyquestion}
+verwenden. Dies erhöht den Zähler und druckt den Buchstaben genau da, wo
+man den Befehl verwendet: \lonelyquestion tu irgendwas\ldots
+
+\begin{solution}
+\answer Wozu? Wenn man zum Beispiel einen Text hat, der ein Bild umwickelt,
+wie zum Beispiel mit \env{wrapfigure}. Da funktionieren Listen nicht so gut,
+und \cs{lonelyquestion} schafft Abhilfe.
+\end{solution}
 \end{worksheet}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -901,6 +1034,7 @@ skaliert allerdings \cs{fillbox} in Mathe-Modus
 \]
 und ist somit für mathematische Ausdrücke besser geeignet.
 
+\exercisesymbol{\onlytikz}
 \exercise[Karierte Felder]
 Noch etwas Nützliches: Der Befehl \cs{grid(\param{x-dimen},\param{y-dimen})\{...\}} erzeugt ein Kastenfeld, dessen Inhalt nur in
 der Lösung angezeigt wird. Die Baseline der ersten Zeile ist dieselbe des umgebenden
@@ -940,6 +1074,7 @@ dafür kann man das optionale Argument verwenden, z.B.~\cs{grid[\string\bfseries
 
 \grid[\bfseries Merke: ](*,1){Bla bla.}
 
+\exercisesymbol{\onlytikz}
 \exercise[Linien]
 Ähnlich zu \cs{grid} gibt es \cs{lines}. Es funktioniert gleich, hat die gleiche Syntax,
 und versucht sogar, den Zeilenabstand anzupassen (funktioniert aber nur für reinen Text):
@@ -984,6 +1119,7 @@ es ein Makro \cs{solutionname}, das auf ,,Lösung`` initialisiert wird.
 
 \begin{worksheet}[Verschiedenes]
 
+\exercisesymbol{\onlytikz}
 \exercise[Zuordnug-Quizzen]
 Eine weitere nützliche (?) Umgebung ist \env{matching} für Zuordnung-Quizzen. Innerhalb der Umgebung
 werden mehrere Befehle \cs{match} mit zwei Argumenten angegeben, als in
@@ -1080,7 +1216,8 @@ der \opt{.tex}-Datei den Text aufschreiben. Genau so wie \env{worksheet} bietet
 festzulegen.
 
 \exercise[Plots]
-Die Klasse lädt automatisch \pkg{pgfplots}: die Umgebung \env{plot} ist
+Die Klasse lädt automatisch \pkg{pgfplots} (es sei denn, man verwendet die
+Klassenoption \opt{nopgfplots}\ldots): die Umgebung \env{plot} ist
 ein dünner Wrapper um \env{axis} mit einigen (für mich sinnvolle) Voreinstellungen
 (siehe neben dem Plot).
 
@@ -1124,8 +1261,8 @@ Alle \pkg{tikz} und \pkg{pgfplots} Optionen können angegeben werden.
 
 Wie man in dem Code für das Plot sieht, gibt es ein Makro \cs{IfSolutionT}, das
 seinen Inhalt nur in der Variante mit Lösung zeigt. Das Makro kann überall verwendet
-werden. \IfSolutionT{(Zum Beispiel hier.)\space\ignorespaces} In der Tat, ist es
-eins von vier verwandten Makros:
+werden. \IfSolutionT{(Zum Beispiel hier.)\space\ignorespaces} Tatsächlich handelt
+es sich um eins von vier verwandten Makros:
 \begin{compactitem}
 \item \cs{IfSolutionT\{arg\}} zeigt das Argument nur in der Variante mit Lösung,
 \item \cs{IfSolutionF\{arg\}} zeigt das Argument nur in der Variante ohne Lösung,
@@ -1136,7 +1273,7 @@ und das Argument \opt{arg2} nur in der Variante mit Lösung.
 \end{compactitem}
 
 \exercise[Vierfeldertafeln]
-Das Makro \cs{crosstable} setzt ihr Argument in einer Vierfeldertafel
+Das Makro \cs{crosstable} setzt sein Argument in einer Vierfeldertafel:
 \[
 \crosstable{%
    1 & 2 & 3 \\
@@ -1195,6 +1332,7 @@ Nein, es gibt keinen Automatismus: man muss selbst zählen! Es gibt zu viele
 \end{solution}
 
 \clearpage
+\exercisesymbol{\onlytikz}
 \exercise[!! Experimentell !!]
 \addbackgroundgrid
 Es gibt ein böses, böses Makro \cs{addbackgroundgrid}, das ein Gitter auf der
@@ -1217,6 +1355,7 @@ bis zum Ende der aktuellen \env{worksheet} Umgebung, oder bis das Makro
 ICH HABE ES NOCH NICHT GANZ DURCHGETESTET, ALSO MIT VORSICHT GENIESSEN!
 \end{solution}
 
+\exercisesymbol{\onlytikz}
 \exercise[Vektorsummen]
 Das Makro \cs{vecsum} nimmt zwei \TikZ-Koordinaten und bildet die Summe mit Parallelogramm.
 Die Syntax ist
@@ -1306,6 +1445,38 @@ Sowohl \cs{exercise} als auch \cs{experiment} verwenden die gleichen Klammer/Abs
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\twocolumn
+
+\begin{worksheet*}[Zweispaltiges Layout]
+Arbeitsblätter haben eine minimale Unterstützung für ein zweispaltiges Format.
+Verwendet man das Kernel-Makro \cs{twocolumn}, so wird der Titel trotzdem über
+beide Spalten gesetzt.
+
+Die beiden Kernel-Makros \cs{twocolumn} und \cs{onecolumn} starten
+allerdings immer eine neue Seite und müssen entsprechend \emph{außerhalb}
+einer Umgebung \env{worksheet\optstar} verwendet werden.
+
+Will man \emph{innerhalb} eines Arbeitsblattes zwischen ein- und zweispaltigem
+Textformat wechseln, so muss man externe Pakete verwenden, wie zum Beispiel
+\pkg{multicol}.
+
+\medium\exercise[Foo]
+\lipsum[1-3]
+
+\easy\exercise
+Zweispaltiges Format ist schwierig. Um Platz für die Schwierigkeitssymbole
+zu machen, musste ich \cs{columnsep} ziemlich erhöhen (\opt{24pt} statt der
+eher üblichen \opt{10pt}). Das macht engere Spalten und der Blocksatz
+wird schwieriger.
+
+\verb=\raggedright= könnte eine gute Idee sein, vor allem mit der deutschen Sprache\ldots
+
+\end{worksheet*}
+
+\onecolumn
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{print2}[Titel, wenn man will]
 Die Umgebung \env{print2} ist nützlich, um etwas doppelt auf der Seite zu drucken,
@@ -1370,7 +1541,7 @@ Warnung halt.)
    Das zweite Argument kommt hinten.
    \[a=b\]
    Gleichungen und Bilder \includegraphics[width=2cm]{example-image} sind unproblematisch.}
-\cluecard{Vorne 2}{Hinten 2\\Standardmäßig sind 2x3 Kärtchen auf einem Blatt.}
+\cluecard{Vorne 2}{Hinten 2\\\onlytikz\\Standardmäßig sind 2x3 Kärtchen auf einem Blatt.}
 \cluecard{Vorne 3}{Hinten 3\\Damit das mit vorne/hinten gut funktioniert, muss der Drucker natürlich mitmachen\ldots\ das ist leider nicht unter meiner Kontrolle.}
 \cluecard{Vorne 4}{Hinten 4\\Die Standardgeometrie kann geändert werden: mit \cs{begin\{cluecards\}[NxM]}
    werden \opt{N} Spalten und \opt{M} Zeilen erzeugt. Siehe das nächste Beispiel.}
@@ -1472,6 +1643,15 @@ errechnet wird!
 \begin{center}
 \nocalculator\ 1.\ Teil --- OHNE Taschenrechner
 \end{center}
+\leavevmode\llap{\onlytikz\quad}%
+Wie man hier oben sieht, stehen auch die Symbole \cs{calculator} \calculator\
+und \cs{nocalculator} \nocalculator\ zur Verfügung. Diese nehmen \TikZ-Optionen
+als optionales Argument:
+\begin{tabular}[t]{l@{\space\textrightarrow\space}l}
+\cs{calculator[scale=1.5]}  & \calculator[scale=1.5] \\
+\cs{nocalculator[baseline]} & \nocalculator[baseline]
+\end{tabular}\par\noindent
+(Standardmäßig liegen die Symbole etwas unter der Baseline).
 
 \medium\exercise[0.5]
 Man kann natürlich auch hier die Präfixe \cs{hard}, \cs{medium} und \cs{easy} verwenden.
@@ -1551,7 +1731,7 @@ sowie z.B.~in \env{multresponse\optstar} und  \env{multchoice\optstar}
 \answer Das ist eigentlich ein ,,Relikt`` meiner Klasse \pkg{unituemnf}, das einfach copy/pasted wurde.
 \answer Es fehlen Antworten, aber keine Warnung, weil ich hier \NoCheck\str\NoCheck\ verwendet habe.
 \answer Was \emph{möglich} ist, ist aber auch nicht unbedingt \emph{sinnvoll}. Ich finde
-horizontale Auflistungen mit Punktzahl etwas zu ,,überladen``, aber das ist Geschmackssache.
+horizontale Auf{}listungen mit Punktzahl etwas zu ,,überladen``, aber das ist Geschmackssache.
 \end{solution}
 \end{test}
 
@@ -1567,12 +1747,12 @@ Da sie nicht notwendigerweise mit Arbeitsblättern zu tun haben bzw.~auch außer
 \env{worksheet} Umgebung funktionieren, werden sie hier vorgestellt.
 
 \subsection{Farbige \env{minipage}}
-Die Klasse definiert eine Umgebung \env{colorminipage}, die sich wie \env{minipage} verhält,
-aber ihren Inhalt in einer farbigen Box setzt. Es handelt sich im Grunde um eine Kombination
-aus \cs{colorbox} und \env{minipage}, aber die Textbreite wird so gerechnet, dass die angegebene
-Breite auch den Rand berücksichtigt. Die Randgröße ist ganz normal der Wert von \cs{fboxsep}.
-Alle optionalen Argumente zu \env{minipage} können wie
-gewohnt verwendet werden:
+Die Klasse definiert eine Umgebung \env{colorminipage}, die sich wie \env{minipage}
+verhält, ihren Inhalt aber in einer farbigen Box setzt. Es handelt sich im Grunde
+um eine Kombination aus \cs{colorbox} und \env{minipage}, aber die Textbreite
+wird so gerechnet, dass die angegebene Breite auch den Rand berücksichtigt. Die
+Randbreite entspricht ganz gewöhnlich dem Wert von \cs{fboxsep}. Alle optionale
+Argumente zu \env{minipage} können wie gewohnt verwendet werden:
 \bcode
 \leavevmode
 \kern-2.5em
@@ -1606,15 +1786,15 @@ oder zentriert. Ich mache ein Beispiel und zeichne zuerst einen Pfeil 2\,cm nach
 und 2\,ex nach oben als Referenzpunkt. Mit dem Code
 \begin{verbatim}
     \rlap{\tikz{\draw[->](0,0)--(2cm,3ex);}}%
-    \drcput(2cm,3ex){\textcolor{red}{X}}% same as \drcput[r](2cm,3ex)
-    \drcput[c](2cm,3ex){\textcolor{blue}{X}}%
-    \drcput[l](2cm,3ex)[l]{\textcolor{green}{X}}%
+    \drcput(2cm,3ex){\textcolor{red}{\LARGE X}}% same as \drcput[r](2cm,3ex)
+    \drcput[c](2cm,3ex){\textcolor{blue}{\LARGE X}}%
+    \drcput[l](2cm,3ex)[l]{\textcolor{green}{\LARGE X}}%
 \end{verbatim}
 kriegt man:
 \rlap{\tikz{\draw[->](0,0)--(2cm,3ex);}}
-\drcput(2cm,3ex){\textcolor{red}{X}}
-\drcput[c](2cm,3ex){\textcolor{blue}{X}}
-\drcput[l](2cm,3ex){\textcolor{green}{X}}.
+\drcput(2cm,3ex){\textcolor{red}{\LARGE X}}
+\drcput[c](2cm,3ex){\textcolor{blue}{\LARGE X}}
+\drcput[l](2cm,3ex){\textcolor{green}{\LARGE X}}.
 Wozu? Na ja, ich benutze es, um z.B.~die Lösungen auf gescannten bzw.~importierten
 Arbeitsblätter drauf zu schreiben.
 
@@ -1658,8 +1838,10 @@ Wer eine feinere Kontrolle und bessere Ergebnisse möchte, sollte natürlich auf
 zugreifen.
 
 \wraptikz[blue,thick]{\draw[step=.5](0,0)grid(1,1);\draw[->](.2,.8)--++(-40:1);}
-Ähnlich zu \cs{wrap} existiert auch\\[.5ex]
-\hspace*{2em}\cs{wraptikz[\param{\TikZ\ Optionen}][\param{\opt{l} oder \opt{r}}]\{\param{\TikZ\ Code}\}}\\[.5ex]
+Ähnlich zu \cs{wrap} existiert auch\rlap{\quad\onlytikz}
+\bcode
+\\wraptikz[\param{\TikZ\ Optionen}][\param{\opt{l} oder \opt{r}}]\{\param{\TikZ\ Code}\}
+\ecode
 das im Grunde dasselbe wie \cs{wrap} macht aber den
 Inhalt gleich in einer \env{tikzpicture} setzt. Die Syntax ist leicht anders, denn es
 gibt nun \emph{zwei} optionale Argumente: erst die \TikZ-Optionen und dann \opt{l} (default)
@@ -1713,7 +1895,7 @@ Das folgende Beispiel beschreibt, was darin möglich ist:
 \begin{colorminipage}{red!30!white}{.7\linewidth}
 Ob und wie genau PDF-Forms funktionieren (oder nicht), hängt \emph{sehr} vom
 verwendeten PDF-Viewer ab! Wenn etwas nicht läuft, dann nicht sofort mit den
-Schülern/Studenten schimpfen! Vielleicht trifft sie doch ausnahmsweise keine
+Schülern/Studenten schimpfen! Vielleicht trifft sie doch (ausnahmsweise) keine
 Schuld\ldots
 \end{colorminipage}
 \end{center}
@@ -1752,7 +1934,7 @@ Aussage 3 \false
 
 \exercise[Grids]
 Das Makro \cs{grid} ergibt in der Lösung das übliche Ergebnis, erzeugt aber in der Schülervariante
-eine mehrzeilig auffüllbare Box.
+eine mehrzeilig auf{}füllbare Box.
 
 \grid(*,2){Denken ist überbewertet, daher versuche ich, es zu unterlassen. Ach ja, in der füllbaren Variante gibt es keinen
 Unterschied zwischen \texttt{*} und \texttt{+} als erstes Argument.}
