@@ -6,12 +6,12 @@ LaTeX Klasse zur Herstellung von Unterrichtsentwürfen, Arbeitsblättern und Kla
 ## Description
 LaTeX class for maths/physics period drafts, worksheets and tests in German schools. The documentation is only in German!
 
-## Distributed files
+## Included in releases
 - The class file `drcschool.cls` itself.
 - The completion file `drcschool.cwl` for TeXStudio.
-- A doc/template file `drcschool_template.tex`.
 
-These three files are embedded in the compiled template `drcschool_template.pdf`, so you may donwnload only this one and you've got everything.
+## Other files
+A doc/template file `drcschool_template.tex`. This and the files included in releases are embedded in the compiled template `drcschool_template.pdf`, so you may donwnload only this one and you've got everything.
 
 ## Author
 This package is maintained by Davide Campagnari (e-mail can be found in the class file).
