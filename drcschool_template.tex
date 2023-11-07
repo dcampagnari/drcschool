@@ -46,20 +46,6 @@
       }%                                                                   %
    }%                                                                      %
 }                                                                          %
-\newcommand*{\withtikz}{%                                                  %
-   \textcolor{teal}{%                                                      %
-      \vtop{%                                                              %
-         \vbox{%                                                           %
-            \vss                                                           %
-            \hrule height\p@                                               %
-            \kern2\p@                                                      %
-            \hbox{\normalfont\normalsize( \TikZ\ )}%                       %
-         }%                                                                %
-         \kern\p@                                                          %
-         \hrule height\p@                                                  %
-      }%                                                                   %
-   }%                                                                      %
-}                                                                          %
 \makeatother                                                               %
 \usepackage{lipsum}                                                        %
 \usepackage{embedfile}                                                     %
@@ -152,11 +138,12 @@ Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\med
    \item wenn man Lua\TeX\ oder X\lower.5ex\hbox{\reflectbox{E}}\kern-.16em\TeX\
          verwendet.
    \end{compactitem}
-   Einige Symbole werden aus \pkg{fontawesome} und \pkg{fontawesome5} genommen
+   Einige Symbole werden aus \pkg{fontawesome} genommen
    (jedoch nur einzeln importiert, die Pakete selbst werden nicht geladen).
 \item[Sprache] \pkg{babel} mit Option \opt{ngerman}.
 \item[Tabellen] \pkg{tabularx}, \pkg{booktabs}, \pkg{colortbl}, \pkg{longtable}.
 \item[Seitenmanagement] \pkg{scrlayer-scrpage}, \pkg{geometry}.
+\item[Grafik] \pkg{pict2e}.
 \item[Verschiedenes] \pkg{amsgen}, \pkg{environ}\footnote{%
    Seit 2018 bietet \pkg{xparse} ein \opt{b}-Argument für Umgebungen, die den gesamten Inhalt
    sammeln sollen; seit 2020 ist \pkg{xparse} außerdem im \LaTeX-Kernel integriert. Da aber
@@ -616,8 +603,7 @@ der Klasse erstellt werden können:
 
 \begin{description}
 \item[Anmerkung] Features, die \emph{nur} mit \TikZ\ funktionieren, werden mit
-\onlytikz\ markiert. Features, die auch ohne \TikZ\ funktionieren aber leicht
-anders aussehende Ergebnisse liefern, werden mit \withtikz\ markiert.
+\onlytikz\ markiert.
 \end{description}
 
 \begin{worksheet}[Titel des Arbeitsblatts]
@@ -706,7 +692,6 @@ Am Ende der \env{solution} Umgebung wird überprüft, ob die Anzahl der \cs{answ
 der Anzahl der \cs{question}s entspricht; falls nicht (wie in diesem Fall) wird eine Warnung herausgegeben.
 \end{solution}
 
-\exercisesymbol{\withtikz}
 \exercise[Multiple-Choice-Quiz]
 Es stehen die Symbole \cs{checkbox} (\checkbox) und \cs{radiobutton} (\radiobutton)
 zur Verfügung. Beide haben eine Sternform \cs{checkbox*} (\checkbox*) und
@@ -868,13 +853,13 @@ aber all dies ist ,,versteckt`` hinter der Umgebung. Dafür gibt es eine Schnitt
 \ecode
 mit folgenden Keys:
 \begin{compactdesc}
-\item[\opt{extrarowheight=\param{Länge}}] setzt \cs{extrarowheight}
-\item[\opt{arraystretch=\param{Zahl}}] setzt \cs{arraystretch}
-\item[\opt{tabcolsep=\param{Länge}}] setzt \cs{tabcolsep}
+\item[\opt{extrarowheight=\param{Länge}}] wird zu \cs{setlength}\marg{\cs{extrarowheight}}\marg{\param{Länge}}
+\item[\opt{arraystretch=\param{Zahl}}] wird zu \cs{renewcommand*}\marg{\cs{arraystretch}}\marg{\param{Zahl}}
+\item[\opt{tabcolsep=\param{Länge}}] wird zu \cs{setlength}\marg{\cs{tabcolsep}}\marg{\param{Länge}}
 \item[\opt{extrarowdepth=\param{Länge}}] führt \str\\\oarg{\param{Länge}} bei jeder neuen Zeile ein
 \item[\opt{lastdepth=\param{Länge}}] führt \str\\\oarg{\param{Länge}} nach der \emph{letzten} Zeile ein.
 \end{compactdesc}
-Die letzten Zeile muss leicht anders betrachtet werden. In der Tat, mit der Option \opt{extrarowheight}
+Die letzte Zeile muss leicht anders betrachtet werden. In der Tat, mit der Option \opt{extrarowheight}
 wird auch dieser Parameter fixiert. Setzt man das obige Beispiel mit
 \bcode
 \\begin\{questions*\}[extrarowdepth=2ex,extrarowheight=1.5ex]\{4\}
@@ -920,7 +905,7 @@ Aussage B \false
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[\texorpdfstring{\leavevmode\llap{\withtikz\quad}}{}Schwierigkeitssymbole und sonstige Teilaufgaben]
+\begin{worksheet}[Schwierigkeitssymbole und sonstige Teilaufgaben]
 
 \easy\exercise
 Eine einfache Aufgabe kriegt man mit \cs{easy}\cs{exercise}.
@@ -1609,6 +1594,10 @@ welche äquivalent sind zu \opt{subject=Mathematik}, \opt{subject=Physik} und
    angegeben werden.
 \item[\ttfamily date] Selbsterklärend.
 \item[\ttfamily class] Auch selbsterklärend.
+\item[\ttfamily class*] Weniger selbsterklärend: Diese Datei hat \opt{class=9a} im Quelltext,
+   und in der Überschrift findet man ,,Klasse 9a``. Wenn man aber z.B.~eine Oberstufe
+   hat, will man das Wort ,,Klasse`` nicht haben. Dann kann man z.B.~\opt{class*=Kursstufe 1}
+   verwenden.
 \item[\ttfamily schoolyear] Das aktuelle Schuljahr wird automatisch berechnet basierend
    auf dem aktuellen Monat. Alternativ kann man \opt{schoolyear=...} explizit angeben.
 \item[\ttfamily type] Art des Tests. Voreingestellt ist ,,KA``, aber mit \opt{type=Test} kann man das ändern.
@@ -1643,15 +1632,8 @@ errechnet wird!
 \begin{center}
 \nocalculator\ 1.\ Teil --- OHNE Taschenrechner
 \end{center}
-\leavevmode\llap{\onlytikz\quad}%
 Wie man hier oben sieht, stehen auch die Symbole \cs{calculator} \calculator\
-und \cs{nocalculator} \nocalculator\ zur Verfügung. Diese nehmen \TikZ-Optionen
-als optionales Argument:
-\begin{tabular}[t]{l@{\space\textrightarrow\space}l}
-\cs{calculator[scale=1.5]}  & \calculator[scale=1.5] \\
-\cs{nocalculator[baseline]} & \nocalculator[baseline]
-\end{tabular}\par\noindent
-(Standardmäßig liegen die Symbole etwas unter der Baseline).
+und \cs{nocalculator} \nocalculator\ zur Verfügung.
 
 \medium\exercise[0.5]
 Man kann natürlich auch hier die Präfixe \cs{hard}, \cs{medium} und \cs{easy} verwenden.

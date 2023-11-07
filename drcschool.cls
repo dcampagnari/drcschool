@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-11-05 v1.2.0]
+\ProvidesClass{drcschool}[2023-11-07 v1.2.1]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -80,6 +80,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% REQUIRED PACKAGES
+\RequirePackage{pict2e}
 \RequirePackage{amsgen}
 \RequirePackage{environ}
 \RequirePackage{paralist}
@@ -459,44 +460,43 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% DIFFICULTY SYMBOLS
-\newcommand*{\difficulty@symbol@tikz}[1]{%
+\newcommand*{\difficulty@symbol}[1]{%
    \leavevmode
-   \hbox{%
-      \normalfont\normalsize
-      \dimen@.5\fontcharht\font`\A
-      \tikz[x=\dimen@,y=\dimen@]{#1}%
-   }%
-}%
-\newcommand*{\easysymbol}{\difficulty@symbol@tikz{\draw[gray,thick](0,0)circle(1);}}
-\newcommand*{\mediumsymbol}{\difficulty@symbol@tikz{\draw[gray,thick](0,0)circle(1);\fill[gray](-1,0)--(1,0)arc(0:-180:1);}}
-\newcommand*{\hardsymbol}{\difficulty@symbol@tikz{\filldraw[gray,thick](0,0)circle(1);}}
-\newcommand*{\hardersymbol}{\difficulty@symbol@tikz{\filldraw[thick](0,0)circle(1);}}
+   \begingroup
+   \unitlength\fontcharht\font`\A
+   \@picture(1,1)(0,0)
+   \linethickness{.8\p@}%
+   #1%
+   \endpicture
+   \endgroup
+}
+\newcommand*{\easysymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}}}}
+\newcommand*{\mediumsymbol}{\difficulty@symbol{\color{gray}\put(.5,.55){\circle{1}}\moveto(0,.55)\curveto(.2,-.1)(.8,-.1)(1,.55)\closepath\fillpath}}
+\newcommand*{\hardsymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}\circle*{1}}}}
+\newcommand*{\hardersymbol}{\difficulty@symbol{\put(.5,.55){\circle{1}\circle*{1}}}}
 \newcommand*{\deadlysymbol}{%
    \leavevmode
-   \hbox{%
-      \normalfont\normalsize
-      \begin{tikzpicture}[scale=.8,baseline=-1ex]
-      \begin{scope}[yshift=-.5ex]
-      \draw[darkgray,line width=.5ex] (20:1.95ex)--(20:-1.8ex) (-20:1.8ex)--(-20:-1.95ex);
-      \fill[darkgray](20:1.95ex)circle(.4ex) (20:-1.8ex)circle(.4ex) (-20:1.8ex)circle(.4ex) (-20:-1.95ex)circle(.4ex);
-      \end{scope}
-      \fill[darkgray,draw=white,line width=.1ex,rounded corners=.1ex] (230:1.2ex)arc(230:-50:1.2ex)--(.5ex,-1.6ex)--(-.5ex,-1.6ex)--cycle;
-      \fill[white](-.45ex,0)circle(.35ex) (.45ex,0)circle(.35ex);
-      \end{tikzpicture}%
-   }%
-}%
-
-\if@drctikz\else% if no tikz then fontawesome5 variants
-    \newcommand*{\difficulty@symbols@fa}[3]{%
-       \setbox\drc@box=\hbox{\resizebox{!}{\fontcharht\font`A}{\usefont{U}{fontawesomefree#1}{#2}{n}#3}}%
-       \raise\dp\drc@box\box\drc@box
-    }%
-    \renewcommand*{\easysymbol}{\textcolor{gray}{\difficulty@symbols@fa0{regular}{\char187}}}%
-    \renewcommand*{\mediumsymbol}{\textcolor{gray}{\difficulty@symbols@fa0{solid}{\rotatebox[origin=c]{90}{\char3}}}}%
-    \renewcommand*{\hardsymbol}{\textcolor{gray}{\difficulty@symbols@fa0{solid}{\char187}}}%
-    \renewcommand*{\hardersymbol}{\leavevmode{\difficulty@symbols@fa0{solid}{\char187}}}%
-    \renewcommand*{\deadlysymbol}{\textcolor{darkgray}{\usefont{U}{fontawesomefree2}{solid}{n}\char254}}%
-\fi
+   \begingroup
+   \unitlength1ex
+   \@picture(3.6,1.8)(-1.8,-1)
+   \color{darkgray}
+   \put(1.46,.13){\circle*{.64}}
+   \put(-1.46,.13){\circle*{.64}}
+   \put(1.3,-.79){\circle*{.64}}
+   \put(-1.3,-.79){\circle*{.64}}
+   \linethickness{.5ex}
+   \Line(1.46,.13)(-1.3,-.79)
+   \Line(-1.46,.13)(1.3,-.79)
+   \linethickness{.1ex}
+   \roundjoin
+   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.8)(0,.9)\curveto(1,.8)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\fillpath
+   \color{white}
+   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.8)(0,.9)\curveto(1,.8)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\strokepath
+   \put(.36,0){\circle*{.56}}
+   \put(-.36,0){\circle*{.56}}
+   \endpicture
+   \endgroup
+}
 
 % for backward compatibility
 \newcommand*{\difficulty}[1]{\ifcase#1\relax\easysymbol\or\mediumsymbol\or\hardsymbol\or\hardersymbol\else\deadlysymbol\fi}
@@ -825,8 +825,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% RADIO BUTTONS, CHECKBOXES, MULTIPLE CHOICE/RESPONSE, TRUE/FALSE TABLE
-
+%% RADIO BUTTONS & CHECKBOXES
 % check boxes
 \newcommand*{\checkbox}{\checkbox@}
 \newcommand*{\checkbox@}{%
@@ -836,23 +835,24 @@
    \setbox\tw@=\hb@xt@\wd\z@{\fontencoding{U}\fontfamily{fontawesometwo}\selectfont\char26\hss}% filled check box
    \@ifstar{\lower.2ex\if@solution\box\tw@\else\box\z@\fi\egroup}{\lower.2ex\box\z@\egroup}%
 }
+
 % radio buttons
 \newcommand*{\radiobutton}{\radiobutton@}
-\newcommand*{\radiobutton@}{\leavevmode\@ifstar{\radio@button{\if@solution\fill(0,0)circle(.45ex);\fi}}{\radio@button{}}}
-\newcommand*{\radio@button}[1]{\tikz[baseline=-.6ex]{\draw[line width=.15ex](0,0)circle(.75ex);#1}}
+\newcommand*{\radiobutton@}{\leavevmode\@ifstar{\radiobutton@@{\circle*{.6}}}{\radiobutton@@{}}}
+\newcommand*{\radiobutton@@}[1]{%
+   \begingroup
+   \unitlength1.5ex
+   \@picture(1,1)(0,0)%
+   \linethickness{.75pt}%
+   \put(.5,.4){\circle{1}#1}%
+   \endpicture
+   \endgroup
+}
 
-\if@drctikz\else% if no TikZ then use fontawesome5
-    \renewcommand*{\radiobutton@}{\leavevmode\@ifstar{\if@solution\radiobutton@checked\else\radiobutton@empty\fi}{\radiobutton@empty}}
-    \newcommand*{\radiobutton@empty}{\hbox{\m@th$\vcenter{\hbox{\resizebox{!}{1.4ex}{\usefont{U}{fontawesomefree0}{regular}{n}\char187}}}$}}
-    \newcommand*{\radiobutton@checked}{%
-       \bgroup
-       \ooalign{%
-          \radiobutton@empty\cr
-          \hidewidth$\m@th\vcenter{\hbox{\resizebox{!}{.8ex}{\usefont{U}{fontawesomefree0}{solid}{n}\char187}}}$\hidewidth
-       }%
-       \egroup
-    }%
-\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% MULTIPLE CHOICE/RESPONSE, TRUE/FALSE TABLE
 
 \newif\if@choice
 \newcommand*{\check@choice}{%
@@ -1822,23 +1822,29 @@
    \long\def\drc@lines@#1(#2,#3)#4{\ClassError{drcschool}{\string\lines\space unavailable without tikz}{Remove the `notikz' option.}}
 \fi
 % CALCULATOR ICONS
-\newcommand*{\calculator}[1][]{\calc@icons{#1}{}}%
-\newcommand*{\nocalculator}[1][]{\calc@icons{#1}{\draw[very thick](0,0)--(.7,1)(0,1)--(.7,0);}}%
-\newcommand*{\calc@icons}[2]{%
-   \leavevmode
-   \tikz[x=2ex,y=2ex,baseline=.25ex,#1]{\calc@icons@code#2}%
+\newcommand*{\calculator}{\leavevmode\calc@icons{}}%
+\newcommand*{\nocalculator}{\leavevmode\calc@icons{\textcolor{black}{\linethickness\p@\Line(0,-.1)(.7,.9)\Line(.7,-.1)(0,.9)}}}%
+\newcommand*{\calc@icons}[1]{%
+   \begingroup
+   \unitlength2ex\relax
+   \@picture(.7,1)(0,0)%
+   \color{gray}%
+   \put(.35,.4){{\let\pIIe@strokeGraph\pIIe@fillGraph\oval[.1](.7,1)}}%
+   \color{white}%
+   \polygon*(.1,.0)(.2,.0)(.2,.1)(.1,.1)%
+   \polygon*(.1,.2)(.2,.2)(.2,.3)(.1,.3)%
+   \polygon*(.1,.4)(.2,.4)(.2,.5)(.1,.5)%
+   \polygon*(.3,.0)(.4,.0)(.4,.1)(.3,.1)%
+   \polygon*(.3,.2)(.4,.2)(.4,.3)(.3,.3)%
+   \polygon*(.3,.4)(.4,.4)(.4,.5)(.3,.5)%
+   \polygon*(.5,.0)(.6,.0)(.6,.1)(.5,.1)%
+   \polygon*(.5,.2)(.6,.2)(.6,.3)(.5,.3)%
+   \polygon*(.5,.4)(.6,.4)(.6,.5)(.5,.5)%
+   \polygon*(.1,.6)(.6,.6)(.6,.8)(.1,.8)%
+   #1%
+   \endpicture
+   \endgroup
 }
-\newcommand*{\calc@icons@code}{%
-   \filldraw[rounded corners=1pt,gray](0,0)rectangle(.7,1) ;
-   \fill[white](.1,.7)rectangle(.6,.9);
-   \fill[white](.1,.5)rectangle++(.1,.1) (.3,.5)rectangle++(.1,.1) (.5,.5)rectangle++(.1,.1) ;
-   \fill[white](.1,.3)rectangle++(.1,.1) (.3,.3)rectangle++(.1,.1) (.5,.3)rectangle++(.1,.1) ;
-   \fill[white](.1,.1)rectangle++(.1,.1) (.3,.1)rectangle++(.1,.1) (.5,.1)rectangle++(.1,.1) ;
-}
-\if@drctikz\else
-   \renewcommand*{\calculator}[1][]{\ClassWarningNoLine{drcschool}{\string\calculator\space unavailable without tikz}}
-   \renewcommand*{\nocalculator}[1][]{\ClassWarningNoLine{drcschool}{\string\nocalculator\space unavailable without tikz}}
-\fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2179,3 +2185,26 @@
    \drc@ws@end
    \removebackgroundgrid
 }
+
+\endinput
+
+% DUMP
+
+% Check boxes might also be drawn with pict2e but importing glyphs from fontawesome is much more efficient.
+%\newcommand*{\pIIe@checkbox}{\leavevmode\@ifstar{\pIIe@checkbox@{\pIIe@checkbox@@}}{\pIIe@checkbox@{}}}
+%\newcommand*{\pIIe@checkbox@}[1]{%
+%   \begingroup
+%   \unitlength1.48ex
+%   \begin{picture}(1,1)%
+%   \linethickness{.75pt}%
+%   \put(.5,.42){\oval[.15](1,1)}%
+%   #1%
+%   \end{picture}%
+%   \endgroup
+%}
+%\newcommand*{\pIIe@checkbox@@}{%
+%   \roundjoin
+%   \roundcap
+%   {\color{white}\linethickness{2.8pt}\polyline(.25,.45)(.5,.2)(1.1,.8)}%
+%   \linethickness{1.8pt}\polyline(.25,.45)(.5,.2)(1.1,.8)%
+%}

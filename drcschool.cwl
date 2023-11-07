@@ -42,6 +42,7 @@
 \begin{cluecards}[opt]#S
 \begin{colorminipage}{arg1}[opt1][opt2][opt3]{arg2}#S
 \begin{graybox}[opt1][opt2][opt3]{arg1}#S
+\begin{hint}[opt]#S
 \begin{hyperworksheet}[opt]#S
 \begin{hyperworksheet*}[opt]#S
 \begin{matching}[opt]#S
@@ -87,6 +88,7 @@
 \end{cluecards}#S
 \end{colorminipage}#S
 \end{graybox}#S
+\end{hint}#S
 \end{hyperworksheet}#S
 \end{hyperworksheet*}#S
 \end{matching}#S
