@@ -925,9 +925,7 @@ können mit Hilfe von \cs{harder}\cs{exercise} erstellt werden. Und ja, es
 gibt auch (eher zum Spaß)\ldots
 
 \deadly\exercise
-\ldots\ auch \cs{deadly}\cs{exercise} \texttt{;-)} Falls \TikZ\ nicht verwendet
-wird, stehen die Symbole noch zur Verfügung aber sehen etwas anders aus (sie
-werden dann aus \pkg{fontawesome5} genommen).
+\ldots\ auch \cs{deadly}\cs{exercise} \texttt{;-)}
 
 \exercisesymbol{$\heartsuit\varheartsuit\heartsuit$}
 \exercise[Putzig, gell?]
@@ -1781,6 +1779,7 @@ Wozu? Na ja, ich benutze es, um z.B.~die Lösungen auf gescannten bzw.~importier
 Arbeitsblätter drauf zu schreiben.
 
 \subsection{Rechte Winkel}
+\leavevmode\drcput[l](-1em,3.5ex){\onlytikz}
 Mit der \TikZ-Library \opt{angles} (die standardmäßig geladen wird) kann man einen Winkel
 zwischen drei Koordinaten plotten. Beispiel: Man definiere drei
 Koordinaten $A(0,5|1)$, $B(0|0)$ und $C(1|0)$ und man vergleiche
@@ -1820,7 +1819,7 @@ Wer eine feinere Kontrolle und bessere Ergebnisse möchte, sollte natürlich auf
 zugreifen.
 
 \wraptikz[blue,thick]{\draw[step=.5](0,0)grid(1,1);\draw[->](.2,.8)--++(-40:1);}
-Ähnlich zu \cs{wrap} existiert auch\rlap{\quad\onlytikz}
+\leavevmode\drcput[l](-5em,0pt){\onlytikz}Ähnlich zu \cs{wrap} existiert auch
 \bcode
 \\wraptikz[\param{\TikZ\ Optionen}][\param{\opt{l} oder \opt{r}}]\{\param{\TikZ\ Code}\}
 \ecode
