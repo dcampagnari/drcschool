@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-11-07 v1.2.1]
+\ProvidesClass{drcschool}[2023-11-13 v1.2.2]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -838,7 +838,7 @@
 
 % radio buttons
 \newcommand*{\radiobutton}{\radiobutton@}
-\newcommand*{\radiobutton@}{\leavevmode\@ifstar{\radiobutton@@{\circle*{.6}}}{\radiobutton@@{}}}
+\newcommand*{\radiobutton@}{\leavevmode\@ifstar{\radiobutton@@{\if@solution\circle*{.6}\fi}}{\radiobutton@@{}}}
 \newcommand*{\radiobutton@@}[1]{%
    \begingroup
    \unitlength1.5ex
@@ -853,7 +853,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% MULTIPLE CHOICE/RESPONSE, TRUE/FALSE TABLE
-
 \newif\if@choice
 \newcommand*{\check@choice}{%
    \if@choice\else
