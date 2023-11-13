@@ -484,14 +484,14 @@
    \put(-1.46,.13){\circle*{.64}}
    \put(1.3,-.79){\circle*{.64}}
    \put(-1.3,-.79){\circle*{.64}}
-   \linethickness{.5ex}
+   \linethickness{.5\unitlength}
    \Line(1.46,.13)(-1.3,-.79)
    \Line(-1.46,.13)(1.3,-.79)
-   \linethickness{.1ex}
+   \linethickness{.1\unitlength}
    \roundjoin
-   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.8)(0,.9)\curveto(1,.8)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\fillpath
+   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.9)(0,.9)\curveto(1,.9)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\fillpath
    \color{white}
-   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.8)(0,.9)\curveto(1,.8)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\strokepath
+   \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.9)(0,.9)\curveto(1,.9)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\strokepath
    \put(.36,0){\circle*{.56}}
    \put(-.36,0){\circle*{.56}}
    \endpicture

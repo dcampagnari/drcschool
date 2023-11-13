@@ -6,8 +6,10 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
 
 ## 2023-11-13 [v1.2.2]
 ### Fixed
-The new implementation of `\radiobutton` had a bug (forgot a `\if@solution`,
-the correct choice was always shown).
+- The new implementation of `\radiobutton` had a bug (I forgot a
+  `\if@solution`, the correct choice was always shown).
+- Changed a bit the definition of `\deadlysymbol` (it wasn't
+  smooth at the top).
 
 ## 2023-11-07 [v1.2.1]
 ### Changed
