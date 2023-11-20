@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-11-13 v1.2.2]
+\ProvidesClass{drcschool}[2023-11-20 v1.3.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -471,7 +471,7 @@
    \endgroup
 }
 \newcommand*{\easysymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}}}}
-\newcommand*{\mediumsymbol}{\difficulty@symbol{\color{gray}\put(.5,.55){\circle{1}}\moveto(0,.55)\curveto(.2,-.1)(.8,-.1)(1,.55)\closepath\fillpath}}
+\newcommand*{\mediumsymbol}{\difficulty@symbol{\color{gray}\put(.5,.55){\circle{1}}\moveto(0,.55)\curveto(0,-.1)(1,-.1)(1,.55)\closepath\fillpath}}
 \newcommand*{\hardsymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}\circle*{1}}}}
 \newcommand*{\hardersymbol}{\difficulty@symbol{\put(.5,.55){\circle{1}\circle*{1}}}}
 \newcommand*{\deadlysymbol}{%
@@ -508,6 +508,8 @@
 \newcounter{exercise}
 \newcommand*{\exercisename}{Aufgabe}
 \newcommand*{\starredexercisename}{Aufgabe}
+\newcommand*{\pointname}{Punkt}
+\newcommand*{\pointsname}{Punkte}
 \newcommand*{\starredexercisemark}{*}
 \newcommand*{\drc@title@sep}{\enskip}
 \newcommand*{\drc@title@L}{(}
@@ -517,7 +519,6 @@
 \let\drcschool@extra\@empty
 \def\drc@ex@name{\exercisename}
 \newcommand*{\reset@exercise@format}{\let\drcschool@difficulty\@empty\let\drcschool@extra\@empty\def\drc@ex@name{\exercisename}}
-
 \newcommand*{\exercise}{%
    \ClassError{drcschool}{Lonely \string\exercise}%
               {An \string\exercise\space should appear only within a {test},\MessageBreak a {worksheet} or similar.}%
@@ -531,6 +532,20 @@
 % customizable
 \newcommand*{\exercisesymbol}[1]{\def\drcschool@difficulty{\leavevmode\llap{#1\kern.5em}}}
 
+\newlength{\beforeexerciseskip}
+\beforeexerciseskip2ex plus.5ex minus.2ex\relax
+\newlength{\afterexerciseskip}
+\afterexerciseskip.2ex plus.2ex minus.2ex\relax
+\newcommand*{\hangexercises}[1][.2ex plus.2ex minus.2ex]{%
+   \skip@#1\relax
+   \ifdim\skip@=\z@% borderline case
+      \afterexerciseskip=1sp plus.2ex\relax
+   \else
+      \afterexerciseskip=\ifdim\skip@<\z@-\fi\skip@\relax
+   \fi
+}
+\newcommand*{\runinexercises}[1][.8em]{\skip@#1\relax\afterexerciseskip=\ifdim\skip@>\z@-\fi\skip@\relax}
+
 % exercise in worksheet
 \newcommand*{\exercise@ws}{%
    \@ifstar{\def\drc@ex@name{\starredexercisename}\def\drcschool@extra{\starredexercisemark}\exercise@ws@}%
@@ -540,7 +555,7 @@
    \refstepcounter{exercise}%
    \gdef\s@luti@n{0}% no solution yet
    \if\relax\detokenize{#1}\relax\def\drc@next{}\else\def\drc@next{\drc@title@sep\drc@title@L#1\drc@title@R}\fi
-   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\drcschool@difficulty\drc@ex@name~\theexercise\drcschool@extra\autodot\drc@next}%
+   \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{\drcschool@difficulty\drc@ex@name~\theexercise\drcschool@extra\autodot\drc@next}%
    \reset@exercise@format
 }
 % exercise in test (similar to exercise in worksheet but increases number of points)
@@ -555,10 +570,10 @@
    \refstepcounter{exercise}%
    \gdef\s@luti@n{0}% no solution yet
    \dimen@#1\p@
-   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{%
+   \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{%
       \drcschool@difficulty
       \drc@ex@name~\theexercise\drcschool@extra\autodot\drc@title@sep
-      \drc@title@L\drcschool@pts@pre\drc@strip@pt\dimen@\drcschool@pts@post\ Punkt\ifdim\dimen@=\p@\else e\fi\drc@title@R
+      \drc@title@L\drcschool@pts@pre\drc@strip@pt\dimen@\drcschool@pts@post\ \ifdim\dimen@=\p@\pointname\else\pointsname\fi\drc@title@R
    }%
    \reset@exercise@format
 }
@@ -573,7 +588,7 @@
    \refstepcounter{experiment}%
    \setcounter{question}{0}% the counter \c@question is reset by \exercise, so I have to do this manually...
    \if\relax\detokenize{#1}\relax\def\drc@next{}\else\def\drc@next{\drc@title@L#1\drc@title@R}\fi
-   \drc@heading{2ex\@plus.5ex\@minus.2ex}{.2ex\@plus.2ex\@minus.2ex}{\experimentname~\theexperiment\autodot\drc@title@sep\drc@next}%
+   \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{\experimentname~\theexperiment\autodot\drc@title@sep\drc@next}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -739,7 +754,7 @@
 \newcommand*{\qst@pts}[1][]{%
    \if\relax\detokenize{#1}\relax\else
       \dimen@#1\p@
-      \textbf{(\drc@strip@pt\dimen@~Punkt\ifdim\dimen@=\p@\else e\fi)}\space\ignorespaces
+      \textbf{(\drc@strip@pt\dimen@~\ifdim\dimen@=\p@\pointname\else\pointsname\fi)}\space\ignorespaces
    \fi
 }
 % horizontal questions, based on a tabular
@@ -1599,7 +1614,7 @@
    \hline
    \multicolumn{3}{|l|}{Name:}\\
    \hline
-   Punkte: \kern5em $\big/$\csname drcschool@test\the\c@worksheet @pts\endcsname&Note:&mündlicher Eindruck:\kern3cm\\
+   \pointsname: \kern5em $\big/$\csname drcschool@test\the\c@worksheet @pts\endcsname&Note:&mündlicher Eindruck:\kern3cm\\
    \hline
    \end{tabularx}%
    \end{center}%
