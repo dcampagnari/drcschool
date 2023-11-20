@@ -963,6 +963,15 @@ man den Befehl verwendet: \lonelyquestion tu irgendwas\ldots
 wie zum Beispiel mit \env{wrapfigure}. Da funktionieren Listen nicht so gut,
 und \cs{lonelyquestion} schafft Abhilfe.
 \end{solution}
+
+\runinexercises
+\exercise[Keine neue Zeile] Mit dem Macro \cs{runinexercises} werden Aufgabenüberschriften
+als ,,run-in`` gesetzt, also keine neue Zeile wird danach gestartet. Als optionales
+Argument kann man eine explizite Länge angeben: \cs{runinexercises}\oarg{\param{Länge}}
+(default \texttt{0.8em}). Das Makro kann natürlich in der Präambel oder in einer
+Konfigurationsdatei verwendet werden. ,,Normale`` (,,hanging``) Überschriften
+bekommt man wieder mit \cs{hangexercises}\oarg{\param{Länge}} (default \texttt{.2ex plus.2ex minus.2ex}).
+
 \end{worksheet}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1941,31 +1950,21 @@ Die Umgebung \env{multresponse} funktioniert genauso wie im normalen Fall.
 (Die Schwierigkeit bezieht sich auf \TeX, nicht auf den Inhalt\ldots)\\
 Die Umgebung \env{multchoice} funktioniert
 mehr oder weniger auch, aber nicht jeder PDF-Viewer schafft es, sie
-richtig darzustellen.\par\smallskip\noindent
-\begin{minipage}[b]{.3\linewidth}
-\begin{multchoice}
+richtig darzustellen.
+\begin{multchoice*}{3}
 \question Frage A
 \choice foo
 \choice* bar
 \choice baz
-\end{multchoice}
-\end{minipage}\hfill
-\begin{minipage}[b]{.3\linewidth}
-\begin{multchoice}
 \question Frage B
 \choice foo
 \choice bar
 \choice* baz
-\end{multchoice}
-\end{minipage}\hfill
-\begin{minipage}[b]{.3\linewidth}
-\begin{multchoice}
 \question Frage C
 \choice* foo
 \choice bar
 \choice baz
-\end{multchoice}
-\end{minipage}\par\noindent
+\end{multchoice*}
 Die Idee einer \env{multchoice} Umgebung ist, dass nur eine Antwort richtig
 ist. Wenn man dann einen anderen Feld anklickt, so sollte ein zuerst angeklickter
 Radiobutton (aus derselben Frage) ,,weggehen``. Nun, das funktioniert nicht mit
