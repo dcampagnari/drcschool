@@ -26,8 +26,6 @@
 \Qu{arg1}#S
 \RenewScheduleStyle[opt]{arg1}{arg2}#S
 \SetBlockStart{arg1}{arg2}#S
-\SetCalculatorIcons[opt]{length}#S
-\SetDifficultySymbols{arg}#S
 \SetDuration{arg}#S
 \SetScheduleStyle{arg}#S
 \SetTitleSeparators[opt]{arg1}{arg2}#S
@@ -123,6 +121,7 @@
 \fillhere#S
 \goal{arg1}#S
 \grid{arg1}#S
+\hangexercises[length]#S
 \hard#S
 \harder#S
 \hardersymbol#S
@@ -150,6 +149,7 @@
 \radiobutton#S
 \removebackgroundgrid#S
 \rightangle#S
+\runinexercises[length]#S
 \scolumnheader#S
 \sectionformat#S
 \shortsolution#S
