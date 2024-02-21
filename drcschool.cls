@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2023-11-20 v1.3.0]
+\ProvidesClass{drcschool}[2024-02-21 v1.3.1]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -51,6 +51,8 @@
    \renewcommand*{\familydefault}{\sfdefault}%
    \renewcommand*{\rmdefault}{\sfdefault}%
    \RequirePackage[noSTIXops]{newtxsf}%
+   \DeclareMathSymbol{,}{\mathpunct}{operators}{44}%
+   \DeclareMathSymbol{.}{\mathord}{operators}{46}%
    \renewcommand*{\ttdefault}{ntxtt}%
    \RequirePackage[T1]{fontenc}%
    \RequirePackage{microtype}%
@@ -1316,7 +1318,9 @@
    \drc@print@wstitle
   }{%
    \drcschool@print@stopcollect
-   \copy\z@\vfill\box\z@
+   \copy\z@
+   \vfill
+   \hbox{\leaders\copy\z@\hskip\wd\z@}%
    \clearpage
    \aftergroup\restoregeometry
 }
@@ -1327,7 +1331,9 @@
    \drc@add@bookmark
    \@solutionfalse
    \drcschool@print@startcollect\drc@print@wstitle\BODY\drcschool@print@stopcollect
-   \copy\z@\vfill\copy\z@
+   \copy\z@
+   \vfill
+   \hbox{\leaders\copy\z@\hskip\wd\z@}%
    \restoregeometry% does also \clearpage internally
    \drc@reset@counters
    \@solutiontrue
@@ -1358,7 +1364,8 @@
   }{%
    \drcschool@print@stopcollect
    \def\@tempa{\vfill\nointerlineskip\hbox to\linewidth{\hss\vrule\@width\paperwidth\@height.4\p@\hss}\nointerlineskip\vfill}%
-   \copy\z@\@tempa\copy\z@\@tempa\copy\z@
+   \setbox\tw@=\hbox{\leaders\copy\z@\hskip\wd\z@}%
+   \copy\z@\@tempa\copy\tw@\@tempa\copy\tw@
    \clearpage
    \aftergroup\restoregeometry
 }
@@ -1369,8 +1376,8 @@
    \@solutionfalse
    \drcschool@print@startcollect\drc@print@wstitle\BODY\drcschool@print@stopcollect
    \def\@tempa{\vfill\nointerlineskip\hbox to\linewidth{\hss\vrule\@width\paperwidth\@height.4\p@\hss}\nointerlineskip\vfill}%
-   \copy\z@\@tempa
-   \copy\z@\@tempa\copy\z@
+   \setbox\tw@=\hbox{\leaders\copy\z@\hskip\wd\z@}%
+   \copy\tw@\@tempa\copy\tw@\@tempa\copy\tw@
    \restoregeometry% does also \clearpage internally
    \drc@reset@counters
    \@solutiontrue
