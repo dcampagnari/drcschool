@@ -4,16 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## UNRELEASED
-### Fixed
-No more warnings from `hyperref` and `\label` in `{printX}`
-environments (except `{print4}`).
-
 ## 2024-02-21 [v1.3.1]
 ### Changed
 Comma and point are taken from the operators (text font) in math mode,
 much like the figures. It is otherwise strange to see a completely
 different comma in text and math.
+### Fixed
+No more warnings from `hyperref` and `\label` in `{printX}`
+environments (except `{print4}`).
 
 ## 2023-11-20 [v1.3.0]
 ### Added
