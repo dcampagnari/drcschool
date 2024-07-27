@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2024-02-21 v1.3.1]
+\ProvidesClass{drcschool}[2024-07-27 v1.3.2]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1566,7 +1566,7 @@
 \def\test@nr{X}
 \def\@test@type{KA}
 \edef\drcschool@year{%
-   \ifcase\month<9
+   \ifnum\month<9
       \number\numexpr\year-1\relax/\number\year
    \else
       \number\year\relax/\number\numexpr\year+1\relax
@@ -1599,7 +1599,7 @@
 \define@key{drc@test}{postpts}{\def\drcschool@pts@post{#1}}
 \define@key{drc@test}{logo}{\SetLogo{#1}}
 
-\IfFileExists{logo-wildermuth.png}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-wildermuth}\hfill}}{\def\drc@logo{}}%
+\IfFileExists{logo-ggs.pdf}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-ggs}\hfill}}{\def\drc@logo{}}%
 \newcommand*{\SetLogo}[1]{%
    \if\relax\detokenize{#1}\relax
       \def\drc@logo{}%

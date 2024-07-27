@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2024-07-27 [v1.3.2]
+### Fixed
+There was a wrong `\ifcase` instead of `\ifnum` in the evaluation of the school year.
+### Changed
+Default logo changed to my new school (irrelevant for any user other than me).
+
 ## 2024-02-21 [v1.3.1]
 ### Changed
 Comma and point are taken from the operators (text font) in math mode,
@@ -388,6 +394,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v1.3.2]: https://github.com/dcampagnari/drcschool/compare/v1.3.1...v1.3.2
 [v1.3.1]: https://github.com/dcampagnari/drcschool/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/dcampagnari/drcschool/compare/v1.2.2...v1.3.0
 [v1.2.2]: https://github.com/dcampagnari/drcschool/compare/v1.2.1...v1.2.2
