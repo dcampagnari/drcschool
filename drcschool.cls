@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2024-07-27 v1.3.2]
+\ProvidesClass{drcschool}[2024-07-30 v1.3.3]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1537,7 +1537,7 @@
    \if\relax\detokenize{#1}\relax\else{\TAtitlefont#1}\par\fi
    \noindent\ignorespaces
 }
-\def\endTA{\vskip2\p@\egroup\egroup\par\addvspace{3\p@}}
+\def\endTA{\vskip2\p@\xdef\@tempa{\the\prevdepth}\egroup\egroup\par\prevdepth\@tempa}
 \newcommand*{\TA@start}{%
    \setbox\z@=\hbox{\textbf{TA}}%
    \setbox\tw@=\hbox{\textbf{TA} }%
