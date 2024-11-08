@@ -158,6 +158,7 @@
 \toprule#St
 \true#S
 \vecsum#S
+\warningsymbol#S
 \wrap[opt]{arg1}#S
 \wrap{arg1}#S
 \wraptikz[options%keyval][opt]{arg}#S\picture
