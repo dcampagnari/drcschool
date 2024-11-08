@@ -4,12 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2024-11-08 [v1.4.0]
+### Added
+- Macro `\warningsymbol`.
+- Schedule style `simple`.
+- Customizable duration of teaching blocks.
+- Environment `{test*}` (analogous to `{worksheet*}`) to print a test
+  either with or without solution.
+### Fixed (hopefully)
+- The fix introduced in [v1.3.3] wasn't fixing much. I admit that I am
+  still not sure I'm doing it right.
+- Reintroduced (did I ever have it?) `\title` within `{TA}`.
+- The class used to define the `hyperref` counter representations
+  `\theH...` to cope with the case where `hyperref` is loaded in
+  the preamble. With the 2024-11-01 LaTeX release these counter
+  representations are defined directly by `\newcounter`, so `\newcommand`
+  raised an error. I know, the elegant way to supprt both older and newer
+  kernels would be to use `\providecommand` followed by `\renewcommand`,
+  but `\def` is shorter.
+
 ## 2024-07-30 [v1.3.3]
 ### Fixed
 Suddenly the environments `{TA}` and `{TA*}` were misbehaving when they
 were the last text in a schedule cell. (I guess some of the recent changes
-to `longtabular` might have to do with that, but I don't want to blame
-David or Ulrike `:-)`.) The original code was proably bad anyway.
+to `array` and/or `longtable` might have to do with that, but I don't want
+to blame David or Ulrike `:-)`.) The original code was proably bad anyway.
 
 ## 2024-07-27 [v1.3.2]
 ### Fixed
@@ -401,6 +420,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v1.4.0]: https://github.com/dcampagnari/drcschool/compare/v1.3.3...v1.4.0
 [v1.3.3]: https://github.com/dcampagnari/drcschool/compare/v1.3.2...v1.3.3
 [v1.3.2]: https://github.com/dcampagnari/drcschool/compare/v1.3.1...v1.3.2
 [v1.3.1]: https://github.com/dcampagnari/drcschool/compare/v1.3.0...v1.3.1

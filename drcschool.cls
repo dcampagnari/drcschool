@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2024-07-30 v1.3.3]
+\ProvidesClass{drcschool}[2024-11-08 v1.4.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -274,6 +274,11 @@
    \DeclareColumn{\method}{Methode}{6}%
    \DeclareColumn{\material}{Material}{8}%
 }
+\NewScheduleStyle{simple}{%
+%   \DeclareColumn{\goal}{Ziele}{6}%
+   \DeclareColumn[\def\\{\newline}\let\time\TeXtime]{\content}{Inhalt}{9}%
+   \DeclareColumn{\notes}{Bemerkungen}{2}%
+}
 \newcommand*{\drc@style}{default}
 \newcommand*{\UseScheduleStyle}[1]{%
    \@ifundefined{drc@style@#1}%
@@ -316,17 +321,18 @@
 \newcommand*{\TeXtime}{}
 \let\TeXtime\time% copy of primitive
 
-\newcommand*{\SetBlockStart}[2]{%
+\newcommand*{\SetBlockStart}[3][\drc@duration]{%
    \def\@tempa##1:##2:##3\relax{{0##1}{0##2}}%
-   \@xp\edef\csname block#1start\endcsname{\@tempa#2::\relax}%
+   \@xp\edef\csname block#2start\endcsname{\@tempa#3::\relax}%
+   \@xp\edef\csname block#2duration\endcsname{#1}%
 }
 
 \SetBlockStart{0}{00:00}
-\SetBlockStart{1}{07:50}
-\SetBlockStart{2}{09:40}
-\SetBlockStart{3}{11:25}
-\SetBlockStart{4}{14:00}
-\SetBlockStart{5}{15:40}
+\SetBlockStart[95]{1}{07:40}
+\SetBlockStart{2}{09:35}
+\SetBlockStart[95]{3}{11:20}
+\SetBlockStart{4}{13:50}
+\SetBlockStart[95]{5}{15:35}
 \SetBlockStart{6}{16:00}
 \SetBlockStart{7}{17:00}
 \SetBlockStart{8}{18:00}
@@ -363,7 +369,7 @@
    \end{center}%
 }
 
-\NewEnviron{schedule}[1][1234]{%
+\NewEnviron{schedule}[1][0]{%
    \cleardoublepage
    \pagestyle{empty}
    \newgeometry{hmargin=1.5cm,vmargin=2cm}%
@@ -386,7 +392,12 @@
    \def\drc@next{\clearpage}%
    \def\@tempa##1{%
       \ifx##1\relax\else
-         \edef\drc@next{\unexpanded\@xp{\drc@next}\noexpand\print@schedule\csname block##1start\endcsname\noexpand\clearpage}%
+         \edef\drc@next{%
+            \unexpanded\@xp{\drc@next}%
+            \noexpand\def\noexpand\drc@duration{\csname block##1duration\endcsname}%
+            \noexpand\print@schedule\csname block##1start\endcsname
+            \noexpand\clearpage
+         }%
          \@xp\@tempa
       \fi
    }%
@@ -512,6 +523,8 @@
 \newcommand*{\starredexercisename}{Aufgabe}
 \newcommand*{\pointname}{Punkt}
 \newcommand*{\pointsname}{Punkte}
+\newcommand*{\shortpointname}{P}
+\newcommand*{\shortpointsname}{P}
 \newcommand*{\starredexercisemark}{*}
 \newcommand*{\drc@title@sep}{\enskip}
 \newcommand*{\drc@title@L}{(}
@@ -566,9 +579,7 @@
            {\@tempswatrue\exercise@test@}%
 }
 \newcommand*{\exercise@test@}[1][0]{%
-   \if@tempswa
-      \if@solution\advance\drcschool@pts#1\p@\fi
-   \fi
+   \if@tempswa\drcschool@addto@pts{#1}\fi
    \refstepcounter{exercise}%
    \gdef\s@luti@n{0}% no solution yet
    \dimen@#1\p@
@@ -579,6 +590,7 @@
    }%
    \reset@exercise@format
 }
+\def\drcschool@addto@pts#1{\advance\drcschool@pts#1\p@\relax}
 % similar to the above but with independent counter
 \newcounter{experiment}
 \newcommand*{\experimentname}{Versuch}
@@ -756,7 +768,7 @@
 \newcommand*{\qst@pts}[1][]{%
    \if\relax\detokenize{#1}\relax\else
       \dimen@#1\p@
-      \textbf{(\drc@strip@pt\dimen@~\ifdim\dimen@=\p@\pointname\else\pointsname\fi)}\space\ignorespaces
+      \textbf{(\drc@strip@pt\dimen@~\ifdim\dimen@=\p@\shortpointname\else\shortpointsname\fi)}\space\ignorespaces
    \fi
 }
 % horizontal questions, based on a tabular
@@ -1514,6 +1526,7 @@
 \newcommand*{\B}{{\fboxsep\p@\fbox{B}} }
 \newcommand*{\exercises}[1]{\leavevmode\vtop{\def\\{\cr\ignorespaces}\ialign{\strut##\hfil\cr#1\crcr}}}
 \newcommand*{\homework}{HA:~\exercises}
+\newcommand*{\warningsymbol}{{\fontencoding{U}\fontfamily{fontawesomethree}\selectfont\symbol{111}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1523,41 +1536,46 @@
 \newcommand*{\TA}{%
    \def\@tempa{TA}%
    \ifx\@tempa\@currenvir
-      \@xp\TA@envir
+      \@xp\TA@start
    \else
       \@xp\TA@macro
    \fi
 }
-\newcommand{\TA@macro}[2][]{\TA@envir[#1]#2\endTA}
+\newcommand{\TA@macro}[2][]{\TA@start[#1]#2\TA@stop}
 \newcommand*{\TAtitlefont}{\scshape\itshape}
-\newcommand*{\TA@envir}[1][]{%
-   \TA@start
-   \noindent
-   \llap{\fcolorbox{white}{white}{\textbf{TA}}}%
-   \if\relax\detokenize{#1}\relax\else{\TAtitlefont#1}\par\fi
-   \noindent\ignorespaces
+\newbox\drc@TAbox
+\newcommand*{\TA@start}[1][]{%
+   \setbox\z@=\hbox{\bfseries TA\vrule\@width\z@\@height1.5\fontcharht\font`T\relax}%
+   \dimen@\dimexpr\linewidth-\wd\z@-.5em\relax
+   \setbox\drc@TAbox=\vtop\bgroup
+      \hsize\dimen@
+      \linewidth\dimen@
+      \textwidth\dimen@
+      \def\title##1{{\TAtitlefont##1}}%
+      \IfBlankF{#1}{{\TAtitlefont#1}\par}%
 }
-\def\endTA{\vskip2\p@\xdef\@tempa{\the\prevdepth}\egroup\egroup\par\prevdepth\@tempa}
-\newcommand*{\TA@start}{%
-   \setbox\z@=\hbox{\textbf{TA}}%
-   \setbox\tw@=\hbox{\textbf{TA} }%
-   \dimen@\linewidth
-   \advance\dimen@-\wd\tw@
-   \@tempdima=\dimexpr(\wd\z@-3\p@)/2\relax
-   \@tempdimb=\dimexpr\wd\tw@-(\wd\z@+3\p@)/2\relax
+\newcommand*{\TA@stop}[1]{%
+   \vskip\p@
+   \egroup% end of saved \drc@TAbox
    \par
-   \leavevmode
-   \hbox\bgroup
-   \kern\@tempdima
-   \textcolor{gray}{\vrule\@width3\p@}%
-   \kern\@tempdimb
-   \vtop\bgroup
-   \hsize\dimen@
-   \linewidth\dimen@
-   \textwidth\dimen@
+   \hbox{#1\kern.5em\copy\drc@TAbox}%
+   \xdef\drc@afterTA{\prevdepth\dp\drc@TAbox}%
+   \aftergroup\drc@afterTA
 }
-\newenvironment{TA*}{\TA@start\noindent\vrule width\z@ height2ex\ignorespaces}{\endTA}
-
+\def\endTA{\TA@stop\leftbar@TA}
+\newenvironment{TA*}{\TA@start}{\TA@stop\leftbar@TAstar}
+\newcommand*{\leftbar@TAstar}{%
+   \kern\dimexpr.5\wd\z@-1.5\p@\relax
+   \textcolor{gray}{\vrule\@height\fontcharht\font`T\@width3\p@}%
+}
+\newcommand*{\leftbar@TA}{%
+   \vtop{%
+      \offinterlineskip
+      \copy\z@
+      \kern2\p@
+      \moveright\dimexpr.5\wd\z@-1.5\p@\relax\hbox{\begingroup\color{gray}\vrule\@height\dimexpr\dp\drc@TAbox-2\p@\relax\@width3\p@\endgroup}%
+   }%
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1598,8 +1616,9 @@
 \define@key{drc@test}{ptspost}{\def\drcschool@pts@post{#1}}
 \define@key{drc@test}{postpts}{\def\drcschool@pts@post{#1}}
 \define@key{drc@test}{logo}{\SetLogo{#1}}
+\define@key{drc@test}{solution}[true]{\drc@key@to@bool{name}{@solution}{#1}}% for starred version
 
-\IfFileExists{logo-ggs.pdf}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-ggs}\hfill}}{\def\drc@logo{}}%
+\IfFileExists{logo-ggs.png}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-ggs}\hfill}}{\def\drc@logo{}}%
 \newcommand*{\SetLogo}[1]{%
    \if\relax\detokenize{#1}\relax
       \def\drc@logo{}%
@@ -1646,6 +1665,7 @@
    \pagestyle{empty}%
    \drc@reset@counters
    \begingroup
+   \let\drcschool@addto@pts\@gobble
    \let\label\@gobble
    \let\label@in@display\@gobble
    \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi}{KA.\the\c@worksheet.T}%
@@ -1668,6 +1688,38 @@
    \clearpage
    \removebackgroundgrid
 }
+
+\newenvironment{test*}[1][]{%
+   % generic setup
+   \cleardoublepage
+   \@solutionfalse
+   \stepcounter{worksheet}%
+   \drcschool@pts\z@
+   \def\class@exam{\classname\space\@class}%
+   \setkeys{drc@test}{#1}%
+   \let\exercise\exercise@test
+   \let\lonelyquestion\lonelyquestion@
+   \drc@set@fakepage
+   \pagestyle{empty}%
+   \drc@reset@counters
+   \if@solution
+      \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%
+      \ifoot{Schuljahr \drcschool@year\ --- \test@nr. \@test@type\ \drcschool@subject\ --- \ifdefined\drcschool@text@v\drcschool@text@v\ ---\ \fi \classname\space\@class}%
+   \else
+      \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi}{KA.\the\c@worksheet.T}%
+   \fi
+   \drc@print@test@headline
+  }{%
+   \cleardoublepage
+   \immediate\write\@auxout{\global\string\@namedef{drcschool@test\the\c@worksheet @pts}{\drc@strip@pt\drcschool@pts}}%
+   \clearpage
+   \removebackgroundgrid
+}
+
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1989,16 +2041,17 @@
 %%
 %% HYPERREF
 
-% first some safety definitions; these must be always defined, in case that one
-% loads hyperref in the preamble
-\newcommand*{\theHworksheet}{\number\c@worksheet.\if@solution S\else T\fi}
-\newcommand*{\theHexercise}  {\theHworksheet.\number\c@exercise}
-\newcommand*{\theHexperiment}{\theHworksheet.\number\c@experiment}
-\newcommand*{\theHquestion}  {\theHexercise.\number\c@question}
-\newcommand*{\theHequation}  {\theHworksheet.\number\c@equation}
-\newcommand*{\theHfigure}    {\theHworksheet.\number\c@figure}
-\newcommand*{\theHtable}     {\theHworksheet.\number\c@table}
-\newcommand*{\theHfootnote}  {\theHworksheet.\number\c@footnote}
+% First some safety definitions; these must be always defined, in case that one
+% loads hyperref in the preamble. The 2024-11-01 kernel does that by default, but
+% to cope with older kernels I replaced \newcommand by good old \def
+\def\theHworksheet {\number\c@worksheet.\if@solution S\else T\fi}
+\def\theHexercise  {\theHworksheet.\number\c@exercise}
+\def\theHexperiment{\theHworksheet.\number\c@experiment}
+\def\theHquestion  {\theHexercise.\number\c@question}
+\def\theHequation  {\theHworksheet.\number\c@equation}
+\def\theHfigure    {\theHworksheet.\number\c@figure}
+\def\theHtable     {\theHworksheet.\number\c@table}
+\def\theHfootnote  {\theHworksheet.\number\c@footnote}
 
 \drcschool@hyperworksheet % this is either \endinput or \relax
 
