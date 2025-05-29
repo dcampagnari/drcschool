@@ -1,6 +1,6 @@
 %% drcschool.cls --- DRC's LaTeX school class
 %%
-%% Copyright (C) 2022--2023 Davide Campagnari
+%% Copyright (C) 2022--2025 Davide Campagnari
 %%
 %% This work may be distributed and/or modified under the conditions
 %% of the LaTeX Project Public License, either version 1.3c of this
@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2024-11-08 v1.4.0]
+\ProvidesClass{drcschool}[2025-05-29 v1.5.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -191,6 +191,9 @@
    }%
 }
 
+\newcommand*{\saveprevdepth}{\par\xdef\drc@tpd{\the\prevdepth}}
+\newcommand*{\useprevdepth}{\par\prevdepth\drc@tpd}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -198,7 +201,7 @@
 \newcommand*{\lesson@title}{{\normalfont\ttfamily\string\lesson\{Titel\}[Untertitel]}}
 \let\lesson@subtitle\@empty
 \def\set@lesson@subtitle[#1]{\gdef\lesson@subtitle{#1}}
-\newcommand*{\lesson}[1]{\gdef\lesson@title{#1}\@ifnextchar[{\set@lesson@subtitle}{}}
+\newcommand*{\lesson}[1]{\gdef\lesson@title{#1}\@ifnextchar[{\set@lesson@subtitle}{\set@lesson@subtitle[]}}
 
 \newcommand*{\classname}{Klasse}
 \newcommand*{\@class}{0x}
@@ -206,7 +209,7 @@
 \newcommand*{\class}[1]{%
    \gdef\@class{#1}%
    \afterassignment\remove@to@nnil
-   \count@=0#1\@nnil
+   \count@=0#1\relax\@nnil
    \edef\@cl@ss{\the\count@}%
 }
 \newcommand*{\printclass}{\@ifstar\@cl@ss\@class}
@@ -262,11 +265,20 @@
 \newcommand*{\Declare@Column@}[6]{% #1=style name; #2=extra code; #3=column macro; #4=internal column macro; #5=column name; #6=width
    \advance\@tempcnta\@ne% one column more in the table
    \advance\@tempcntb#6  % add total (relative) width
-   \g@addto@name{drc@style@#1}{\def#4{}\long\def#3##1{\gdef#4{##1}\ignorespaces}}% add definition
+   \g@addto@name{drc@style@#1}{% add definition
+      \gdef#4{}% reset column content
+      \long\def#3##1{%
+         \drc@column@dbl@error#3%
+         \gdef#4{##1}\ignorespaces
+      }%
+   }%
    \g@addto@name{drc@style@#1@colspec}{|>{\raggedright\arraybackslash}p{#6\dimen@}}% add col specs
    \g@addto@name{drc@style@#1@header}{&\bfseries#5}% add header
    \g@addto@name{drc@style@#1@newblock}{&#2#4}% add line
    \g@addto@name{drc@style@#1@reset}{\gdef#4{}}% add reset
+}
+\newcommand*{\drc@column@dbl@error}[1]{%
+   \long\def#1##1{\ClassError{drcschool}{Double \string#1}{\string#1\space can be used only once in a block.}}%
 }
 \NewScheduleStyle{default}[5]{%
    \DeclareColumn{\goal}{Ziele}{6}%
@@ -275,7 +287,6 @@
    \DeclareColumn{\material}{Material}{8}%
 }
 \NewScheduleStyle{simple}{%
-%   \DeclareColumn{\goal}{Ziele}{6}%
    \DeclareColumn[\def\\{\newline}\let\time\TeXtime]{\content}{Inhalt}{9}%
    \DeclareColumn{\notes}{Bemerkungen}{2}%
 }
@@ -370,8 +381,9 @@
 }
 
 \NewEnviron{schedule}[1][0]{%
-   \cleardoublepage
-   \pagestyle{empty}
+   \clearpage
+   \pagestyle{empty}%
+   \@solutiontrue
    \newgeometry{hmargin=1.5cm,vmargin=2cm}%
    \drc@kv@num@else{#1}{\schedule@start@kv{#1}}{\schedule@start@block{#1}}{\schedule@start@time{#1}}%
    \clearpage\aftergroup\restoregeometry % do I really need this?!
@@ -473,40 +485,71 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% DIFFICULTY SYMBOLS
-\newcommand*{\difficulty@symbol}[1]{%
+%% Lambacher-Schweizer style
+\newcommand*{\diff@sym@LS}[1]{%
    \leavevmode
    \begingroup
    \unitlength\fontcharht\font`\A
-   \@picture(1,1)(0,0)
+   \@picture(1,1)(0,0)%
    \linethickness{.8\p@}%
    #1%
    \endpicture
    \endgroup
 }
-\newcommand*{\easysymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}}}}
-\newcommand*{\mediumsymbol}{\difficulty@symbol{\color{gray}\put(.5,.55){\circle{1}}\moveto(0,.55)\curveto(0,-.1)(1,-.1)(1,.55)\closepath\fillpath}}
-\newcommand*{\hardsymbol}{\difficulty@symbol{\put(.5,.55){\color{gray}\circle{1}\circle*{1}}}}
-\newcommand*{\hardersymbol}{\difficulty@symbol{\put(.5,.55){\circle{1}\circle*{1}}}}
+\newcommand*{\easysymbol@LS}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}}}}
+\newcommand*{\mediumsymbol@LS}{\diff@sym@LS{\color{gray}\put(.5,.55){\circle{1}}\moveto(0,.55)\curveto(0,-.1)(1,-.1)(1,.55)\closepath\fillpath}}
+\newcommand*{\hardsymbol@LS}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}\circle*{1}}}}
+\newcommand*{\hardersymbol@LS}{\diff@sym@LS{\put(.5,.55){\circle{1}\circle*{1}}}}
+% Elemente der Mathematik style
+\newcommand*{\diff@sym@EdM}[2]{%
+   \leavevmode
+   \begingroup
+   \unitlength\fontcharht\font`\A
+   \@picture(1,1)(0,0)%
+   \roundcap
+   \linethickness{.2\unitlength}%
+   {#1}{#2}%
+   \endpicture
+   \endgroup
+}
+\newcommand*{\easysymbol@EdM}{\diff@sym@EdM{\color{gray}\Line(.1,.1)(.9,.1)}{\color{lightgray}\Line(.1,.5)(.9,.5)\Line(.1,.9)(.9,.9)}}
+\newcommand*{\mediumsymbol@EdM}{\diff@sym@EdM{\color{gray}\Line(.1,.1)(.9,.1)\Line(.1,.5)(.9,.5)}{\color{lightgray}\Line(.1,.9)(.9,.9)}}
+\newcommand*{\hardsymbol@EdM}{\diff@sym@EdM{\color{gray}\Line(.1,.1)(.9,.1)\Line(.1,.5)(.9,.5)\Line(.1,.9)(.9,.9)}{}}
+\newcommand*{\hardersymbol@EdM}{\diff@sym@EdM{\Line(.1,.1)(.9,.1)\Line(.1,.5)(.9,.5)\Line(.1,.9)(.9,.9)}{}}
+% Fundamente der Mathematik style
+\newcommand*{\easysymbol@FdM}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}}}}
+\newcommand*{\mediumsymbol@FdM}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}\arc*[45,225]{.375}}}}
+\newcommand*{\hardsymbol@FdM}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}\circle*{.75}}}}
+\newcommand*{\hardersymbol@FdM}{\diff@sym@LS{\put(.5,.55){\circle{1}\circle*{.75}}}}
+% Switch between styles
+\newcommand*{\UseDifficultySymbols}[1]{%
+   \expandafter\let\expandafter\easysymbol\csname easysymbol@#1\endcsname
+   \expandafter\let\expandafter\mediumsymbol\csname mediumsymbol@#1\endcsname
+   \expandafter\let\expandafter\hardsymbol\csname hardsymbol@#1\endcsname
+   \expandafter\let\expandafter\hardersymbol\csname hardersymbol@#1\endcsname
+}
+\UseDifficultySymbols{LS}
+% Deadly symbol is my own style :-)
 \newcommand*{\deadlysymbol}{%
    \leavevmode
    \begingroup
    \unitlength1ex
-   \@picture(3.6,1.8)(-1.8,-1)
-   \color{darkgray}
-   \put(1.46,.13){\circle*{.64}}
-   \put(-1.46,.13){\circle*{.64}}
-   \put(1.3,-.79){\circle*{.64}}
-   \put(-1.3,-.79){\circle*{.64}}
-   \linethickness{.5\unitlength}
-   \Line(1.46,.13)(-1.3,-.79)
-   \Line(-1.46,.13)(1.3,-.79)
-   \linethickness{.1\unitlength}
+   \@picture(3.6,1.8)(-1.8,-1)%
+   \color{darkgray}%
+   \put(1.46,.13){\circle*{.64}}%
+   \put(-1.46,.13){\circle*{.64}}%
+   \put(1.3,-.79){\circle*{.64}}%
+   \put(-1.3,-.79){\circle*{.64}}%
+   \linethickness{.5\unitlength}%
+   \Line(1.46,.13)(-1.3,-.79)%
+   \Line(-1.46,.13)(1.3,-.79)%
+   \linethickness{.1\unitlength}%
    \roundjoin
    \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.9)(0,.9)\curveto(1,.9)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\fillpath
-   \color{white}
+   \color{white}%
    \moveto(-.5,-.75)\curveto(-1.2,0)(-1,.9)(0,.9)\curveto(1,.9)(1.2,0)(.5,-.75)\lineto(.4,-1.2)\lineto(-.4,-1.2)\closepath\strokepath
-   \put(.36,0){\circle*{.56}}
-   \put(-.36,0){\circle*{.56}}
+   \put(.36,0){\circle*{.56}}%
+   \put(-.36,0){\circle*{.56}}%
    \endpicture
    \endgroup
 }
@@ -523,6 +566,9 @@
 \newcommand*{\starredexercisename}{Aufgabe}
 \newcommand*{\pointname}{Punkt}
 \newcommand*{\pointsname}{Punkte}
+\newcommand*{\extrapointname}{Bonuspunkt}
+\newcommand*{\extrapointsname}{Bonuspunkte}
+\AtBeginDocument{\def\drc@pointname{\pointname}\def\drc@pointsname{\pointsname}}
 \newcommand*{\shortpointname}{P}
 \newcommand*{\shortpointsname}{P}
 \newcommand*{\starredexercisemark}{*}
@@ -533,7 +579,13 @@
 \let\drcschool@difficulty\@empty
 \let\drcschool@extra\@empty
 \def\drc@ex@name{\exercisename}
-\newcommand*{\reset@exercise@format}{\let\drcschool@difficulty\@empty\let\drcschool@extra\@empty\def\drc@ex@name{\exercisename}}
+\newcommand*{\reset@exercise@format}{%
+   \let\drcschool@difficulty\@empty
+   \let\drcschool@extra\@empty
+   \def\drc@ex@name{\exercisename}%
+   \def\drc@pointname{\pointname}%
+   \def\drc@pointsname{\pointsname}%
+}
 \newcommand*{\exercise}{%
    \ClassError{drcschool}{Lonely \string\exercise}%
               {An \string\exercise\space should appear only within a {test},\MessageBreak a {worksheet} or similar.}%
@@ -563,8 +615,15 @@
 
 % exercise in worksheet
 \newcommand*{\exercise@ws}{%
-   \@ifstar{\def\drc@ex@name{\starredexercisename}\def\drcschool@extra{\starredexercisemark}\exercise@ws@}%
-           {\exercise@ws@}%
+   \@ifstar{%
+      \def\drc@ex@name{\starredexercisename}%
+      \def\drcschool@extra{\starredexercisemark}%
+      \def\drc@pointname{\extrapointname}%
+      \def\drc@pointsname{\extrapointsname}%
+      \exercise@ws@
+     }{%
+      \exercise@ws@
+   }%
 }
 \newcommand*{\exercise@ws@}[1][]{%
    \refstepcounter{exercise}%
@@ -575,8 +634,17 @@
 }
 % exercise in test (similar to exercise in worksheet but increases number of points)
 \newcommand*{\exercise@test}{%
-   \@ifstar{\@tempswafalse\def\drc@ex@name{\starredexercisename}\def\drcschool@extra{\starredexercisemark}\exercise@test@}%
-           {\@tempswatrue\exercise@test@}%
+   \@ifstar{
+      \@tempswafalse
+      \def\drc@ex@name{\starredexercisename}
+      \def\drcschool@extra{\starredexercisemark}
+      \def\drc@pointname{\extrapointname}%
+      \def\drc@pointsname{\extrapointsname}%
+      \exercise@test@
+     }{%
+      \@tempswatrue
+      \exercise@test@
+   }%
 }
 \newcommand*{\exercise@test@}[1][0]{%
    \if@tempswa\drcschool@addto@pts{#1}\fi
@@ -586,7 +654,7 @@
    \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{%
       \drcschool@difficulty
       \drc@ex@name~\theexercise\drcschool@extra\autodot\drc@title@sep
-      \drc@title@L\drcschool@pts@pre\drc@strip@pt\dimen@\drcschool@pts@post\ \ifdim\dimen@=\p@\pointname\else\pointsname\fi\drc@title@R
+      \drc@title@L\drcschool@pts@pre\drc@strip@pt\dimen@\drcschool@pts@post\ \ifdim\dimen@=\p@\drc@pointname\else\drc@pointsname\fi\drc@title@R
    }%
    \reset@exercise@format
 }
@@ -601,6 +669,7 @@
 \newcommand*{\experiment@ws}[1][]{%
    \refstepcounter{experiment}%
    \setcounter{question}{0}% the counter \c@question is reset by \exercise, so I have to do this manually...
+   \gdef\s@luti@n{0}% no solution yet
    \if\relax\detokenize{#1}\relax\def\drc@next{}\else\def\drc@next{\drc@title@L#1\drc@title@R}\fi
    \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{\experimentname~\theexperiment\autodot\drc@title@sep\drc@next}%
 }
@@ -768,7 +837,7 @@
 \newcommand*{\qst@pts}[1][]{%
    \if\relax\detokenize{#1}\relax\else
       \dimen@#1\p@
-      \textbf{(\drc@strip@pt\dimen@~\ifdim\dimen@=\p@\shortpointname\else\shortpointsname\fi)}\space\ignorespaces
+      \textbf{(\drc@strip@pt\dimen@\,\ifdim\dimen@=\p@\shortpointname\else\shortpointsname\fi)}\space\ignorespaces
    \fi
 }
 % horizontal questions, based on a tabular
@@ -794,12 +863,11 @@
 \newcommand*{\stop@horizontal@questions}{%
    \\[\drc@hqst@lastdepth]
    \endtabular
-   \par
-   \xdef\drc@next{\noexpand\prevdepth\the\prevdepth}%
+   \saveprevdepth
    \egroup
    \par\noindent
    \box\drc@box
-   \par\drc@next
+   \useprevdepth
 }
 \newenvironment{questions*}[2][]{%
    \def\question{\leavevmode\refstepcounter{question}\h@question{#2}}%
@@ -978,13 +1046,13 @@
 \newenvironment{TF}[1][\linewidth]{%
    \def\true{&\radiobutton*&\radiobutton\\}%
    \def\false{&\radiobutton&\radiobutton*\\}%
-   \par\medskip\noindent
+   \noindent
    \renewcommand*{\tabularxcolumn}[1]{b{##1}}% local redefinition
    \tabularx{#1}{X*{2}{>{\centering\arraybackslash}b{3em}}}%
    \toprule
     & wahr & falsch \\
    \midrule[\heavyrulewidth]
- }{\bottomrule\endtabularx\par\medskip\@endparenv}
+ }{\bottomrule\endtabularx}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1154,6 +1222,7 @@
 \newcommand*{\worksheetname}{Arbeitsblatt}
 \newcommand*{\drc@reset@counters}{%
    \setcounter{exercise}{0}%
+   \setcounter{question}{0}% for {questions} without \exercise, e.g. in {printX+}
    \setcounter{experiment}{0}%
    \setcounter{figure}{0}%
    \setcounter{table}{0}%
@@ -1298,7 +1367,7 @@
 
 \newcommand*{\drcschool@print@setup}[2]{% #1 = keys, #2 = number of copies on same page
    \let\ws@title\@empty
-   \cleardoublepage
+   \clearpage
    \stepcounter{worksheet}%
    \drc@reset@counters
    \let\exercise\exercise@ws
@@ -1357,7 +1426,7 @@
 
 % prints on the same page the content once with and once without solution
 \NewEnviron{print2-}{%
-   \cleardoublepage
+   \clearpage
    \thispagestyle{empty}%
    \drc@reset@counters
    \let\exercise\exercise@ws
@@ -1399,7 +1468,7 @@
 
 %% SIMILAR, FOR STUFF TO BE PRINTED FOUR TIMES; NO \exercise available (probably I'll use it for small pictures)
 \newenvironment{print4}{%
-   \cleardoublepage
+   \clearpage
    \stepcounter{worksheet}%
    \thispagestyle{empty}%
    \newgeometry{margin=1cm}%
@@ -1415,7 +1484,7 @@
 }
 
 \NewEnviron{print4+}{%
-   \cleardoublepage
+   \clearpage
    \stepcounter{worksheet}%
    \thispagestyle{empty}%
    \newgeometry{margin=1cm}%
@@ -1518,7 +1587,17 @@
       \@hangfrom{\space\textbullet\space}%
    \else
       \hangindent2em
-      \noindent\textbf{#1}\space\ignorespaces
+      \noindent\textbf{#1}\space
+   \fi
+   \ignorespaces
+}
+\newcommand*{\hangfrom}[2][]{%
+   \par
+   \if\relax\detokenize\expandafter{\@gobble#1?}\relax
+      \@hangfrom{{#2}\space}%
+   \else
+      \hangindent#1
+      \noindent{#2}\space
    \fi
    \ignorespaces
 }
@@ -1541,7 +1620,7 @@
       \@xp\TA@macro
    \fi
 }
-\newcommand{\TA@macro}[2][]{\TA@start[#1]#2\TA@stop}
+\newcommand{\TA@macro}[2][]{\TA@start[#1]#2\TA@stop\leftbar@TA}
 \newcommand*{\TAtitlefont}{\scshape\itshape}
 \newbox\drc@TAbox
 \newcommand*{\TA@start}[1][]{%
@@ -1605,12 +1684,12 @@
 \define@key{drc@test}{class*}{\def\class@exam{#1}}
 \define@key{drc@test}{type}{\gdef\@test@type{#1}}
 \define@key{drc@test}{date}{\gdef\@date{#1}}
-\define@key{drc@test}{schoolyear}{\gdef\drcschool@year{#1}}
+\define@key{drc@test}{schoolyear}{\def\drcschool@year{#1}}
 \define@key{drc@test}{background}[gray]{\addbackgroundgrid[#1]}
 \define@key{drc@test}{bg}[gray]{\addbackgroundgrid[#1]}
-\define@key{drc@test}{v}{\gdef\drcschool@text@v{#1}}
-\define@key{drc@test}{version}{\gdef\drcschool@text@v{#1}}
-\define@key{drc@test}{variant}{\gdef\drcschool@text@v{#1}}
+\define@key{drc@test}{v}{\def\drcschool@text@v{#1}}
+\define@key{drc@test}{version}{\def\drcschool@text@v{#1}}
+\define@key{drc@test}{variant}{\def\drcschool@text@v{#1}}
 \define@key{drc@test}{ptspre}{\def\drcschool@pts@pre{#1}}
 \define@key{drc@test}{prepts}{\def\drcschool@pts@pre{#1}}
 \define@key{drc@test}{ptspost}{\def\drcschool@pts@post{#1}}
@@ -1676,7 +1755,7 @@
    % then the solution
    \@solutiontrue
    \drc@set@fakepage
-%   \pagestyle{scrheadings}%
+   \pagestyle{scrheadings}%
    \ifoot{Schuljahr \drcschool@year\ --- \test@nr. \@test@type\ \drcschool@subject\ --- \ifdefined\drcschool@text@v\drcschool@text@v\ ---\ \fi \classname\space\@class}%
 %   \ofoot[]{\thepage}%
    \thispagestyle{empty}%
@@ -1700,26 +1779,21 @@
    \let\exercise\exercise@test
    \let\lonelyquestion\lonelyquestion@
    \drc@set@fakepage
-   \pagestyle{empty}%
    \drc@reset@counters
    \if@solution
       \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%
+      \thispagestyle{empty}%
       \ifoot{Schuljahr \drcschool@year\ --- \test@nr. \@test@type\ \drcschool@subject\ --- \ifdefined\drcschool@text@v\drcschool@text@v\ ---\ \fi \classname\space\@class}%
    \else
       \drc@pdfbookmark[1]{\test@nr. \@test@type\ \drcschool@subject\ifdefined\drcschool@text@v\ -- \drcschool@text@v\fi}{KA.\the\c@worksheet.T}%
+      \pagestyle{empty}%
    \fi
    \drc@print@test@headline
   }{%
-   \cleardoublepage
-   \immediate\write\@auxout{\global\string\@namedef{drcschool@test\the\c@worksheet @pts}{\drc@strip@pt\drcschool@pts}}%
    \clearpage
+   \immediate\write\@auxout{\global\string\@namedef{drcschool@test\the\c@worksheet @pts}{\drc@strip@pt\drcschool@pts}}%
    \removebackgroundgrid
 }
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1890,7 +1964,49 @@
    }%
 }
 
+\newcommand*{\markcoords}[1][]{\drc@mark@coords#1}
+\def\drc@mark@coords{\drc@mark@coordsII}
+\def\drc@mark@coordsII#1(#2,#3){\draw[dashed,#1](0,0)--(#2,0)--(#2,#3)}
+\def\drc@mark@coordsIII#1(#2,#3,#4){\draw[dashed,#1](0,0,0)--(#2,0,0)--(#2,#3,0)--(#2,#3,#4)}
+
+\newcommand*{\markpoint}[1][]{\drc@mark@point#1}
+\def\drc@mark@point{\drc@mark@pointII}
+\def\drc@mark@pointII#1(#2,#3){\draw[thick,#1](#2,#3)edge++(.06,.06)edge++(.06,-.06)edge++(-.06,-.06)edge++(-.06,.06)}
+\def\drc@mark@pointIII#1(#2,#3,#4){\draw[thick,#1](#2,#3,#4)edge++(0,.06,.06)edge++(0,.06,-.06)edge++(0,-.06,-.06)edge++(0,-.06,.06)}
+
+\newenvironment{3daxes}[1][]{\thr@@Daxes#1}{\endscope\endtikzpicture}
+\def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
+   \@tempdima#2\p@
+   \@tempdima-.5\@tempdima
+   \@tempdimb#5\p@
+   \@tempdimc#7\p@
+   \edef\thr@@Dxmax{\ifdim\@tempdima<\@tempdimb#5\else.5*#2\fi}%
+   \edef\thr@@Dymax{\ifdim\@tempdima<\@tempdimc#7\else.5*#2\fi}%
+   \@tempdima#3\p@
+   \@tempdima.5\@tempdima
+   \@tempdimb-#4\p@
+   \@tempdimc-#6\p@
+   \edef\thr@@Dxmin{\ifdim\@tempdima<\@tempdimb#4\else-.5*#3\fi}%
+   \edef\thr@@Dymin{\ifdim\@tempdima<\@tempdimc#6\else-.5*#3\fi}%
+   \def\drc@mark@coords{\drc@mark@coordsIII}%
+   \def\drc@mark@point{\drc@mark@pointIII}%
+   \tikzpicture[#1]
+   \draw[help lines,step=.5](\thr@@Dxmin-.1,\thr@@Dymin-.1)grid(\thr@@Dxmax+.1,\thr@@Dymax+.1);
+   \scope[x={(-.5cm,-.5cm)},y={(1cm,0cm)},z={(0cm,1cm)}]
+   \draw[->](#2-.3,0,0)--(#3+.3,0,0)node[above left]{$x_1$};
+   \draw[->](0,#4-.2,0)--(0,#5+.2,0)node[below]{$x_2$};
+   \draw[->](0,0,#6-.2)--(0,0,#7+.2)node[left]{$x_3$};
+   \foreach\x in {#2,...,-1}\draw[thick](\x,0,-.06)--(\x,0,.06);
+   \foreach\x in {1,...,#3} \draw[thick](\x,0,-.06)--(\x,0,.06);
+   \foreach\x in {#4,...,-1}\draw[thick](0,\x,-.06)--(0,\x,.06);
+   \foreach\x in {1,...,#5} \draw[thick](0,\x,-.06)--(0,\x,.06);
+   \foreach\x in {#6,...,-1}\draw[thick](0,-.06,\x)--(0,.06,\x);
+   \foreach\x in {1,...,#7} \draw[thick](0,-.06,\x)--(0,.06,\x);
+}
+
 \if@drctikz\else
+   \expandafter\def\csname 3daxes\endcsname{\ClassError{drcschool}{Environment {3daxes} unavailable without tikz}{Remove the `notikz' option.}}
+   \expandafter\def\csname end3daxes\endcsname{\relax}
    \long\def\drc@grid@#1(#2,#3)#4{\ClassError{drcschool}{\string\grid\space unavailable without tikz}{Remove the `notikz' option.}}
    \long\def\drc@lines@#1(#2,#3)#4{\ClassError{drcschool}{\string\lines\space unavailable without tikz}{Remove the `notikz' option.}}
 \fi
@@ -1949,7 +2065,7 @@
    \setbox\@arstrutbox\hbox{\vrule\@height1.2\drc@gdimb\@depth1.2\drc@gdimc\@width\z@}%
    \vcenter{\hbox{%
      \vbox{\ialign{\@arstrut\hbox to\drc@gdima{\hfil$##$\hfil}\cr
-           \cr\noalign{\hrule\@height.7\p@}\@tempa\cr\noalign{\hrule}\bar\@tempa\cr\noalign{\hrule\@height.7\p@}\strut\crcr}}%
+           \cr\noalign{\hrule\@height.7\p@}\@tempa\cr\noalign{\hrule}\ifx\@tempa\@empty\else\bar\@tempa\fi\cr\noalign{\hrule\@height.7\p@}\strut\crcr}}%
      \vbox{%
         \def\\{\drc@CT@cr}%
         \ialign{%

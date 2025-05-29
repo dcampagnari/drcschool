@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2025-05-29 [v1.5.0]
+### Added
+- Macros `\hangfrom`, `\markpoint` and `\markcoords`.
+- Environment `{3daxes}`.
+- The switch `\if@solution` is set to true within a `{schedule}`
+  environment, such that `\checkbox*` can be used there.
+- Names `\extrapointname` and `\extrapointsname` for starred exercises added.
+- Difficulty symbols in Westermann and Cornelsen style.
+### Changed
+- Until now, the macros `\content`, `\goal` & Co. within a `{schedule}`
+  environment could be used more than once per block: each use overwrote
+  the preceding content. This was never meant to be but I've always relied
+  on users not doing it. However, the internal behaviour has been now changed,
+  and using the macros twice before `\newblock` leads to an error.
+- The environment `{TF}` always started a new paragraph. This is not
+  necessarily desired if one wants to put two such tables besides each other.
+- Many `\cleardoublepage`s have been replaced by `\cleapage`. An empty
+  page can be easily inserted by hand, while it is impossible to remove an
+  already shipped out one.
+### Fixed
+- A couple of assignments in `{test}` were global. I think I had reason
+  for that but I cannot remember it.
+- The lesson subtitle was not reset if `\lesson` was used without
+  optional argument.
+- The internal check for the presence of a solution wasn't reset by
+  `\experiment`.
+- The counter `\c@question` is reset by `\c@exercise`. However, in certain
+  situations (e.g. using `{questions}` without `\exercise`) the counter
+  must be reset manually. This was missing in `\drc@reset@counters`.
+- Page style was set to `empty` everywhere in tests, though I did want
+  page numbers in the version with solution.
+- A `\relax` was missing in `\class`, so that an error was raised if something
+  like `\class{9}` instead of `\class{9b}` was used.
+
 ## 2024-11-08 [v1.4.0]
 ### Added
 - Macro `\warningsymbol`.
@@ -420,6 +454,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v1.4.1]: https://github.com/dcampagnari/drcschool/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/dcampagnari/drcschool/compare/v1.3.3...v1.4.0
 [v1.3.3]: https://github.com/dcampagnari/drcschool/compare/v1.3.2...v1.3.3
 [v1.3.2]: https://github.com/dcampagnari/drcschool/compare/v1.3.1...v1.3.2

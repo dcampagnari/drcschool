@@ -63,7 +63,7 @@
 \end{center}
 Mehr als eine Dokumentation ist dies eine Sammlung von Beispielen, die
 (hoffentlich) alle wesentlichen Fähigkeiten der Klasse \pkg{drcschool} zeigen.
-Sie sind allerdings nicht vollständig und es gibt in der Tat einige Features,
+Sie ist allerdings nicht vollständig und es gibt in der Tat einige Features,
 die hier nicht beschrieben werden. Der Grund dafür ist, dass sie meiner Meinung
 nach noch nicht ganz reif sind und ich sie daher als noch nicht ,,offiziell``
 betrachte. Wer durch den Code gehen will, um diese zu entdecken, soll gewarnt
@@ -112,7 +112,7 @@ Es gibt einige wenige eigene Optionen:
    Schriften besser finden. (Zugegeben, für Kinder \emph{ohne} LRS ist es andersrum\ldots)
    Soll jemand meine Standardeinstellung nicht mögen,\footnote{%
       ,,\texttt{drc}`` ist eine Abkürzung für meinen Namen (,,\texttt{r}`` steht hierbei
-      für meinen zweiten Vornamen, nicht für den Doktortitel --- auf se einem Egotrip bin ich nicht\ldots).
+      für meinen zweiten Vornamen, nicht für den Doktortitel --- auf so einem Egotrip bin ich nicht\ldots).
       Also ja, ich gestalte die Klasse so, dass sie \emph{mir} gefällt.
       Dass andere sie nützlich finden, ist nur ein netter Nebeneffekt~\texttt{;-)}}
    so kann die Klasse mit der Option \opt{nofonts} geladen werden; daraufhin kann jede/r
@@ -126,7 +126,7 @@ Es gibt einige wenige eigene Optionen:
 \item[\opt{hyperworksheet}] Aktiviert die Umgebung für ausfüllbare PDF-Dateien (s.~Abschnitt~\ref{sec:hy}).
 \end{compactdesc}
 
-\section{Abhängigkeiten}
+\section{Geladene Pakete}
 Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\medskip\noindent
 \begin{compactdesc}
 \item[Schriften] \pkg{fontenc} mit Option \opt{T1}, \pkg{microtype}, \pkg{tgheros} und \pkg{newtxsf}.
@@ -147,9 +147,10 @@ Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\med
 \item[Verschiedenes] \pkg{amsgen}, \pkg{environ}\footnote{%
    Seit 2018 bietet \pkg{xparse} ein \opt{b}-Argument für Umgebungen, die den gesamten Inhalt
    sammeln sollen; seit 2020 ist \pkg{xparse} außerdem im \LaTeX-Kernel integriert. Da aber
-   auf meinem Büro-Rechner noch TeX Live~2017 läuft, muss ich bei \pkg{environ} bleiben.},
+   auf meinem Büro-Rechner noch TeX Live~2017 läuft, muss ich vorerst bei \pkg{environ} bleiben.
+   Und es ist schneller.},
    \pkg{paralist}, \pkg{icomma}, \pkg{tikz},\footnote{Es sei denn, die Klasse wurde mit der Option \opt{notikz} geladen.}
-    \pkg{pgfplots}.\footnote{Es sei denn, die Klasse wurde mit der Option \opt{nopgfplots} oder \opt{notikz} geladen.}
+   \pkg{pgfplots}.\footnote{Es sei denn, die Klasse wurde mit der Option \opt{nopgfplots} oder \opt{notikz} geladen.}
 \end{compactdesc}
 Die Verwendung von \pkg{geometry} mit einer \KOMAScript-Klasse ist etwas
 ungewöhnlich, war aber aus \TeX nischen Gründen nötig. Dies bedeutet allerdings,
@@ -165,7 +166,7 @@ Dies ist \emph{sehr schlechter} \TeX-Stil,
 ist aber aus ,,geschichtlichen`` Gründen gewachsen: Diese Klasse ist während ihrer Nutzung
 entstanden und daher haben sich einige im Feuer des Gefechtes getroffenen
 Erstentscheidungen als ungünstig erwiesen. Aus Kompatibilitätsgründen habe
-ich allerdings einige dieser Entscheidungen ,,retten`` müssen. Ich werde
+ich allerdings einige dieser Entscheidungen ,,retten`` wollen. Ich werde
 hier und dort beschreiben, was die ,,bessere`` Variante ist, aber auch die andere(n)
 der Vollständigkeit halber angeben.
 \end{description}
@@ -210,7 +211,8 @@ getrennt. Hier kommt ein etwas größeres Beispiel:
    \cs{content} ist irrelevant. Man kann selbstverständlich auch welche auslassen. (Außer
    \cs{time}, denke ich. Ich habe es ehrlich gesagt nie ausprobiert, weil es sowieso
    sinnlos ist \texttt{;-)})
-   Das Makro \cs{newblock} trennt die verschiedenen Unterrichtsphasen.}
+   Das Makro \cs{newblock} trennt die verschiedenen Unterrichtsphasen.
+   Verwendet man einen der Befehle mehrmals in einem Block, bekommt man einen Fehler.}
 \time{5}
 \material{Foo}
 \method{Baz}
@@ -227,12 +229,14 @@ getrennt. Hier kommt ein etwas größeres Beispiel:
    (default\cs{scshape}\cs{itshape}).
    \end{TA}
    \V für Versuchsbeschreibung und \B für Beobachtung.\\
-   Aus historischen Gründen ist es möglich, den Tafelanschrieb als \emph{Makro} mit
-   einem optionalen und einem obligatorischen Argumenten anzugeben, d.h.\
-   \cs{TA[Überschrift]\{Irgendein Text...\}} erzeugt
-   \TA[Überschrift]{Irgendein Text, der nur da ist, um etwas Platz zu nehmen, um zu zeigen, wie sich das
-   Ganze verhält, aber ohne einen besonderen tiefen Sinn. Nur Platzhalter halt.}
-   Das ist \emph{sehr schlechter} \TeX-Stil aber es funktioniert\ldots
+   Fülltext, der keine besondere Bedeutung hat, außer dass ich ein paar Zeilen
+   damit füllen kann, so dass man sieht, wie es weitergeht.
+%   Aus historischen Gründen ist es möglich, den Tafelanschrieb als \emph{Makro} mit
+%   einem optionalen und einem obligatorischen Argumenten anzugeben, d.h.\
+%   \cs{TA[Überschrift]\{Irgendein Text...\}} erzeugt
+%   \TA[Überschrift]{Irgendein Text, der nur da ist, um etwas Platz zu nehmen, um zu zeigen, wie sich das
+%   Ganze verhält, aber ohne einen besonderen tiefen Sinn. Nur Platzhalter halt.}
+%   Das ist \emph{sehr schlechter} \TeX-Stil aber es funktioniert\ldots
 }
 \material{}
 \method{}
@@ -286,7 +290,7 @@ getrennt. Hier kommt ein etwas größeres Beispiel:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Zu Beginn der \env{schedule} Umgebung wird erst eine neue Seite gestartet, der Satzspiegel
+Zu Beginn einer \env{schedule} Umgebung wird erst eine neue Seite gestartet, der Satzspiegel
 etwas vergrößert, und eine Überschrift in der Form \emph{Klasse --- Titel --- Untertitel}
 gedruckt. Diese Inhalte wurden in der Präambel folgendermaßen deklariert:
 \begin{verbatim}
@@ -340,11 +344,11 @@ wenn man eine Einzelstunde will, die um 8 Uhr startet. Mit der Angabe \opt{title
 wird die Kopfzeile nicht gedruckt. (Default ist \opt{true}.) Natürlich ist es sinnlos,
 sowohl \opt{block=...} als auch \opt{start=...} anzugeben: das letzte gewinnt.
 \end{itemize}
-Der Defaultwert des optionalen Argumenten ist \opt{1234}, d.h.~wenn gar kein
-optionales Argument angegeben wird, so bekommt man den Stundenverlauf viermal
-gedruckt (einmal pro Block).
+Der Defaultwert des optionalen Argumenten ist \opt{0}, d.h.~wenn gar kein
+optionales Argument angegeben wird, so bekommt man den Stundenverlauf mit
+Start um \opt{0:00}.
 
-\subsection{Neue Stile für die Stundenplanung definieren \texorpdfstring{\colorbox{green!30!white}}{}{(NEU! v1.0.0)}}
+\subsection{Neue Stile für die Stundenplanung definieren}
 Wie im obigen Beispiel gezeigt, stehen innerhalb\footnote{%
    Und zwar \emph{nur} innerhalb. Außerhalb ist \cs{time} die bekannte \TeX\
    Primitive und alle anderen Makros sind nicht definiert.
@@ -409,7 +413,8 @@ ohne dass eine neue Tabellenzeile gestartet wird (mit dem Chaos, das dabei
 entstehen würde), und das Makro \cs{time} bekommt wieder seine ursprüngliche
 Definition.
 
-Man kann somit z.B.~einen anderen Stil, sagen wir \opt{simple}, definieren:
+Man kann somit z.B.~einen anderen Stil definieren. Zum Beispiel definiert die
+Klasse neben dem Stil \opt{default} den Stil \opt{simple} folgendermaßen:
 \begin{verbatim}
    \NewScheduleStyle{simple}{%
       \DeclareColumn[\def\\{\newline}\let\time\TeXtime]{\content}{Inhalt}{8}%
@@ -436,11 +441,6 @@ schreibt. Alternativ kann man im optionalen Argumenten der Umgebung \env{schedul
     \end{schedule*}
 \end{verbatim}
 das folgende Ergebnis:
-\NewScheduleStyle{simple}{%
-   \DeclareColumn[\def\\{\newline}\let\time\TeXtime]%
-       {\content}{Inhalt}{8}%
-   \DeclareColumn{\notes}{Anmerkungen}{3}%
-}
 \begin{schedule*}[style=simple,start=8:00,title=false]
 \time{45}
 \content{Irgendwas}
@@ -477,20 +477,22 @@ Mit
 macht man eine Kopie eines existierenden Stils, der dann geändert werden kann.
 
 \subsection{Uhrzeiten}
-Die Uhrzeiten der Blöcke sind zuerst festgelegt auf 07:50, 09:40, 11:25 und~14:00
-(die Uhrzeiten meiner Schule halt\ldots), und die Dauer eines Unterrichtblocks ist
-wie schon gesagt auf 90~Minuten initialisiert. Wie bereits beschrieben, können die Startzeit
-und die Unterrichtsdauer einer einzelnen Umgebung \env{schedule} mit den Optionen \opt{start=...}
-und \opt{duration=...} geändert werden. Die Startzeiten der Blöcke können im Allgemeinen
-mit Hilfe von \cs{SetBlockStart} festgelegt werden. Vordefiniert sind
+Wie bereits beschrieben, können die Startzeit und die Unterrichtsdauer
+einer einzelnen Umgebung \env{schedule} mit den Optionen \opt{start=...}
+und \opt{duration=...} geändert werden. Die Startzeiten der Unterrichtsblöcke
+und deren Dauer können im Allgemeinen mit Hilfe von \cs{SetBlockStart}
+festgelegt werden. Vordefiniert sind:
 \begin{verbatim}
-    \SetBlockStart{1}{07:50}
-    \SetBlockStart{2}{09:40}
-    \SetBlockStart{3}{11:25}
-    \SetBlockStart{4}{14:00}
-    \SetBlockStart{5}{15:40}
+    \SetBlockStart[95]{1}{07:40}
+    \SetBlockStart{2}{09:35}
+    \SetBlockStart[95]{3}{11:2}
+    \SetBlockStart{4}{13:50}
+    \SetBlockStart[95]{5}{15:35}
 \end{verbatim}
-und die kann man natürlich nach Belieben umdefinieren.
+(Die Uhrzeiten meiner Schule halt\ldots) Das optionale Argument legt die
+Standarddauer des Blocks fest, was sich vom Argumenten von \cs{SetDuration}
+unterscheiden kann. In meinem Fall, der erste, dritte und fünfte Block haben
+bereits eine kleine Pause einprogrammiert und daher eine Dauer von 95~Minuten.
 
 \section{Individuelle Anpassungen speichern}\label{sec:anpassungen}
 Es ist mir klar, dass jede Schule andere Uhrzeiten hat; und es ist mir auch klar,
@@ -597,7 +599,7 @@ der Klasse erstellt werden können:
       Seite drücken.
 \item Es folgen dann Beispiele der Umgebung \env{cluecards}, mit der man z.B.~Lösungskärtchen drucken kann.
 \item Zum Schluss kommt ein Beispiel für die Umgebung \env{test} für Tests/Klassenarbeiten.
-      Die ist weitgehend ähnlich zu einem Arbeitsblatt aber mit der Möglichkeiten,
+      Die ist weitgehend ähnlich zu einem Arbeitsblatt aber mit der Möglichkeit,
       Punktzahlen anzugeben.
 \end{itemize}
 
@@ -627,7 +629,7 @@ sein. Mögliche Optionen sind:
 \item[\opt{fontsize=\param{Schriftgröße}}] ändert die Schriftgröße im Arbeitsblatt;
 \item[\opt{geometry=\param{Optionen}}] gibt die \param{Optionen} an das \pkg{geometry} Paket weiter.
 \end{compactdesc}
-(Ein \param{Ein-Aus-Wert} ist wie gewohnt \opt{true}/\opt{yes}/\opt{on} oder \opt{false}/\opt{no}/\opt{off}.)
+Ein \param{Ein-Aus-Wert} ist \opt{true}/\opt{yes}/\opt{on}/\opt{show} oder \opt{false}/\opt{no}/\opt{off}/\opt{hide}.
 Im Grunde ist also
 \bcode
 \\begin\{worksheet\}[Titel des Arbeitsblatts]
@@ -711,8 +713,8 @@ und was auf Deutsch ,,Multiple-Choice`` ist, heißt auf Englisch
 Entsprechend ihrer gemeinten Nutzung geben beide Umgebungen eine Warnung,
 wenn eine Frage keine als richtig markierte Antwort hat. Die Umgebung \env{multchoice}
 gibt darüber hinaus eine Warnung, wenn eine Frage mehr als eine richtige Antwort
-hat. Beide Umgebungen verwenden immer denselben Zähler wie auch die Umgebungen
-\env{questions} und \env{questions*}, und können daher zusammen in einer Aufgabe
+hat. Beide Umgebungen verwenden denselben Zähler wie auch die Umgebung
+\env{questions} und können daher zusammen in einer Aufgabe
 verwendet werden. (Ob das sinnvoll ist, ist eine andere Geschichte\ldots)
 
 Die Umgebung \env{multchoice} verwendet Radiobuttons
@@ -755,7 +757,6 @@ einen Leerraum lassen: Man vergleiche
 
 \begin{worksheet}[Horizontale Auflistungen und Wahr-Falsch-Tabellen]
 
-In Mathe-Büchern werden üblicherweise Teilaufgaben horizontal aufgelistet. Ankreuzaufgaben
 In Mathe-Büchern werden Teilaufgaben üblicherweise horizontal aufgelistet.
 Ankreuzaufgaben mit relativ kurzen Texten könnten auch platzsparender auf
 Spalten verteilt werden. Zu diesem Zwecke gibt es jeweils eine Sternform
@@ -874,15 +875,17 @@ so kriegt man
 \question $\dfrac{48}{12}$
 \question $\dfrac{48}{12}$
 \end{questions*}
-was etwas besser aussieht. Es gibt natürlich keine allgemeine Regel, welche
-Kombination aus Längen und Streckfaktor am Besten aussieht. Da muss man leider
-etwas herumprobieren.
+was etwas besser aussieht. Es gibt natürlich keine allgemeine Regel darüber,
+welche Kombination aus Längen und Streckfaktor optimal ist.\footnote{Bzw.~mir
+ist keine bekannt. Ich nehme Hinweise sehr gerne entgegen.}
+Da muss man leider etwas herumprobieren.
 
 \exercise[Wahr-Falsch-Tabelle]
 Eine wahr/falsch Tabelle wird mittels der Umgebung \env{TF} erzeugt: Dies ist im Grunde
 eine \env{tabularx}, und jede Aussage muss mit \cs{true} oder \cs{false} beendet werden.
 Neue Zeilen werden automatisch hinzugefügt (es sind also keine \cs{\textbackslash} nötig),
 horizontale Linien (mit \cs{hline} oder \cs{midrule}) sind nach Geschmack natürlich möglich.
+\begin{center}
 \begin{TF}
 Aussage 1 \true
 \midrule
@@ -892,9 +895,12 @@ Aussage 3 \false
 \midrule
 Aussage 4 \true
 \end{TF}
+\end{center}
 Natürlich kann man die ganzen \cs{midrule}s (oder \cs{hline}s, wenn man will) weglassen,
 wenn man sie nicht will\ldots\ Die Gesamtbreite der Tabelle kann als optionaler Parameter
 angegeben werden (default \texttt{\textbackslash linewidth}):
+
+\noindent
 \begin{TF}[.35\linewidth]
 Aussage A \true
 Aussage B \false
@@ -905,7 +911,12 @@ Aussage B \false
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[Schwierigkeitssymbole und sonstige Teilaufgaben]
+\begin{worksheet*}[title={Schwierigkeitssymbole und sonstige Teilaufgaben},solution=true]
+
+Die Sternform \env{worksheet*} macht das Gleiche wie \env{worksheet}, druckt aber ihren
+Inhalt nur \emph{einmal}, entweder mit oder ohne Lösung. Dazu nimmt sie eine weitere
+Option \opt{solution=}\param{Ein-Aus-Wert}. Alle andere Keys von \env{worksheet} werden
+ebenso akzeptiert.
 
 \easy\exercise
 Eine einfache Aufgabe kriegt man mit \cs{easy}\cs{exercise}.
@@ -921,31 +932,39 @@ nachempfunden.
 
 \harder\exercise[Noch härter]
 Nicht im Lambacher-Schweizer aber trotzdem da: noch schwierigere Aufgaben
-können mit Hilfe von \cs{harder}\cs{exercise} erstellt werden. Und ja, es
-gibt auch (eher zum Spaß)\ldots
+können mit Hilfe von \cs{harder}\cs{exercise} erstellt werden.
 
-\deadly\exercise
-\ldots\ auch \cs{deadly}\cs{exercise} \texttt{;-)}
-
-\exercisesymbol{$\heartsuit\varheartsuit\heartsuit$}
-\exercise[Putzig, gell?]
-Mit dem Makro \cs{exercisesymbol\{...\}} kann man einen beliebigen Inhalt neben
-der Überschrift. Das betrifft allerdings nur die unmittelbar darauf{}folgende Aufgabe.
-\begin{solution}
-Bitte beachten: Die Makros \cs{easy}, \ldots, \cs{deadly} dürfen \emph{nur}
+Die Makros \cs{easy}, \ldots dürfen \emph{nur}
 vor dem Befehl \cs{exercise} verwendet werden. Der Code
 \bcode
    \\hard\\SomeOtherMacro
 \ecode
 erzeugt einen Fehler.
-Will man die Symbole irgendwo haben, so gibt es dafür die Befehle
-\cs{easysymbol} (\easysymbol), \cs{mediumsymbol} (\mediumsymbol), \cs{hardsymbol} (\hardsymbol),
-\cs{hardersymbol} (\hardersymbol), \cs{deadlysymbol} (\deadlysymbol).
+
+Die Symbole können auch i.A.~verwendet werden, und es gibt andere Stile,
+die mit dem Makro \cs{UseDifficultySymbols\{\param{Stil}\}} gewählt werden können:
+\begin{center}
+\begin{tabular}{lcccc}
+Stil & \cs{easysymbol}&\cs{mediumsymbol}&\cs{hardsymbol}&\cs{hardersymbol}\\
+\midrule
+\opt{LS} (default)  & \easysymbol & \mediumsymbol & \hardsymbol & \hardersymbol \\
+\opt{EdM} & \UseDifficultySymbols{EdM}\easysymbol & \UseDifficultySymbols{EdM}\mediumsymbol & \UseDifficultySymbols{EdM}\hardsymbol & \UseDifficultySymbols{EdM}\hardersymbol \\
+\opt{FdM} & \UseDifficultySymbols{FdM}\easysymbol & \UseDifficultySymbols{FdM}\mediumsymbol & \UseDifficultySymbols{FdM}\hardsymbol & \UseDifficultySymbols{FdM}\hardersymbol
+\end{tabular}
+\end{center}
 Aus Kompatibilitätsgründen gibt es noch das Makro \cs{difficulty\{\param{Zahl}\}},
 das eine Zahl von~0 bis~4 annimmt.
-\end{solution}
+Und ja, es gibt auch (eher zum Spaß)\ldots
 
-\exercise[,,Die bereitgestellten Features sing gut, aber\ldots]
+\deadly\exercise
+\ldots\ auch \cs{deadly}\cs{exercise} \texttt{;-)} Das Symbol \cs{deadlysymbol} \deadlysymbol\ bleibt gleich in allen Stilen.
+
+\exercisesymbol{$\heartsuit\varheartsuit\heartsuit$}
+\exercise[Putzig, gell?]
+Mit dem Makro \cs{exercisesymbol\{...\}} kann man einen beliebigen Inhalt neben
+der Überschrift. Das betrifft allerdings nur die unmittelbar darauf{}folgende Aufgabe.
+
+\exercise[,,Die bereitgestellten Features sind gut, aber\ldots]
 \ldots\ aber ich möchte eine Frage haben, die nicht in \env{questions} \& Co.\ auftaucht``.
 
 Gut, das kann ich sogar verstehen. Das Makro \cs{question} funktioniert nur in
@@ -972,12 +991,15 @@ Argument kann man eine explizite Länge angeben: \cs{runinexercises}\oarg{\param
 Konfigurationsdatei verwendet werden. ,,Normale`` (,,hanging``) Überschriften
 bekommt man wieder mit \cs{hangexercises}\oarg{\param{Länge}} (default \texttt{.2ex plus.2ex minus.2ex}).
 
-\end{worksheet}
+Da ich das Symbol immer wieder brauche, steht \cs{warningsymbol} (\warningsymbol)
+zur Verfügung. Das kommt aus \texttt{fontawesome} aber das Paket wird nicht geladen.
+
+\end{worksheet*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[Lückentexte und Zusatzaufgaben]
+\begin{worksheet*}[title={Lückentexte und Zusatzaufgaben},solution=true]
 
 \exercise[Einfache Lückentexte]
 Platz für Lückentexte wird mit dem Makro \cs{fillhere} eingeführt: \fillhere{ein Wort}.
@@ -1104,12 +1126,12 @@ wird die nächste Zusatzaufgabe so aussehen:
 \cs{exercisename}. Beide sind zuerst auf ,,Aufgabe`` initialisiert. Ähnlich gibt
 es ein Makro \cs{solutionname}, das auf ,,Lösung`` initialisiert wird.
 
-\end{worksheet}
+\end{worksheet*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[Verschiedenes]
+\begin{worksheet*}[title={Verschiedenes},solution=true]
 
 \exercisesymbol{\onlytikz}
 \exercise[Zuordnug-Quizzen]
@@ -1193,19 +1215,19 @@ lll & ccc & rrr & LL=LL & CC=CC & RR=RR & Lösung hier                & a^b     
 \bottomrule
 \end{tabular}
 
-\exercise[Arbeitsblatt entweder mit oder ohne Lösung]
-Es gibt auch eine Sternform \env{worksheet*}, die alle Key-Value-Optionen
-annimmt, die für \env{worksheet} definiert sind, plus eine weitere: das Blatt
-wird nur einmal gedruckt, entweder mit oder ohne Lösung, was mit der Option
-\begin{compactdesc}
-\item[\opt{solution=\param{Ein-Aus-Wert}}]
-\end{compactdesc}
-gesteuert wird. Standardmäßig wird \emph{keine} Lösung gezeigt.
-Ich verwende das z.B.~wenn ich einfach einen längeren Text austeilen will.
-Freilich, dafür bräuchte man keine besondere Umgebung und man könnte einfach in
-der \opt{.tex}-Datei den Text aufschreiben. Genau so wie \env{worksheet} bietet
-\env{worksheet*} allerdings die Möglichkeit an, Titel/Name/Datum/Schriftgröße
-festzulegen.
+%\exercise[Arbeitsblatt entweder mit oder ohne Lösung]
+%Es gibt auch eine Sternform \env{worksheet*}, die alle Key-Value-Optionen
+%annimmt, die für \env{worksheet} definiert sind, plus eine weitere: das Blatt
+%wird nur einmal gedruckt, entweder mit oder ohne Lösung, was mit der Option
+%\begin{compactdesc}
+%\item[\opt{solution=\param{Ein-Aus-Wert}}]
+%\end{compactdesc}
+%gesteuert wird. Standardmäßig wird \emph{keine} Lösung gezeigt.
+%Ich verwende das z.B.~wenn ich einfach einen längeren Text austeilen will.
+%Freilich, dafür bräuchte man keine besondere Umgebung und man könnte einfach in
+%der \opt{.tex}-Datei den Text aufschreiben. Genau so wie \env{worksheet} bietet
+%\env{worksheet*} allerdings die Möglichkeit an, Titel/Name/Datum/Schriftgröße
+%festzulegen.
 
 \exercise[Plots]
 Die Klasse lädt automatisch \pkg{pgfplots} (es sei denn, man verwendet die
@@ -1375,23 +1397,17 @@ in den Lösungen drückt:
 \end{tikzpicture}
 \end{center}
 
-\end{worksheet}
+\end{worksheet*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}[Schülerversuche]
+\begin{worksheet*}[title={Schülerversuche},solution=true]
 
-\noindent
-\begin{colorminipage}{red!30!white}[t]{\linewidth}
-\centerline{\vrule width0pt height2.5ex depth1ex\bfseries !! VORSICHT !! ÄNDERUNG MIT v1.0.0 !!}
-\end{colorminipage}
-
-\smallskip\noindent
 In früheren Varianten der Klasse gab es eine Umgebung \env{experiment}, die
 eigentlich dasselbe wie \env{worksheet} war, nur dass der Befehl \cs{experiment} zur Verfügung
 stand. Das habe ich im Grunde nie verwendet, aber eine Kleinigkeit habe ich behalten:
-In einer \env{worksheet} Umgebung kann man auch eben einen Versuch mit \cs{experiment}
+In einer \env{worksheet\optstar} Umgebung kann man auch eben einen Versuch mit \cs{experiment}
 angeben. Die Syntax ist die gleiche wie bei \cs{exercise} (außer Schwierigkeitsgrad),
 und die Zähler sind unabhängig, d.h.~wir können Folgendes haben:
 
@@ -1433,7 +1449,7 @@ Freilich, man könnte auch {\ttfamily\cs{SetTitleSeparators}[\cs{quad}]\{-{}-{}-
 
 \experiment[Klar?]
 Sowohl \cs{exercise} als auch \cs{experiment} verwenden die gleichen Klammer/Abstände.
-\end{worksheet}
+\end{worksheet*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1719,6 +1735,28 @@ horizontale Auf{}listungen mit Punktzahl etwas zu ,,überladen``, aber das ist G
 \end{solution}
 \end{test}
 
+\begin{test*}[class*=Kursstufe,subject=Gemeinschaftskunde,logo=example-image-a,solution=true]
+\exercise[10]
+Analog zu \env{worksheet*} existiert auch die Umgebung \env{test*}, welches alle Keys
+wie \env{test} annimmt plus \opt{solution=\param{Ein-Aus-Wert}}. Somit kann man den Test
+entweder mit oder ohne Lösung drucken.
+\begin{solution}
+Man kann mehrere Tests in der gleichen Datei haben. Die Punktzahlen sollten sich nicht
+in die Quere kommen (es sei denn, ich habe etwas verbockt\ldots).
+\end{solution}
+
+\exercise*[2]
+Die ,,Namen`` der Punkte sind in verschiedenen Makros gespeichert, welche in ganz gewohnter
+Weise mit \cs{renewcommand} geändert werden können:
+\begin{center}
+\begin{tabular}{l@{ }l@{\qquad}l@{ }l@{\qquad}l@{ }l}
+    \cs{pointname}:  & {Punkt}  & \cs{extrapointname}:  & {Bonuspunkt}  & \cs{shortpointname}:  & {P} \\
+    \cs{pointsname}: & {Punkte} & \cs{extrapointsname}: & {Bonuspunkte} & \cs{shortpointsname}: & {P}
+\end{tabular}
+\end{center}
+Die Singularform wird bei einem einzigen Punkt verwendet.
+\end{test*}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1836,12 +1874,22 @@ Vorsicht! Bei \cs{wrap} und \cs{wraptikz}  soll beachtet werden,
 dass sie nicht gut reagieren, wenn in ihrer Nähe ein neuer Abschnitt begonnen wird oder gar
 ein Seitenumbruch stattfindet. Dann wird das Ergebnis äußerst enttäuschend sein\ldots
 
+\subsection{3D-Koordinaten (experimentell)}
+\leavevmode\drcput[l](-1em,3.5ex){\onlytikz}
+Die Umgebung \env{3daxes} erlaubt, dreidimensionale Koordinatensysteme zu zeichnen und
+verwenden. Man soll den höchsten und kleinsten Wert aller Koordinaten angeben:
+\begin{center}
+\begin{3daxes}(-2,2)(-2,2)(-2,2)
+\draw[red,->](0,0,0)--(2,2,-1);
+\end{3daxes}
+\end{center}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Ausfüllbare PDFs \texorpdfstring{\colorbox{green!30!white}}{}{(NEU! v1.0.0)}}\label{sec:hy}
+\section{Ausfüllbare PDFs}\label{sec:hy}
 %\textbf{Achtung! Noch nicht ganz gründlich getestet! (Mangels Versuchskaninchen\ldots) Rückmeldungen willkommen.}
 %\vskip1ex\noindent
 Lädt man die Klasse mit der Option \opt{hyperworksheet}, so steht auch eine gleichnamige
@@ -1987,7 +2035,7 @@ Ich habe gerade keinen Ansatz für \env{matching}. Dafür kann man im Grunde ein
 mit \cs{fillhere} oder \cs{fillbox} aufsetzen.
 
 Wenn man das Blatt online verteilen will, ist es natürlich wesentlich sinnvoller,
-die Sternform der Umgebung, \env{hyperworksheet}, zu verwenden. Nutzt man die normale
+die Sternform der Umgebung, \env{hyperworksheet*}, zu verwenden. Nutzt man die normale
 Variante, so muss man danach noch die Seite(n) ohne Lösung extrahieren.
 \end{hyperworksheet}
 
