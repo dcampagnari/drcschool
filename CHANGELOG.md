@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+2025-12-05 [v1.6.0]
+## Added
+- Due to the font scaling, the Euro symbol provided by `eurosym` is a bit too large.
+  The symbol is now loaded by default with an appropriate scaling.
+- Macro `\csqrt` for "closed" roots, i.e. with a small closing tick.
+- Difficulty symbols in the style of Dorn-Bader.
+## Fixed
+- `\markpoint` scaled within a `{tikzpicture}`, which isn't really wanted.
+  Based now on a `pic`, it keeps its dimension.
+- Environment `{3daxes}` draws now correct ticks also when non-integer
+  sizes are given.
+- The counter `\c@answer` was increased only locally. I never noticed it
+  because I never had an `\answer` in a group, but recently I did have
+  one in a `{minipage}`, which of course led to a warning.
+
 ## 2025-05-29 [v1.5.0]
 ### Added
 - Macros `\hangfrom`, `\markpoint` and `\markcoords`.
@@ -20,7 +35,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   and using the macros twice before `\newblock` leads to an error.
 - The environment `{TF}` always started a new paragraph. This is not
   necessarily desired if one wants to put two such tables besides each other.
-- Many `\cleardoublepage`s have been replaced by `\cleapage`. An empty
+- Many `\cleardoublepage`s have been replaced by `\clearpage`. An empty
   page can be easily inserted by hand, while it is impossible to remove an
   already shipped out one.
 ### Fixed
@@ -53,7 +68,7 @@ and this project tries to adhere to [Semantic Versioning](https://semver.org/spe
   `\theH...` to cope with the case where `hyperref` is loaded in
   the preamble. With the 2024-11-01 LaTeX release these counter
   representations are defined directly by `\newcounter`, so `\newcommand`
-  raised an error. I know, the elegant way to supprt both older and newer
+  raised an error. I know, the elegant way to support both older and newer
   kernels would be to use `\providecommand` followed by `\renewcommand`,
   but `\def` is shorter.
 
@@ -84,7 +99,7 @@ environments (except `{print4}`).
 - Made skips before and after exercise heading customizable.
 - Exercise titles can now be run-in or hanging.
 ### Changed
-- Changed a bit the control points of bezier curves in medium difficulty symbol.
+- Changed a bit the control points of Bezier curves in medium difficulty symbol.
 
 ## 2023-11-13 [v1.2.2]
 ### Fixed
@@ -96,7 +111,7 @@ environments (except `{print4}`).
 ## 2023-11-07 [v1.2.1]
 ### Changed
 The difficulty symbols, radio buttons, and calculator symbols are now
-drawn with `pict2e` instead of `tikz`, independent of whether `tikz`
+drawn with `pict2e` instead of Ti*k*Z, independent of whether Ti*k*Z
 is loaded or not. This guarantees same-looking symbols no matter what
 class option is loaded. (BTW, benchmark tests show that the `pict2e`
 variants are roughly 10 times faster.)
@@ -107,11 +122,11 @@ variants are roughly 10 times faster.)
 - In fact, there is a generic macro `\exercisesymbol` which puts whatever
   one wants in front of the exercise heading, not only one of the
   difficulty symbols.
-- Added *mild* support for two columns. Basically, `worksheet` and
-  `worksheet*` (as well as their `hyper...` variants) set the title
+- Added *mild* support for two columns. Basically, `{worksheet}` and
+  `{worksheet*}` (as well as their `hyper...` variants) set the title
   always in one column even if two columns are used.
 - Checks for nested or multiple solutions.
-- Added possibility of not loading `tikz` and `pgfplots`.
+- Added possibility of not loading Ti*k*Z and `pgfplots`.
 - Added keys for customization of the `{tabular}` behind the
   `{questions*}` environment.
 - Added `\lonelyquestion`.
@@ -157,7 +172,7 @@ I had a strange, useless assignment in `{cluecards}`.
 Possibly a relic of something I ended not using.
 
 ## 2023-10-08 v1.0.4
-Removed history (can be now found in changelog).
+Moved history to this file `CHANGELOG.md`.
 
 ## 2023-10-06 v1.0.3
 - The macro `\the@fakepage` was redefined each time the fake page number was being reset, which was quite pointless.
@@ -171,6 +186,8 @@ Removed history (can be now found in changelog).
 ## 2023-09-22 v1.0.1
 - Added `\lines`, similar to `\grid`.
 - Added horizontal versions of `{multchoice}` and `{multresponse}`.
+  I decided to use the starred form (as `{questions*}`): the original
+  starred versions introduced in v0.2 have been removed.
 
 ## 2023-08-30 v1.0.0
 Wow, after sixteen months and two weeks of school and two more weeks of
@@ -218,8 +235,9 @@ Here a short list of changes, in no particular order:
 - The strange `\vskip-\baselineskip` I had in the `\content` of `{schedule}`
   was indeed due to a bug in `longtable` (well... David wouldn't
   agree...). I kind of fixed that, though that required some change
-  in some other places. Results with older documents will result in
-  slightly different vertical spacing, there is no way to avoid that.
+  in some other places. Older documents will result in
+  slightly different vertical spacing; there is no way to avoid that,
+  and nobody besides me will be affected.
 
 ## 2023-07-31 v0.4d / v0.4e
 These versions never really existed. They lasted a couple of days
@@ -238,9 +256,10 @@ before I moved to the following version.
   counters) but screwed the check that the number of answers was the
   same as the number of questions in the solution. In fact, the old
   global macro `\drcschool@last@qst` (the last remnant of the `unituemnf`
-  class) isn't needed any more, so I simply deleted it.
+  class from which this one was derived) isn't needed any more, so I
+  simply removed it.
 - Added the name `\starredexercisename`.
-- Changed the tikz pic rightangle: it does /not/ draw a 90 degree
+- Changed the Ti*k*Z pic rightangle: it does *not* draw a 90 degree
   angle but only prints the dot in the middle.
 
 ## 2023-06-15 v0.4a
@@ -249,7 +268,7 @@ Added starred version of `\shortsolution`.
 ## 2023-05-23 v0.4
 - Completely changed the individual configurations. Now the class
   always checks whether a configuration file `drcschool.cfg` exists,
-  and loads it. The .sco files can still be manually loaded but
+  and loads it. The `.sco` files can still be manually loaded though
   not as class option any more but rather with `\LoadSchoolOptionFile`.
 - Added optional parameter to `\drcput`.
 
@@ -286,7 +305,7 @@ defined yet, since I still had to load `amsgen` at that moment. Fixed.
   since I never used it and it wasn't documented in the template.
 
 ## 2023-04-01 v0.3a
-- Added environment `{matching`} and related macro `\match{...}{...}`.
+- Added environment `{matching}` and related macro `\match{...}{...}`.
 - Added `\let\par\relax` as end code of `\newblock` and at the start
   of the `{schedule}` environment. In this way empty lines are
   ignored between `\time`, `\method`, `\content` & Co. Since we are in
@@ -303,10 +322,10 @@ defined yet, since I still had to load `amsgen` at that moment. Fixed.
 - I had actually screwed up quite a lot with the page
   numbering, and `\cleardoublepage` led sometimes to strange
   empty pages and out-of-sync even/odd pages. Now there is
-  a new counter `\c@savep@ge`, and all environments which
-  reset the page number (`{worksheet}` and `{test}`) now
-  save the current page number and restore the "correct"
-  number after they have ended.
+  a new counter `\c@savep@ge`, and all environments resetting
+  the page number (`{worksheet}` and `{test}`) now save the
+  current page number and restore the "correct" one after
+  they have ended.
 - I had also some `\restoregeometry` which weren't really
   necessary.
 - The headers/footers of the `{worksheet}` have been changed too:
@@ -333,7 +352,7 @@ defined yet, since I still had to load `amsgen` at that moment. Fixed.
 - The code for the background grid has been extremely simplified
   and made more efficient and user-friendly. Now the macros
   `\addbackgroundgrid` and `\removebackgroundgrid` can be used with much
-  more flexibility, and they take TikZ options as optional argument.
+  more flexibility, and they take Ti*k*Z options as optional argument.
 - The macros setting up the difficulty symbols and the calculator
   icons are now user-level macros. They are initialized at
   `\begin{document}` but can be called again at any point in the
@@ -392,7 +411,7 @@ Major changes:
 ## 2023-02-09 v0.1d
 - Changed definition of `\rightangle` in order to work with declared
   coordinates. (No idea why the original version didn't work.)
-- Added possibility to pass tikz options too.
+- Added possibility to pass Ti*k*Z options too.
 
 ## 2023-01-31 v0.1c
 Added `fontsize` key for all `{print...}` environments.
@@ -419,11 +438,11 @@ start time. The optional printing of the headline is also a possibility.
 ## 2022-11-25 v0.1
 ### Added
 - Added the macros `\IfSolutionT`, `\IfSolutionF`, `\IfSolutionTF`.
-- Added the option ptspre for test to add something before the
+- Added the option `ptspre` for test to add something before the
   number of points.
 - Added the `{cluecards}` environment (and related `\cluecard` macro).
 ### Changed
-- Changed heavily internal coding of test. More than one test
+- Changed heavily internal coding of `{test}`. More than one test
   per file now possible. Added also a "version label" for
   different versions of the test.
 - Changed a bit the definition of the `{TF}` environment, now
@@ -433,7 +452,7 @@ start time. The optional printing of the headline is also a possibility.
 ## 2022-10-20 v0.0f
 - Added `\fillbox`.
 - Changed order of solution/no solution for
-worksheets & Co. (to save paper...)
+  worksheets & Co. (to save paper...)
 
 ## 2022-10-03 v0.0e
 Added key/value syntax for `{worksheet}`.
@@ -454,6 +473,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v1.6.0]: https://github.com/dcampagnari/drcschool/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/dcampagnari/drcschool/compare/v1.4.0...v1.5.0
 [v1.4.0]: https://github.com/dcampagnari/drcschool/compare/v1.3.3...v1.4.0
 [v1.3.3]: https://github.com/dcampagnari/drcschool/compare/v1.3.2...v1.3.3

@@ -61,11 +61,12 @@
 \normalfont\normalsize Davide Campagnari\\
 \small\today
 \end{center}
-Mehr als eine Dokumentation ist dies eine Sammlung von Beispielen, die
-(hoffentlich) alle wesentlichen Fähigkeiten der Klasse \pkg{drcschool} zeigen.
-Sie ist allerdings nicht vollständig und es gibt in der Tat einige Features,
+Dieses Dokument ist nicht wirklich eine Dokumentation, sondern eher eine
+Sammlung von Beispielen, die (hoffentlich) alle wesentlichen Fähigkeiten
+der Klasse \pkg{drcschool} zeigen.
+Sie ist allerdings nicht vollständig und es gibt in der Tat manche Features,
 die hier nicht beschrieben werden. Der Grund dafür ist, dass sie meiner Meinung
-nach noch nicht ganz reif sind und ich sie daher als noch nicht ,,offiziell``
+nach noch nicht ganz reif sind und ich sie daher noch nicht als ganz ,,offiziell``
 betrachte. Wer durch den Code gehen will, um diese zu entdecken, soll gewarnt
 sein, dass nicht beschriebene Features geändert oder gar gestrichen werden
 könnten\ldots
@@ -121,7 +122,7 @@ Es gibt einige wenige eigene Optionen:
    dass das Kompilieren einer einfachen ,,Hello world`` Datei verhältnismäßig lange dauern kann,
    denn \TikZ\ ist ein ziemlich großes Paket. Mit dieser Option kann das Laden von \TikZ\ verhindert werden.
 \item[\opt{nopgfplots}] Das Gleiche gilt ähnlich für \pkg{pgfplots}. Will man die \TikZ-Fähigkeiten
-   haben aber braucht man keine Funktionen plotten, so kann man diese Option verwenden
+   haben aber braucht man keine Funktionen zu plotten, so kann man diese Option verwenden
    und sich das Laden von \pkg{pgfplots} ersparen.
 \item[\opt{hyperworksheet}] Aktiviert die Umgebung für ausfüllbare PDF-Dateien (s.~Abschnitt~\ref{sec:hy}).
 \end{compactdesc}
@@ -139,7 +140,7 @@ Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\med
          verwendet.
    \end{compactitem}
    Einige Symbole werden aus \pkg{fontawesome} genommen
-   (jedoch nur einzeln importiert, die Pakete selbst werden nicht geladen).
+   (jedoch nur einzeln importiert, das Paket selbst wird nicht geladen).
 \item[Sprache] \pkg{babel} mit Option \opt{ngerman}.
 \item[Tabellen] \pkg{tabularx}, \pkg{booktabs}, \pkg{colortbl}, \pkg{longtable}.
 \item[Seitenmanagement] \pkg{scrlayer-scrpage}, \pkg{geometry}.
@@ -147,8 +148,9 @@ Hier folgt eine kurze Liste (ohne Abhängigkeiten) der geladenen Pakete:\par\med
 \item[Verschiedenes] \pkg{amsgen}, \pkg{environ}\footnote{%
    Seit 2018 bietet \pkg{xparse} ein \opt{b}-Argument für Umgebungen, die den gesamten Inhalt
    sammeln sollen; seit 2020 ist \pkg{xparse} außerdem im \LaTeX-Kernel integriert. Da aber
-   auf meinem Büro-Rechner noch TeX Live~2017 läuft, muss ich vorerst bei \pkg{environ} bleiben.
-   Und es ist schneller.},
+   auf meinem Büro-Rechner noch TeX Live~2017 lief, musste ich vorerst bei \pkg{environ} bleiben.
+   Das ist 2025 nicht mehr der Fall, aber \pkg{environ} ist trotzdem deutlich schneller, daher
+   bleibe ich zuerst dabei.},
    \pkg{paralist}, \pkg{icomma}, \pkg{tikz},\footnote{Es sei denn, die Klasse wurde mit der Option \opt{notikz} geladen.}
    \pkg{pgfplots}.\footnote{Es sei denn, die Klasse wurde mit der Option \opt{nopgfplots} oder \opt{notikz} geladen.}
 \end{compactdesc}
@@ -534,7 +536,7 @@ Um das alles zu machen, schreibt sie die Datei \texttt{drcschool.cfg}
    }
    \UseScheduleStyle{simple}
    \NoFonts
-   \RequirePackage{newtxtext,newtxmath}
+   \RequirePackage{newtx}
 \end{verbatim}
 und platziert sie dort, wo \TeX\ sie finden kann
 (am Besten da, wo sich auch \texttt{drcschool.cls} befindet).
@@ -542,7 +544,7 @@ Die erste Zeile (\cs{ProvidesFile}) ist nicht notwendig aber wärmstens empfohle
 Die Bedeutung der zweiten Zeile (\cs{SetLogo}) wird später bei der Herstellung
 von Klassenarbeiten oder Tests erklärt. Und da Frau~Maier eine Times-Schrift
 verwenden will, schreibt sie \cs{NoFonts} in der Konfigurationsdatei, bevor sie
-die Pakete \pkg{newtxtext} und \pkg{newtxmath} lädt. Natürlich kann Frau~Mayer
+das Paket \pkg{newtx} lädt. Natürlich kann Frau~Mayer
 in dieser Datei auch alle ihre Lieblingspakete und persönlichen Definitionen
 schreiben, und muss somit eine ewig lange Präambel nicht in jede ihrer Dateien
 kopieren.
@@ -563,9 +565,9 @@ muss aber in der Präambel mit
 \begin{verbatim}
    \LoadSchoolOptionFile{MeineSchuleA}
 \end{verbatim}
-explizit geladen werden (\emph{ohne} \opt{.sco} Endung). Ähnliches
+explizit geladen werden (\emph{ohne} \opt{.sco} Endung). Ähnlich
 kann Frau Maier\footnote{Ist es jemandem aufgefallen, dass ich alle möglichen Kombinationen (ai/ai/ay/ey) verwendet habe? \texttt{:-P}}
-mit ihrer anderen Schule machen.
+mit ihrer anderen Schule vorgehen.
 
 In so einem Fall bietet sich auch eine Kombination aus beiden Methoden an:
 In der Hauptkonfigurationsdatei \texttt{drcschool.cfg} wird der Code geschrieben,
@@ -660,7 +662,7 @@ Innerhalb einer Aufgabe können einzelne Teilaufgaben mit Hilfe der Umgebung
 Hier ein kleiner Hinweis.
 \end{hint}
 \question Am Ende einer einzelnen Frage (oder einer Aufgabe, falls es keine Fragen gibt)
-   kann man eine kurze Lösung mit Hilfe von \cs{minisolution} angeben.\minisolution{43}
+   kann man eine kurze Lösung mit Hilfe von \cs{minisolution} angeben.\minisolution{42}
 \end{questions}
 Die Umgebung kann unterbrochen werden; wenn sie nochmal startet, läuft der Zähler
 weiter:
@@ -949,7 +951,8 @@ Stil & \cs{easysymbol}&\cs{mediumsymbol}&\cs{hardsymbol}&\cs{hardersymbol}\\
 \midrule
 \opt{LS} (default)  & \easysymbol & \mediumsymbol & \hardsymbol & \hardersymbol \\
 \opt{EdM} & \UseDifficultySymbols{EdM}\easysymbol & \UseDifficultySymbols{EdM}\mediumsymbol & \UseDifficultySymbols{EdM}\hardsymbol & \UseDifficultySymbols{EdM}\hardersymbol \\
-\opt{FdM} & \UseDifficultySymbols{FdM}\easysymbol & \UseDifficultySymbols{FdM}\mediumsymbol & \UseDifficultySymbols{FdM}\hardsymbol & \UseDifficultySymbols{FdM}\hardersymbol
+\opt{FdM} & \UseDifficultySymbols{FdM}\easysymbol & \UseDifficultySymbols{FdM}\mediumsymbol & \UseDifficultySymbols{FdM}\hardsymbol & \UseDifficultySymbols{FdM}\hardersymbol \\
+\opt{DB} & \UseDifficultySymbols{DB}\easysymbol & \UseDifficultySymbols{DB}\mediumsymbol & \UseDifficultySymbols{DB}\hardsymbol & \UseDifficultySymbols{DB}\hardersymbol
 \end{tabular}
 \end{center}
 Aus Kompatibilitätsgründen gibt es noch das Makro \cs{difficulty\{\param{Zahl}\}},
@@ -1879,10 +1882,33 @@ ein Seitenumbruch stattfindet. Dann wird das Ergebnis äußerst enttäuschend se
 Die Umgebung \env{3daxes} erlaubt, dreidimensionale Koordinatensysteme zu zeichnen und
 verwenden. Man soll den höchsten und kleinsten Wert aller Koordinaten angeben:
 \begin{center}
+\begin{minipage}[b]{9cm}
+\bcode
+\\begin\{3daxes\}(-2,2)(-2,2)(-2,2)
+\\draw[red,->](0,0,0)--(2,2,-1);
+\\markcoords[orange,very thick](1,-1,1);
+\\markpoint[blue](1,-1,1)node[left]\{A\};
+\\end\{3daxes\}
+\ecode
+\end{minipage}\qquad
 \begin{3daxes}(-2,2)(-2,2)(-2,2)
 \draw[red,->](0,0,0)--(2,2,-1);
+\markcoords[orange,very thick](1,-1,1);
+\markpoint[blue](1,-1,1)node[left]{A};
 \end{3daxes}
 \end{center}
+Das Hintergrundgitter wird groß genug gemacht, dass alles reinpasst, und die Achsen
+werden so weit verlängert, dass sie den Gitterrand erreichen.
+
+Die Befehle \cs{markpoint} und \cs{markcoords} funktionieren auch in einer normalen,
+zweidimensionalen \env{tikzpicture}.
+
+\section{,,Geschlossenes`` Wurzelsymbol}
+Es gibt einen Befehl \cs{csqrt}, der eine Wurzel mit einem Extra-Haken druckt:
+\[
+\sqrt{2}+\sqrt[3]{3} = \csqrt{2}+\csqrt[3]{3}
+\]
+Manche Schüler haben Schwierigkeiten, zu verstehen, wo eine Wurzel endet\ldots
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

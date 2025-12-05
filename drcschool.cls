@@ -19,7 +19,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2018-04-01]
-\ProvidesClass{drcschool}[2025-05-29 v1.5.0]
+\ProvidesClass{drcschool}[2025-12-05 v1.6.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -57,6 +57,10 @@
    \RequirePackage[T1]{fontenc}%
    \RequirePackage{microtype}%
    \def\@sqrt[##1]{\root\uproot{2}\leftroot{1}##1\of}% font correction for roots
+   \DeclareFontFamily{U}{eurosym}{}%
+   \DeclareFontShape{U}{eurosym}{m}{n}{<->s*[.95]feymr10}{}%
+   \newcommand*{\EUR}[1]{##1\,\euro}%
+   \newcommand*{\euro}{\mbox{\usefont{U}{eurosym}{m}{n}e}}%
 }
 % This must be here because the packages which I load later might
 % use the same hook
@@ -389,7 +393,7 @@
    \clearpage\aftergroup\restoregeometry % do I really need this?!
 }
 % same as before but does not start a new page or change margins
-\NewEnviron{schedule*}[1][1234]{%
+\NewEnviron{schedule*}[1][0]{%
    \drc@kv@num@else{#1}{\schedule@start@kv{#1}}{\schedule@start@block{#1}}{\schedule@start@time{#1}}%
 }
 \newcommand*{\schedule@start@kv}[1]{%
@@ -521,6 +525,23 @@
 \newcommand*{\mediumsymbol@FdM}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}\arc*[45,225]{.375}}}}
 \newcommand*{\hardsymbol@FdM}{\diff@sym@LS{\put(.5,.55){\color{gray}\circle{1}\circle*{.75}}}}
 \newcommand*{\hardersymbol@FdM}{\diff@sym@LS{\put(.5,.55){\circle{1}\circle*{.75}}}}
+% Dorn-Bader style
+\newcommand*{\diff@sym@DB}[1]{%
+   \leavevmode
+   \begingroup
+   \unitlength.8\fontcharht\font`\A
+   \@picture(2,1)(0,-.1)%
+   \linethickness{.3\p@}%
+   {\color{lightgray}\moveto(.5,1)\circlearc{.5}{.5}{.5}{90}{270}\lineto(1.5,0)\circlearc{1.5}{.5}{.5}{-90}{90}\closepath\fillpath}%
+   #1%
+   {\color{darkgray}\put(.4,.5){\circle{.4}}\put(1,.5){\circle{.4}}\put(1.6,.5){\circle{.4}}}%
+   \endpicture
+   \endgroup
+}
+\newcommand*{\easysymbol@DB}{\diff@sym@DB{{\color{gray}\put(.4,.5){\circle*{.4}}}{\color{white}\put(1,.5){\circle*{.4}}\put(1.6,.5){\circle*{.4}}}}}
+\newcommand*{\mediumsymbol@DB}{\diff@sym@DB{{\color{gray}\put(.4,.5){\circle*{.4}}\put(1,.5){\circle*{.4}}}{\color{white}\put(1.6,.5){\circle*{.4}}}}}
+\newcommand*{\hardsymbol@DB}{\diff@sym@DB{{\color{gray}\put(.4,.5){\circle*{.4}}\put(1,.5){\circle*{.4}}\put(1.6,.5){\circle*{.4}}}}}
+\newcommand*{\hardersymbol@DB}{\diff@sym@DB{{\color{black}\put(.4,.5){\circle*{.4}}\put(1,.5){\circle*{.4}}\put(1.6,.5){\circle*{.4}}}}}
 % Switch between styles
 \newcommand*{\UseDifficultySymbols}[1]{%
    \expandafter\let\expandafter\easysymbol\csname easysymbol@#1\endcsname
@@ -572,6 +593,7 @@
 \newcommand*{\shortpointname}{P}
 \newcommand*{\shortpointsname}{P}
 \newcommand*{\starredexercisemark}{*}
+\newcommand*{\markname}{Note}
 \newcommand*{\drc@title@sep}{\enskip}
 \newcommand*{\drc@title@L}{(}
 \newcommand*{\drc@title@R}{)}
@@ -691,10 +713,10 @@
 \newcommand*{\the@answer}{\leavevmode\llap{\csname qst\the\c@worksheet.\the\c@exercise.\the\c@answer mark\endcsname}\@alph\c@answer}
 \newcommand*{\@answer}[1][]{%
    \if\relax\detokenize{#1}\relax
-      \advance\c@answer\@ne
+      \global\advance\c@answer\@ne
    \else
       \c@answer`#1\relax
-      \advance\c@answer-96
+      \global\advance\c@answer-96
    \fi
    \drc@heading{.2ex\@plus.2ex\@minus.2ex}{-.5em}{\the@answer.}%
 }
@@ -902,6 +924,32 @@
    \fi
    \drc@next
    \qst@pts
+}
+
+% COPY OF THE ABOVE FOR HORIZONTAL ANSWERS
+% FIRST ROUGH IDEA, DO NOT WRITE INTO DOC, I HAVE TO THINK ABOUT THIS
+\newenvironment{answers*}[2][]{%
+   \def\answer{\leavevmode\refstepcounter{answer}\h@answer{#2}}%
+   \let\drc@questions@check\relax
+   \start@horizontal@questions{#2}{#1}%
+  }{%
+   \stop@horizontal@questions
+   \@endparenv
+}
+\newcommand*{\h@answer}[1]{%
+   \ifnum\c@qst@col=\z@
+      \def\drc@next{\textbf{\the@answer.}&}%
+      \global\advance\c@qst@col\@ne
+   \else
+      \ifnum\c@qst@col<#1\relax
+         \def\drc@next{&\textbf{\the@answer.}&}%
+         \global\advance\c@qst@col\@ne
+      \else
+         \def\drc@next{\\[\drc@hqst@xvspace]\textbf{\the@answer.}&}%
+         \global\c@qst@col\@ne
+      \fi
+   \fi
+   \drc@next
 }
 
 % hint
@@ -1719,7 +1767,7 @@
    \hline
    \multicolumn{3}{|l|}{Name:}\\
    \hline
-   \pointsname: \kern5em $\big/$\csname drcschool@test\the\c@worksheet @pts\endcsname&Note:&mündlicher Eindruck:\kern3cm\\
+   \pointsname: \kern5em $\big/$\csname drcschool@test\the\c@worksheet @pts\endcsname&\markname:&mündlicher Eindruck:\kern3cm\\
    \hline
    \end{tabularx}%
    \end{center}%
@@ -1969,39 +2017,38 @@
 \def\drc@mark@coordsII#1(#2,#3){\draw[dashed,#1](0,0)--(#2,0)--(#2,#3)}
 \def\drc@mark@coordsIII#1(#2,#3,#4){\draw[dashed,#1](0,0,0)--(#2,0,0)--(#2,#3,0)--(#2,#3,#4)}
 
+\tikzset{drc@markpointII/.pic={\draw[thick](.06,.06)--(-.06,-.06) (-.06,.06)--(.06,-.06);}}
+\tikzset{drc@markpointIII/.pic={\draw[thick](0,.06,.06)--(0,-.06,-.06) (0,-.06,.06)--(0,.06,-.06);}}
 \newcommand*{\markpoint}[1][]{\drc@mark@point#1}
 \def\drc@mark@point{\drc@mark@pointII}
-\def\drc@mark@pointII#1(#2,#3){\draw[thick,#1](#2,#3)edge++(.06,.06)edge++(.06,-.06)edge++(-.06,-.06)edge++(-.06,.06)}
-\def\drc@mark@pointIII#1(#2,#3,#4){\draw[thick,#1](#2,#3,#4)edge++(0,.06,.06)edge++(0,.06,-.06)edge++(0,-.06,-.06)edge++(0,-.06,.06)}
+\def\drc@mark@pointII#1(#2){\draw[#1](#2)pic{drc@markpointII}}
+\def\drc@mark@pointIII#1(#2){\draw[#1](#2)pic{drc@markpointIII}}
 
-\newenvironment{3daxes}[1][]{\thr@@Daxes#1}{\endscope\endtikzpicture}
-\def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
-   \@tempdima#2\p@
-   \@tempdima-.5\@tempdima
-   \@tempdimb#5\p@
-   \@tempdimc#7\p@
-   \edef\thr@@Dxmax{\ifdim\@tempdima<\@tempdimb#5\else.5*#2\fi}%
-   \edef\thr@@Dymax{\ifdim\@tempdima<\@tempdimc#7\else.5*#2\fi}%
-   \@tempdima#3\p@
-   \@tempdima.5\@tempdima
-   \@tempdimb-#4\p@
-   \@tempdimc-#6\p@
-   \edef\thr@@Dxmin{\ifdim\@tempdima<\@tempdimb#4\else-.5*#3\fi}%
-   \edef\thr@@Dymin{\ifdim\@tempdima<\@tempdimc#6\else-.5*#3\fi}%
-   \def\drc@mark@coords{\drc@mark@coordsIII}%
+
+\newenvironment{3daxes}[1][]{%
    \def\drc@mark@point{\drc@mark@pointIII}%
+   \def\drc@mark@coords{\drc@mark@coordsIII}%
+   \thr@@Daxes#1%
+  }{\endscope\endtikzpicture}
+\def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
+   \edef\thr@@Dxmax{\ifdim\dimexpr-#2\p@/2\relax<#5\p@#5\else-#2/2\fi}%
+   \edef\thr@@Dymax{\ifdim\dimexpr-#2\p@/2\relax<#7\p@#7\else-#2/2\fi}%
+   \edef\thr@@Dxmin{\ifdim\dimexpr#3\p@/2\relax<-#4\p@#4\else#3/2\fi}%
+   \edef\thr@@Dymin{\ifdim\dimexpr#3\p@/2\relax<-#6\p@#6\else#6/2\fi}%
+   \edef\drc@tempa{\ifdim\thr@@Dxmax\p@<\thr@@Dymax\p@\thr@@Dxmax\else\thr@@Dxmax\fi}%
+   \edef\drc@tempb{\ifdim\thr@@Dxmin\p@>\thr@@Dymin\p@\thr@@Dxmin\else\thr@@Dymin\fi}%
    \tikzpicture[#1]
-   \draw[help lines,step=.5](\thr@@Dxmin-.1,\thr@@Dymin-.1)grid(\thr@@Dxmax+.1,\thr@@Dymax+.1);
+   \draw[help lines,step=.5](\thr@@Dxmin-.3,\thr@@Dymin-.3)grid(\thr@@Dxmax+.3,\thr@@Dymax+.3);
    \scope[x={(-.5cm,-.5cm)},y={(1cm,0cm)},z={(0cm,1cm)}]
-   \draw[->](#2-.3,0,0)--(#3+.3,0,0)node[above left]{$x_1$};
-   \draw[->](0,#4-.2,0)--(0,#5+.2,0)node[below]{$x_2$};
-   \draw[->](0,0,#6-.2)--(0,0,#7+.2)node[left]{$x_3$};
-   \foreach\x in {#2,...,-1}\draw[thick](\x,0,-.06)--(\x,0,.06);
-   \foreach\x in {1,...,#3} \draw[thick](\x,0,-.06)--(\x,0,.06);
-   \foreach\x in {#4,...,-1}\draw[thick](0,\x,-.06)--(0,\x,.06);
-   \foreach\x in {1,...,#5} \draw[thick](0,\x,-.06)--(0,\x,.06);
-   \foreach\x in {#6,...,-1}\draw[thick](0,-.06,\x)--(0,.06,\x);
-   \foreach\x in {1,...,#7} \draw[thick](0,-.06,\x)--(0,.06,\x);
+   \draw[->,shorten >=-3mm,shorten <=-3mm](-\drc@tempa*2,0,0)--(-\drc@tempb*2,0,0)node[above left]{$x_1$};
+   \draw[->,shorten >=-3mm,shorten <=-3mm](0,\thr@@Dxmin,0)--(0,\thr@@Dxmax,0)node[below right]{$x_2$};
+   \draw[->,shorten >=-3mm,shorten <=-3mm](0,0,\thr@@Dymin)--(0,0,\thr@@Dymax)node[above left]{$x_3$};
+   \foreach\x in{-\fpeval{ceil(\drc@tempa*2)},...,-1}\draw[thick](\x,0,-.06)--(\x,0,.06);
+   \foreach\x in{1,...,\fpeval{-floor(\drc@tempb*2)}}\draw[thick](\x,0,-.06)--(\x,0,.06);
+   \foreach\x in{\fpeval{ceil(\thr@@Dxmin)},...,-1}\draw[thick](0,\x,-.06)--(0,\x,.06);
+   \foreach\x in{1,...,\fpeval{floor(\thr@@Dxmax)}}\draw[thick](0,\x,-.06)--(0,\x,.06);
+   \foreach\x in{\fpeval{ceil(\thr@@Dymin)},...,-1}\draw[thick](0,-.06,\x)--(0,.06,\x);
+   \foreach\x in{1,...,\fpeval{floor(\thr@@Dymax)}}\draw[thick](0,-.06,\x)--(0,.06,\x);
 }
 
 \if@drctikz\else
@@ -2040,14 +2087,12 @@
 %%%
 %%% VIERFELDERTAFEL (actually defined in drcmath but I need to make it solution aware)
 \providecommand*{\drc@CT@cr}{}
-
 \providecommand*{\drc@CT@scan}[1]{%
    \setbox\tw@=\hbox{\m@th$#1$\copy\strutbox}%
    \ifdim\wd\tw@>\drc@gdima\global\drc@gdima\wd\tw@\fi
    \ifdim\ht\tw@>\drc@gdimb\global\drc@gdimb\ht\tw@\fi
    \ifdim\dp\tw@>\drc@gdimc\global\drc@gdimc\dp\tw@\fi
 }
-
 \providecommand*{\crosstable}{}
 \renewcommand*{\crosstable}[2][A,B]{%
    \bgroup
@@ -2078,6 +2123,17 @@
      }}%
    \egroup
 }
+
+%% "closed" root symbol
+\providecommand*{\csqrt}{}
+\renewcommand*{\csqrt}[2][]{\mathpalette{\c@sqrt{#1}}{#2}}
+\newcommand*{\c@sqrt}[3]{%#1=root #2=style #3=radicand
+   \setbox\z@=\hbox{$\m@th#2\sqrtsign{#3\mkern1mu}$}%
+   \IfBlankTF{#1}{\copy\z@}{\sqrt[#1]{#3\mkern1mu}}%
+   \dimen@\fontdimen8\ifx#2\displaystyle\textfont\else\ifx#2\textstyle\textfont\else\ifx#2\scriptstyle\scriptfont\else\scriptscriptfont\fi\fi\fi3
+   \vrule\@height\dimexpr\ht\z@-\dimen@\relax\@depth\dimexpr4\dimen@-\ht\z@\relax\@width\dimen@
+}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -38,6 +38,7 @@
 \addbackgroundgrid[opt]#S
 \answer#S
 \begin{3daxes}#S
+\begin{answers*}{arg1}#S
 \begin{cloze}[opt]#S
 \begin{cluecards}[opt]#S
 \begin{colorminipage}{arg1}[opt1][opt2][opt3]{arg2}#S
@@ -78,6 +79,7 @@
 \class{arg1}#S
 \classname#S
 \crosstable{arg1}#Sm
+\csqrt[opt]{arg1}#S
 \deadly#S
 \deadlysymbol#S
 \difficulty{arg1}#S
@@ -85,6 +87,7 @@
 \easy#S
 \easysymbol#S
 \end{3daxes}#S
+\end{answers*}#S
 \end{cloze}#S
 \end{cluecards}#S
 \end{colorminipage}#S
@@ -156,6 +159,7 @@
 \removebackgroundgrid#S
 \rightangle#S
 \runinexercises[opt]#S
+\saveprevdepth#S
 \scolumnheader#S
 \sectionformat#S
 \shortsolution#S
@@ -163,6 +167,7 @@
 \time#S
 \toprule#St
 \true#S
+\useprevdepth#S
 \vecsum#S
 \warningsymbol#S
 \wrap[opt]{arg1}#S
