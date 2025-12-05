@@ -4,13 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-2025-12-05 [v1.6.0]
-## Added
+##2025-12-05 [v1.6.0]
+### Added
 - Due to the font scaling, the Euro symbol provided by `eurosym` is a bit too large.
   The symbol is now loaded by default with an appropriate scaling.
 - Macro `\csqrt` for "closed" roots, i.e. with a small closing tick.
 - Difficulty symbols in the style of Dorn-Bader.
-## Fixed
+### Fixed
 - `\markpoint` scaled within a `{tikzpicture}`, which isn't really wanted.
   Based now on a `pic`, it keeps its dimension.
 - Environment `{3daxes}` draws now correct ticks also when non-integer
