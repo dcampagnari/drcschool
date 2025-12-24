@@ -3,6 +3,9 @@
 ## Beschreibung
 LaTeX Klasse zur Herstellung von Unterrichtsentwürfen, Arbeitsblättern und Klassenarbeiten in den Fächern Mathematik und Physik in der Schule.
 
+## Änderungen mit `v2`
+Die neue Version ändert die Syntax mehrerer Umgebungen. Aus Kompatibilitätsgründen wird eine alte Version `drcschool_v1.6.0.cls` zur Verfügung gestellt.
+
 ## Description
 LaTeX class for maths/physics period drafts, worksheets and tests in German schools. The documentation is only in German!
 
