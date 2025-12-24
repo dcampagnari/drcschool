@@ -4,12 +4,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2025-12-24 [v2.0.0]
+### Changed/Removed
+- Originally, the environments `{test}` and `{worksheet}` always printed their
+  content twice, once without and once with solution. The starred variants
+  `{test*}` and `{worksheet*}` were introduced (at different times) to print
+  the content only once, and were defined as *different* environments such that
+  SyncTeX might work. The code has been now completely re-implemented, and
+  the unstarred variants `{test}` and `{worksheet}` now support a key
+  `solution` which can be a simple switch, *or* it can be `both`, such that
+  both versions are printed. The starred versions have been removed.
+- Removed the macro `\difficulty`. (It existed only for backward compatibility
+  but I think I never actyally used it.)
+- The default style for schedules is now `simple`. The old style `default`
+  has been renamed to `full`.
+- Removed the environment `{schedule*}`. Its functionality can be obtained
+  by passing `embed=true` to `{schedule}`.
+- The various environment `{print2}` & Co. have been replaced by `{copies}`.
+- The environment `{cluecards}` has been also recoded; it does not need
+  Ti*k*Z any more. The "signature" (or layout) is now a *mandatory* argument
+  and the order rows/columns has been swapped, so that it corresponds to
+  `{copies}`.
+### Added
+- Suppont for printing the teacher's name on tests.
+### Fixed
+- Changed a bit the coding of horizontal lists (`{questions*}` and `{answers*}`),
+  hopefully more efficient.
+- Changed a couple of internal macro names for consistent namespace.
+- Some error messages relate to boolean keys were giving the wrong hint,
+  for example `solution=hello` spat out `Unknown value for boolean key NAME`...
+  a copy/paste relic.
+
 ## 2025-12-05 [v1.6.0]
 ### Added
 - Due to the font scaling, the Euro symbol provided by `eurosym` is a bit too large.
   The symbol is now loaded by default with an appropriate scaling.
 - Macro `\csqrt` for "closed" roots, i.e. with a small closing tick.
 - Difficulty symbols in the style of Dorn-Bader.
+### Changed
+- Without optional argument, a `{schedule}` environment prints the schedule
+  for the "zero-th" block, i.e. with times starting from 0:00.
 ### Fixed
 - `\markpoint` scaled within a `{tikzpicture}`, which isn't really wanted.
   Based now on a `pic`, it keeps its dimension.
@@ -473,6 +507,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v2.0.0]: https://github.com/dcampagnari/drcschool/compare/v1.6.0...v2.0.0
 [v1.6.0]: https://github.com/dcampagnari/drcschool/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/dcampagnari/drcschool/compare/v1.4.0...v1.5.0
 [v1.4.0]: https://github.com/dcampagnari/drcschool/compare/v1.3.3...v1.4.0
