@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2025-12-24 v2.0.0]
+\ProvidesClass{drcschool}[2026-01-08 v2.0.1]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1122,9 +1122,9 @@
    \def\false{&\radiobutton&\radiobutton*\\}%
    \noindent
    \tabular[#1]{b{\dimexpr#2-6\tabcolsep-6em\relax}w{c}{3em}w{c}{3em}}%
-   \multicolumn1{@{}c@{}}{}\\[-\dimexpr\ht\@arstrutbox+\dp\@arstrutbox+\heavyrulewidth+\@aboverulesep+\@belowrulesep\relax]% "\firsttoprule"
+   \multicolumn1{@{}c@{}}{}\\[-\dimexpr\ht\@arstrutbox+\dp\@arstrutbox+\heavyrulewidth+\abovetopsep+\belowrulesep\relax]%"\firsttoprule"
    \toprule
-    & wahr & falsch \\
+   &wahr&falsch\\
    \midrule[\heavyrulewidth]
  }{\bottomrule\endtabular}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1331,7 +1331,8 @@
 \define@key{drc@ws}{date}[true]{\drc@key@to@bool{date}{@drc@ws@date}{#1}}
 \define@key{drc@ws}{fontsize}{\KOMAoption{fontsize}{#1}}
 \define@key{drc@ws}{geometry}{\@tempswatrue\def\drc@geometry@options{{#1}}}
-\define@key{drc@ws}{clearbefore}{\def\ws@clear@before{\csname clear#1page\endcsname}}
+\define@key{drc@ws}{clearbefore}{\def\ws@clearbefore{#1}}\def\ws@clearbefore{double}
+\define@key{drc@ws}{clearafter}{\def\ws@clearafter{#1}}\def\ws@clearafter{single}
 \newif\if@drc@ws@newpage\@drc@ws@newpagetrue
 \define@key{drc@ws}{newpage}[true]{\drc@key@to@bool{newpage}{@drc@ws@newpage}{#1}}
 \newcommand*{\drc@hyperworksheet@setup}{}
@@ -1357,12 +1358,18 @@
       \ClassError{drcschool}{{worksheet} within {test}. You are doomed}%
                             {A {worksheet} within a {test} makes no sense\MessageBreak I have no idea what will happen now.}%
    \fi
-   \stepcounter{worksheet}%
-%   \let\ws@title\@empty
    \@expandtwoargs\setkeys{drc@ws}{\drc@default@ws@options}%
    \@tempswafalse
    \setkeys{drc@ws}{#1}%
-%   \drc@ifkv{#1}{\setkeys{drc@ws}{#1}}{\def\ws@title{#1}}%
+   \stepcounter{worksheet}%
+   \def\clearsinglepage{\clearpage}%
+   \ifcsname clear\ws@clearbefore page\endcsname
+      \csname clear\ws@clearbefore page\endcsname
+   \else
+      \ClassWarning{Unknown value `\ws@clearbefore' for key clearbefore.\MessageBreak
+                    I assume you wanted a \string\cleardoublepage}%
+      \cleardoublepage
+   \fi
    \if@tempswa
       \expandafter\newgeometry\drc@geometry@options
       \def\drc@ws@end{\aftergroup\restoregeometry}%
@@ -1382,7 +1389,7 @@
    \def\drc@page{\the@fakepage}%
 }
 % {worksheet} environment
-\newcommand*{\worksheet}[1]{\cleardoublepage\def\ws@title{#1}\@testopt{\drc@worksheet}{}}
+\newcommand*{\worksheet}[1]{\def\ws@title{#1}\@testopt{\drc@worksheet}{}}
 \def\drc@worksheet[#1]{%
    \@solutionfalse
    \drc@worksheet@setup{#1}%
@@ -1395,7 +1402,13 @@
 }
 \def\endworksheet{%
    \if@drc@both\@xp\@firstofone\else\@xp\@gobble\fi\drc@worksheet@both
-   \clearpage
+   \ifcsname clear\ws@clearafter page\endcsname
+      \csname clear\ws@clearafter page\endcsname
+   \else
+      \ClassWarning{Unknown value `\ws@clearafter' for key clearafter.\MessageBreak
+                    I assume you wanted a \string\clearpage}%
+      \clearpage
+   \fi
    \drc@ws@end
    \removebackgroundgrid
 }
@@ -1502,7 +1515,7 @@
    \def\@tempb{\def\@tempb{\vfill\nointerlineskip\hb@xt@\linewidth{\hss\vrule\@width\paperwidth\@height.4\p@\hss}\nointerlineskip\vfill}}%
    \loop\ifnum\@tempcntb<\drc@ny
       \@tempb
-      \def\@tempa{\def\@tempa{\hfill\vbox to\z@{\vss\hrule\@width.4\p@\@height\paperheight\vss}\hfill}}%
+      \def\@tempa{\def\@tempa{\hfill\vbox to\z@{\vss\hrule\@width.4\p@\@height2\paperheight\vss}\hfill}}%
       \advance\@tempcntb\@ne
       \noindent
       {\loop\ifnum\@tempcnta<\drc@nx
@@ -1741,6 +1754,7 @@
    \cleardoublepage
    \@solutionfalse
    \@drc@bothfalse
+   \drc@set@fakepage
    \drc@test@setup{#1}%
    \if@drc@both\@xp\@firstoftwo\else\@xp\@secondoftwo\fi
    {\drc@toks{}\drc@collect}\drc@test@single
@@ -1752,7 +1766,6 @@
 }
 
 \newcommand*{\drc@test@single}{%
-   \drc@set@fakepage
    \drc@reset@counters
    \if@solution
       \drc@pdfbookmark[1]{\drc@test@nr. \drc@test@type\ \drc@subject\ifdefined\drc@test@ver\ -- \drc@test@ver\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%
@@ -1777,6 +1790,7 @@
    \cleardoublepage
    \endgroup
    \@solutiontrue
+   \drc@set@fakepage
    \pagestyle{scrheadings}%
    \ifoot{Schuljahr \drcschool@year\ --- \drc@test@nr. \drc@test@type\ \drc@subject\ --- \ifdefined\drc@test@ver\drc@test@ver\ ---\ \fi \classname\space\@class}%
 %   \ofoot[]{\thepage}%

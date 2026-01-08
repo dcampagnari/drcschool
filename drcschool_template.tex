@@ -814,7 +814,7 @@ einen Leerraum lassen: Man vergleiche
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{worksheet}{Horizontale Auflistungen und Wahr-Falsch-Tabellen}
+\begin{worksheet}{Horizontale Auflistungen und Wahr-Falsch-Tabellen}[solution=true]
 
 In Mathe-Büchern werden Teilaufgaben üblicherweise horizontal aufgelistet.
 Ankreuzaufgaben mit relativ kurzen Texten könnten auch platzsparender auf
@@ -959,14 +959,30 @@ Aussage 4 \true
 \end{center}
 Natürlich kann man die ganzen \cs{midrule}s (oder \cs{hline}s, wenn man will) weglassen,
 wenn man sie nicht will\ldots\ Das optionale Argument ist wie gewohnt die Ausrichtung:
-
-\noindent
+\begin{center}
 Bla bla bla
 \begin{TF}[t]{.35\linewidth}
 Aussage A \true
 Aussage B \false
 \end{TF}
+\end{center}
 
+\exercise[Horizontale Antworten]
+Für die Lösung kurzer Aufgaben kann man die Umgebung \env{answers*} verwenden:
+\begin{questions*}{4}
+\question $\log_2(4)$
+\question $\log_5(5)$
+\question $\log_5(125)$
+\question $\log_2(1/4)$
+\end{questions*}
+\begin{solution}
+\begin{answers*}{4}
+\answer $2$
+\answer $1$
+\answer $3$
+\answer $-2$
+\end{answers*}
+\end{solution}
 \end{worksheet}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
