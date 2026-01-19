@@ -516,6 +516,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v2.0.2]: https://github.com/dcampagnari/drcschool/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/dcampagnari/drcschool/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/dcampagnari/drcschool/compare/v1.6.0...v2.0.0
 [v1.6.0]: https://github.com/dcampagnari/drcschool/compare/v1.5.0...v1.6.0
@@ -530,4 +531,5 @@ First more or less stable version.
 [v1.2.0]: https://github.com/dcampagnari/drcschool/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
+
 [v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
