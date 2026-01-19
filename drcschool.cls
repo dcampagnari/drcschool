@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2026-01-08 v2.0.1]
+\ProvidesClass{drcschool}[2026-01-19 v2.0.2]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1712,7 +1712,7 @@
 \define@key{drc@test}{postpts}{\def\drc@pts@post{#1}}
 \define@key{drc@test}{logo}{\SetLogo{#1}}
 \define@key{drc@test}{solution}[true]{\drc@solution@bool{#1}}
-\newcommand*{\drc@print@test@headline}{%
+\newcommand*{\drc@test@headline}{%
    \begin{center}
    \setbox\drc@box=\hbox{\vbox{\hbox{Schuljahr \drcschool@year}\hbox{\@date}}}%
    \leavevmode\drc@logo
@@ -1775,7 +1775,7 @@
       \drc@pdfbookmark[1]{\drc@test@nr. \drc@test@type\ \drc@subject\ifdefined\drc@test@ver\ -- \drc@test@ver\fi}{KA.\the\c@worksheet.T}%
       \pagestyle{empty}%
    \fi
-   \drc@print@test@headline
+   \drc@test@headline
 }
 
 \newcommand*{\drc@test@both}{%
@@ -1785,7 +1785,7 @@
    \let\label@in@display\@gobble
    \drc@pdfbookmark[1]{\drc@test@nr. \drc@test@type\ \drc@subject\ifdefined\drc@test@ver\ -- \drc@test@ver\fi}{KA.\the\c@worksheet.T}%
    \pagestyle{empty}%
-   \drc@print@test@headline
+   \drc@test@headline
    \the\drc@toks
    \cleardoublepage
    \endgroup
@@ -1797,7 +1797,7 @@
    \thispagestyle{empty}%
    \drc@reset@counters
    \drc@pdfbookmark[1]{\drc@test@nr. \drc@test@type\ \drc@subject\ifdefined\drc@test@ver\ -- \drc@test@ver\fi\ -- \solutionname}{KA.\the\c@worksheet.S}%
-   \drc@print@test@headline
+   \drc@test@headline
    \the\drc@toks
 }
 
@@ -1985,10 +1985,10 @@
    \thr@@Daxes#1%
   }{\endscope\endtikzpicture}
 \def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
-   \edef\thr@@Dxmax{\ifdim\dimexpr-#2\p@/2\relax<#5\p@#5\else-#2/2\fi}%
-   \edef\thr@@Dymax{\ifdim\dimexpr-#2\p@/2\relax<#7\p@#7\else-#2/2\fi}%
-   \edef\thr@@Dxmin{\ifdim\dimexpr#3\p@/2\relax<-#4\p@#4\else#3/2\fi}%
-   \edef\thr@@Dymin{\ifdim\dimexpr#3\p@/2\relax<-#6\p@#6\else#6/2\fi}%
+   \edef\thr@@Dxmax{\ifdim\dimexpr-#2\p@/2\relax<#5\p@#5\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\thr@@Dymax{\ifdim\dimexpr-#2\p@/2\relax<#7\p@#7\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\thr@@Dxmin{\ifdim\dimexpr#3\p@/2\relax<-#4\p@#4\else\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
+   \edef\thr@@Dymin{\ifdim\dimexpr#3\p@/2\relax<-#6\p@#6\else\@xp\rem@pt\the\dimexpr#6\p@/2\relax\fi}%
    \edef\drc@tempa{\ifdim\thr@@Dxmax\p@<\thr@@Dymax\p@\thr@@Dxmax\else\thr@@Dxmax\fi}%
    \edef\drc@tempb{\ifdim\thr@@Dxmin\p@>\thr@@Dymin\p@\thr@@Dxmin\else\thr@@Dymin\fi}%
    \tikzpicture[#1]
