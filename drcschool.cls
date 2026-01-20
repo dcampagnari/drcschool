@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2026-01-19 v2.0.2]
+\ProvidesClass{drcschool}[2026-01-20 v2.0.3]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1985,20 +1985,20 @@
    \thr@@Daxes#1%
   }{\endscope\endtikzpicture}
 \def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
-   \edef\thr@@Dxmax{\ifdim\dimexpr-#2\p@/2\relax<#5\p@#5\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
-   \edef\thr@@Dymax{\ifdim\dimexpr-#2\p@/2\relax<#7\p@#7\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
-   \edef\thr@@Dxmin{\ifdim\dimexpr#3\p@/2\relax<-#4\p@#4\else\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
-   \edef\thr@@Dymin{\ifdim\dimexpr#3\p@/2\relax<-#6\p@#6\else\@xp\rem@pt\the\dimexpr#6\p@/2\relax\fi}%
-   \edef\drc@tempa{\ifdim\thr@@Dxmax\p@<\thr@@Dymax\p@\thr@@Dxmax\else\thr@@Dxmax\fi}%
+   \edef\thr@@Dxmax{\ifdim\dimexpr-#3\p@/2\relax<#5\p@#5\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
+   \edef\thr@@Dymax{\ifdim\dimexpr-#3\p@/2\relax<#7\p@#7\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
+   \edef\thr@@Dxmin{\ifdim\dimexpr#2\p@/2\relax<-#4\p@#4\else\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\thr@@Dymin{\ifdim\dimexpr#2\p@/2\relax<-#6\p@#6\else\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\drc@tempa{\ifdim\thr@@Dxmax\p@<\thr@@Dymax\p@\thr@@Dymax\else\thr@@Dxmax\fi}%
    \edef\drc@tempb{\ifdim\thr@@Dxmin\p@>\thr@@Dymin\p@\thr@@Dxmin\else\thr@@Dymin\fi}%
    \tikzpicture[#1]
    \draw[help lines,step=.5](\thr@@Dxmin-.3,\thr@@Dymin-.3)grid(\thr@@Dxmax+.3,\thr@@Dymax+.3);
    \scope[x={(-.5cm,-.5cm)},y={(1cm,0cm)},z={(0cm,1cm)}]
-   \draw[->,shorten >=-3mm,shorten <=-3mm](-\drc@tempa*2,0,0)--(-\drc@tempb*2,0,0)node[above left]{$x_1$};
-   \draw[->,shorten >=-3mm,shorten <=-3mm](0,\thr@@Dxmin,0)--(0,\thr@@Dxmax,0)node[below right]{$x_2$};
-   \draw[->,shorten >=-3mm,shorten <=-3mm](0,0,\thr@@Dymin)--(0,0,\thr@@Dymax)node[above left]{$x_3$};
-   \foreach\x in{-\fpeval{ceil(\drc@tempa*2)},...,-1}\draw[thick](\x,0,-.06)--(\x,0,.06);
-   \foreach\x in{1,...,\fpeval{-floor(\drc@tempb*2)}}\draw[thick](\x,0,-.06)--(\x,0,.06);
+   \draw[thick,->,shorten >=-3mm,shorten <=-3mm](-\drc@tempa*2,0,0)--(-\drc@tempb*2,0,0)node[above left]{$x_1$};
+   \draw[thick,->,shorten >=-3mm,shorten <=-3mm](0,\thr@@Dxmin,0)--(0,\thr@@Dxmax,0)node[below right]{$x_2$};
+   \draw[thick,->,shorten >=-3mm,shorten <=-3mm](0,0,\thr@@Dymin)--(0,0,\thr@@Dymax)node[above left]{$x_3$};
+   \foreach\x in{-\fpeval{ceil(\drc@tempa*2)},...,-1}\draw[thick](\x,0,-.08)--(\x,0,.08);
+   \foreach\x in{1,...,\fpeval{-floor(\drc@tempb*2)}}\draw[thick](\x,0,-.08)--(\x,0,.08);
    \foreach\x in{\fpeval{ceil(\thr@@Dxmin)},...,-1}\draw[thick](0,\x,-.06)--(0,\x,.06);
    \foreach\x in{1,...,\fpeval{floor(\thr@@Dxmax)}}\draw[thick](0,\x,-.06)--(0,\x,.06);
    \foreach\x in{\fpeval{ceil(\thr@@Dymin)},...,-1}\draw[thick](0,-.06,\x)--(0,.06,\x);

@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-01-20 [v2.0.3]
+### Fixed
+The fix in [v2.0.2] wasn't fixing anything... hopefully really fixed now.
+
 ## 2026-01-19 [v2.0.2]
 ### Fixed
 There was still an error in `{3daxes}` which led to errors with some sizes.
@@ -516,6 +520,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v2.0.3]: https://github.com/dcampagnari/drcschool/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/dcampagnari/drcschool/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/dcampagnari/drcschool/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/dcampagnari/drcschool/compare/v1.6.0...v2.0.0
@@ -531,5 +536,4 @@ First more or less stable version.
 [v1.2.0]: https://github.com/dcampagnari/drcschool/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
-
 [v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
