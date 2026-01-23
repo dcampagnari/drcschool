@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2026-01-20 [v2.1.0]
+### Fixed
+My my, this is getting embarrassing... the fix in [v2.0.3] which should have
+fixed the botched fix in [v2.0.2] actually screwed up more stuff than it
+fixed... this time I am confident that I got it right, but if history ever
+proved anything is that I am usually wrong...
+### Added
+With the macro `\SetTestHeadline` one can design a test's headline at please.
+
 ## 2026-01-20 [v2.0.3]
 ### Fixed
 The fix in [v2.0.2] wasn't fixing anything... hopefully really fixed now.
@@ -28,18 +37,18 @@ There was still an error in `{3daxes}` which led to errors with some sizes.
   `solution` which can be a simple switch, *or* it can be `both`, such that
   both versions are printed. The starred versions have been removed.
 - Removed the macro `\difficulty`. (It existed only for backward compatibility
-  but I think I never actyally used it.)
+  but I think I never actually used it.)
 - The default style for schedules is now `simple`. The old style `default`
   has been renamed to `full`.
 - Removed the environment `{schedule*}`. Its functionality can be obtained
   by passing `embed=true` to `{schedule}`.
 - The various environment `{print2}` & Co. have been replaced by `{copies}`.
-- The environment `{cluecards}` has been also recoded; it does not need
+- The environment `{cluecards}` has been also re-coded; it does not need
   Ti*k*Z any more. The "signature" (or layout) is now a *mandatory* argument
   and the order rows/columns has been swapped, so that it corresponds to
   `{copies}`.
 ### Added
-- Suppont for printing the teacher's name on tests.
+- Support for printing the teacher's name on tests.
 ### Fixed
 - Changed a bit the coding of horizontal lists (`{questions*}` and `{answers*}`),
   hopefully more efficient.
@@ -124,7 +133,7 @@ There was still an error in `{3daxes}` which led to errors with some sizes.
 Suddenly the environments `{TA}` and `{TA*}` were misbehaving when they
 were the last text in a schedule cell. (I guess some of the recent changes
 to `array` and/or `longtable` might have to do with that, but I don't want
-to blame David or Ulrike `:-)`.) The original code was proably bad anyway.
+to blame David or Ulrike `:-)`.) The original code was probably bad anyway.
 
 ## 2024-07-27 [v1.3.2]
 ### Fixed
@@ -179,15 +188,15 @@ variants are roughly 10 times faster.)
 - Added `\lonelyquestion`.
 ### Changed
 - Changed internal coding of boolean keys, now based on the kernel
-  macro `\in@` intead of KoMa's `\Ifstr`.
-- Reimplemented `{matching}` using the kernel's `\int_random:nn`
+  macro `\in@` instead of KoMa's `\Ifstr`.
+- Re-implemented `{matching}` using the kernel's `\int_random:nn`
   instead of `\pgfmathrandominteger` (faster).
 - I was redefining math figures by hand but it turns out `newtxsf`
   has a (not really well-documented) option `noSTIXops` for that.
 - Removed `nosymbolsc` option from `newtxsf`. Since the default
-  setup is a complete font setup and both AMS sybols are summarized
+  setup is a complete font setup and both AMS symbols are summarized
   in a single math family there is no need to spare a (otherwise
-  precious) math alphaet.
+  precious) math alphabet.
 - Renamed a couple of internal macros.
 ### Fixed (?)
 - Fixed a small bug in the handling of lists `{questions}` and `{hint}`.
@@ -265,7 +274,7 @@ Here a short list of changes, in no particular order:
   rewrite that...) but I couldn't pinpoint the issue. Rearranging
   packages seems to have silenced the warning, but I still would like
   to understand what the freaking problem was...
-- Completely recoded the `{schedule}`. Now one can define different
+- Completely re-coded the `{schedule}`. Now one can define different
   "styles" with different columns and related macros. We'll see
   how many bugs I introduced...
 - Added a `{schedule*}` which does not start a new page.
@@ -306,7 +315,7 @@ before I moved to the following version.
   class from which this one was derived) isn't needed any more, so I
   simply removed it.
 - Added the name `\starredexercisename`.
-- Changed the Ti*k*Z pic rightangle: it does *not* draw a 90 degree
+- Changed the Ti*k*Z pic `rightangle`: it does *not* draw a 90 degree
   angle but only prints the dot in the middle.
 
 ## 2023-06-15 v0.4a
@@ -469,7 +478,7 @@ Now a key/value syntax can be also used instead of only number or
 start time. The optional printing of the headline is also a possibility.
 
 ## 2023-01-23 v0.1b
-- Added radio buttons, recoded some stuff, added `{multresponse}`,
+- Added radio buttons, re-coded some stuff, added `{multresponse}`,
   changed `{multchoice}`, added `\setduration`, corrected a bunch of
   bugs which I inadvertently introduced...
 - Thinking of introducing a key/value syntax for the `{schedule}`
@@ -520,6 +529,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v2.1.0]: https://github.com/dcampagnari/drcschool/compare/v2.0.3...v2.1.0
 [v2.0.3]: https://github.com/dcampagnari/drcschool/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/dcampagnari/drcschool/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/dcampagnari/drcschool/compare/v2.0.0...v2.0.1

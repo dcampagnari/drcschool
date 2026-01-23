@@ -30,6 +30,7 @@
 \SetDifficultySymbols{arg}#S
 \SetDuration{arg}#S
 \SetScheduleStyle{arg}#S
+\SetTestHeadline{arg}#S
 \SetTitleSeparators[opt]{arg1}{arg2}#S
 \SetWorksheetOptions{arg}#S
 \UseDifficultySymbols{Arg}#S
@@ -150,6 +151,7 @@
 \teacher#S
 \time#S
 \toprule#St
+\totalpoints#S
 \true#S
 \useprevdepth#S
 \vecsum#S

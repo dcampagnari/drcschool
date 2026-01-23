@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2026-01-20 v2.0.3]
+\ProvidesClass{drcschool}[2026-01-23 v2.1.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -1725,12 +1725,12 @@
    \hline
    \multicolumn{3}{|l|}{Name:}\\
    \hline
-   \pointsname: \kern5em $\big/$\csname drcschool@test\the\c@worksheet @pts\endcsname&\markname:&mündlicher Eindruck:\kern3cm\\
+   \pointsname: \kern5em $\big/$\totalpoints&\markname:&mündlicher Eindruck:\kern3cm\\
    \hline
    \end{tabularx}%
    \end{center}%
 }
-
+\newcommand{\SetTestHeadline}[1]{\renewcommand*{\drc@test@headline}{#1}}
 \newcommand*{\drc@test@setup}[1]{% #1=key/val list
    \ifdefined\drc@test
       \ClassError{drcschool}{Nested tests.}%
@@ -1745,6 +1745,7 @@
    \stepcounter{worksheet}%
    \drcschool@pts\z@
    \def\class@exam{\classname\space\@class}%
+   \def\totalpoints{\csname drcschool@test\the\c@worksheet @pts\endcsname}%
    \setkeys{drc@test}{#1}%
    \let\exercise\exercise@test
    \let\lonelyquestion\lonelyquestion@
@@ -1985,11 +1986,15 @@
    \thr@@Daxes#1%
   }{\endscope\endtikzpicture}
 \def\thr@@Daxes#1(#2,#3)(#4,#5)(#6,#7){%
-   \edef\thr@@Dxmax{\ifdim\dimexpr-#3\p@/2\relax<#5\p@#5\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
-   \edef\thr@@Dymax{\ifdim\dimexpr-#3\p@/2\relax<#7\p@#7\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
-   \edef\thr@@Dxmin{\ifdim\dimexpr#2\p@/2\relax<-#4\p@#4\else\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
-   \edef\thr@@Dymin{\ifdim\dimexpr#2\p@/2\relax<-#6\p@#6\else\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
-   \edef\drc@tempa{\ifdim\thr@@Dxmax\p@<\thr@@Dymax\p@\thr@@Dymax\else\thr@@Dxmax\fi}%
+   \edef\thr@@Dxmax{\ifdim\dimexpr#2\p@/2\relax>-#5\p@#5\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\thr@@Dymax{\ifdim\dimexpr#2\p@/2\relax>-#7\p@#7\else-\@xp\rem@pt\the\dimexpr#2\p@/2\relax\fi}%
+   \edef\thr@@Dxmin{\ifdim\dimexpr#3\p@/2\relax<-#4\p@#4\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
+   \edef\thr@@Dymin{\ifdim\dimexpr#3\p@/2\relax<-#6\p@#6\else-\@xp\rem@pt\the\dimexpr#3\p@/2\relax\fi}%
+   \ifdim\thr@@Dxmax\p@<\p@\def\thr@@Dxmax{1}\fi
+   \ifdim\thr@@Dymax\p@<\p@\def\thr@@Dymax{1}\fi
+   \ifdim\thr@@Dxmin\p@>-\p@\def\thr@@Dxmin{-1}\fi
+   \ifdim\thr@@Dymin\p@>-\p@\def\thr@@Dymin{-1}\fi
+   \edef\drc@tempa{\ifdim\thr@@Dxmax\p@>\thr@@Dymax\p@\thr@@Dymax\else\thr@@Dxmax\fi}%
    \edef\drc@tempb{\ifdim\thr@@Dxmin\p@>\thr@@Dymin\p@\thr@@Dxmin\else\thr@@Dymin\fi}%
    \tikzpicture[#1]
    \draw[help lines,step=.5](\thr@@Dxmin-.3,\thr@@Dymin-.3)grid(\thr@@Dxmax+.3,\thr@@Dymax+.3);
@@ -1997,7 +2002,7 @@
    \draw[thick,->,shorten >=-3mm,shorten <=-3mm](-\drc@tempa*2,0,0)--(-\drc@tempb*2,0,0)node[above left]{$x_1$};
    \draw[thick,->,shorten >=-3mm,shorten <=-3mm](0,\thr@@Dxmin,0)--(0,\thr@@Dxmax,0)node[below right]{$x_2$};
    \draw[thick,->,shorten >=-3mm,shorten <=-3mm](0,0,\thr@@Dymin)--(0,0,\thr@@Dymax)node[above left]{$x_3$};
-   \foreach\x in{-\fpeval{ceil(\drc@tempa*2)},...,-1}\draw[thick](\x,0,-.08)--(\x,0,.08);
+   \foreach\x in{-\fpeval{floor(\drc@tempa*2)},...,-1}\draw[thick](\x,0,-.08)--(\x,0,.08);
    \foreach\x in{1,...,\fpeval{-floor(\drc@tempb*2)}}\draw[thick](\x,0,-.08)--(\x,0,.08);
    \foreach\x in{\fpeval{ceil(\thr@@Dxmin)},...,-1}\draw[thick](0,\x,-.06)--(0,\x,.06);
    \foreach\x in{1,...,\fpeval{floor(\thr@@Dxmax)}}\draw[thick](0,\x,-.06)--(0,\x,.06);
