@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2026-01-23 v2.1.0]
+\ProvidesClass{drcschool}[2026-02-20 v2.2.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -106,7 +106,9 @@
    \RequirePackage[arrowvec,noamssymb]{drcmath}%
 %   \def\FiraSans@scale{.9}%
    \g@addto@macro\drc@unit@defs{\def\litre{\hbox{\usefont{OT1}{FiraSans-TLF}{m}{n}l}}}%
-}{}
+  }{
+   \providecommand*{\E}{\cdot10^}%
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,9 +181,6 @@
 \catcode`T=12
 \lowercase{\def\x{\def\drc@rem@pt##1.##2PT{##1\ifnum##2>\z@,##2\fi}}}
 \@xp\endgroup\x
-% replaces period by comma in decimals
-\def\drc@decimal#1{\@xp\drc@decimal@\romannumeral-`0#1\relax\relax}
-\def\drc@decimal@#1.#2\relax{#1,#2}
 % copies of etoolbox
 \def\drc@expandonce#1{\unexpanded\expandafter{#1}}
 \def\drc@csexpandonce#1{\expandafter\drc@expandonce\csname#1\endcsname}
@@ -229,6 +228,8 @@
    \fi
    \drc@next
 }
+\newcommand*{\afterfi}{}
+\def\afterfi#1#2\fi{\fi#1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -430,9 +431,7 @@
    \@tempswafalse
    \def\drc@block{{0}}%
    \@expandtwoargs\setkeys{drc@schedule}{#1}%
-   \if@tempswa\@xp\@firstoftwo\else\@xp\@secondoftwo\fi
-      {\@xp\schedule@start@time\drc@start}%
-      {\@xp\schedule@start@block\drc@block}%
+   \if@tempswa\afterfi{\@xp\schedule@start@time\drc@start}\else\afterfi{\@xp\schedule@start@block\drc@block}\fi
 }
 \newcommand*{\drc@block@separator}{\def\drc@block@separator{\clearpage}}
 \newcommand*{\schedule@start@block}[1]{%
@@ -738,11 +737,13 @@
 %%
 %% GENERIC MACROS FOR SOLUTIONS
 \newif\if@solution
+\let\showsolution\@solutiontrue
+\let\hidesolution\@solutionfalse
 
-\newcommand{\IfSolutionT}{\if@solution\@xp\@firstofone\else\@xp\@gobble\fi}
-\newcommand{\IfSolutionF}{\if@solution\@xp\@gobble\else\@xp\@firstofone\fi}
-\newcommand{\IfSolutionTF}{\if@solution\@xp\@firstoftwo\else\@xp\@secondoftwo\fi}
-\newcommand{\IfSolutionFT}{\if@solution\@xp\@secondoftwo\else\@xp\@firstoftwo\fi}
+\newcommand*{\IfSolutionT}{\if@solution\@xp\@firstofone\else\@xp\@gobble\fi}
+\newcommand*{\IfSolutionF}{\if@solution\@xp\@gobble\else\@xp\@firstofone\fi}
+\newcommand*{\IfSolutionTF}{\if@solution\@xp\@firstoftwo\else\@xp\@secondoftwo\fi}
+\newcommand*{\IfSolutionFT}{\if@solution\@xp\@secondoftwo\else\@xp\@firstoftwo\fi}
 
 \newcommand*{\answer}{\ClassError{drcschool}{Stray \string\answer}{An \string\answer\space should appear only within a {solution} environment.}}
 \newcounter{answer}[exercise]
@@ -774,7 +775,7 @@
    \drc@toks{}%
    \drc@collect
   }{%
-   \if@solution\expandafter\@firstofone\else\expandafter\@gobble\fi\@solution
+   \if@solution\afterfi\@solution\fi
 }
 \newcommand*{\@solution}{%
    \def\NoCheck{\let\drc@check@answers\relax}%
@@ -1151,14 +1152,11 @@
 }
 % normal version
 \newcommand*{\fill@here}[2][2]{%
-   \relax
-   \ifmmode
-      \setbox\z@=\hbox{$\m@th\displaystyle#2$}%
-   \else
-      \setbox\z@=\hbox{\vrule\@depth.5ex\@width\z@#2}%
-   \fi
+   \bgroup
+   \setbox\z@=\hbox\TextOrMath{{\vrule\@depth.5ex\@width\z@#2}}{{$\m@th\displaystyle#2$}}%
    \Ifdimen{#1}{\setbox\drc@box=\hb@xt@#1}{\setbox\drc@box=\hb@xt@#1\wd\z@}{\hfil\unhbox\z@\hfil}%
    \fill@here@
+   \egroup
 }
 \newcommand*{\fill@here@}{\underline{\print@drc@box}}
 
@@ -1167,11 +1165,7 @@
    \relax
    \begingroup
    \fboxrule\z@
-   \ifmmode
-      \@xp\fillbox@m
-   \else
-      \@xp\fillbox@t
-   \fi
+   \TextOrMath\fillbox@t\fillbox@m
 }
 \newcommand*{\fillbox@t}[2][2]{%
    \setbox\z@=\hbox{#2}%
@@ -1397,11 +1391,10 @@
    \thispagestyle{plain}%
    \drc@set@fakepage
    \drc@reset@counters
-   \if@drc@both\@xp\@firstoftwo\else\@xp\@secondoftwo\fi
-   {\drc@toks{}\drc@collect}\drc@worksheet@single
+   \if@drc@both\afterfi{\drc@toks{}\drc@collect}\else\afterfi\drc@worksheet@single\fi
 }
 \def\endworksheet{%
-   \if@drc@both\@xp\@firstofone\else\@xp\@gobble\fi\drc@worksheet@both
+   \if@drc@both\afterfi\drc@worksheet@both\fi
    \ifcsname clear\ws@clearafter page\endcsname
       \csname clear\ws@clearafter page\endcsname
    \else
@@ -1606,7 +1599,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% MISCELLANEOUS HELPER MACROS
+%% MISCELLANEOUS MACROS
 \newcommand*{\point}[1][]{%
    \par
    \IfBlankTF{#1}{\@hangfrom{\space\textbullet\space}}{\hangindent2em\noindent\textbf{#1}\space}%
@@ -1622,6 +1615,67 @@
 \newcommand*{\exercises}[1]{\leavevmode\vtop{\def\\{\cr\ignorespaces}\ialign{\strut##\hfil\cr#1\crcr}}}
 \newcommand*{\homework}{HA:~\exercises}
 \newcommand*{\warningsymbol}{{\fontencoding{U}\fontfamily{fontawesomethree}\selectfont\symbol{111}}}
+
+% OLD VERSION without zero padding
+%\newcommand*{\round}{%
+%   \hbox\bgroup\m@th
+%   \mathcode`\.=44
+%   $\@ifstar{\@tempswatrue\drc@round}{\@tempswafalse\drc@round}%
+%}
+%\newcommand*{\drc@round}[2][3]{%
+%   \edef\drc@num@raw{\fpeval{#2}}%
+%   \edef\drc@num@exp{\fpeval{logb(\drc@num@raw)}}%
+%   \if@tempswa
+%      \fpeval{round(\drc@num@raw/1e\drc@num@exp,#1-1)}%
+%      \ifnum\drc@num@exp=\z@\else\E{\drc@num@exp}\fi
+%   \else
+%      \fpeval{round(\drc@num@raw,#1-1-\drc@num@exp)}%
+%   \fi%(\the\count@)
+%   $\egroup
+%}
+\newcommand*{\round}{%
+   \hbox\bgroup\m@th
+   \@ifstar{\@tempswatrue\drc@round}{\@tempswafalse\drc@round}%
+}
+\newcommand*{\drc@round}[2][3]{%
+   \edef\drc@num@raw{\fpeval{#2}}%
+   \edef\drc@num@exp{\fpeval{logb(\drc@num@raw)}}%
+   \def\drc@num@post{}%
+   \if@tempswa
+      \edef\drc@num@print{\fpeval{round(\drc@num@raw/1e\drc@num@exp,#1-1)}}%
+      \ifnum\drc@num@exp=\z@\else\def\drc@num@post{\E{\drc@num@exp}}\fi
+      \count@\z@
+   \else
+      \edef\drc@num@print{\fpeval{round(\drc@num@raw,#1-1-\drc@num@exp)}}%
+      \ifnum\drc@num@exp<\z@\count@=\drc@num@exp\relax\else\count@\z@\fi
+   \fi
+   $\@tempswatrue
+   \@xp\drc@num@process\drc@num@print\@nil
+   \drc@num@zeropad{#1}\drc@num@post
+   $\egroup
+}
+\newcommand*{\drc@num@process}[1]{%
+   \ifx#1\@nil\else
+      \if#1.,\@tempswafalse\else#1\advance\count@\@ne\fi
+      \expandafter\drc@num@process
+   \fi
+}
+\newcommand*{\roundto}[2]{%
+   \bgroup
+   \edef\drc@num@print{\fpeval{round(#2,#1)}}%
+   \@tempswatrue
+   \count@\z@
+   \def\@tempa##1{\ifx##1\@nil\else\if##1.,\@tempswafalse\else##1\if@tempswa\else\advance\count@\@ne\fi\fi\@xp\@tempa\fi}%
+   \@xp\@tempa\drc@num@print\@nil
+   \drc@num@zeropad{#1}%
+   \egroup
+}
+\def\drc@num@zeropad#1{%
+   \loop\ifnum#1>\count@
+      \if@tempswa,\@tempswafalse\fi0\advance\count@\@ne
+   \repeat
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -1678,13 +1732,7 @@
 \newcommand*{\drc@pts@pre}{}
 \newcommand*{\drc@pts@post}{}
 \IfFileExists{logo-ggs.png}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-ggs}\hfill}}{\def\drc@logo{}}%
-\newcommand*{\SetLogo}[1]{%
-   \if\relax\detokenize{#1}\relax
-      \def\drc@logo{}%
-   \else
-      \def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{#1}\hfill}%
-   \fi
-}
+\newcommand*{\SetLogo}[1]{\IfBlankTF{#1}{\let\drc@logo\@empty}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{#1}\hfill}}}
 \define@key{drc@test}{subject}{\gdef\drc@subject{#1}}
 \define@key{drc@test}{teacher}{\gdef\drc@teacher{#1}}
 \define@key{drc@test}{M}[]{\gdef\drc@subject{Mathematik}}
@@ -1757,10 +1805,9 @@
    \@drc@bothfalse
    \drc@set@fakepage
    \drc@test@setup{#1}%
-   \if@drc@both\@xp\@firstoftwo\else\@xp\@secondoftwo\fi
-   {\drc@toks{}\drc@collect}\drc@test@single
+   \if@drc@both\afterfi{\drc@toks{}\drc@collect}\else\afterfi\drc@test@single\fi
   }{%
-   \if@drc@both\@xp\@firstofone\else\@xp\@gobble\fi\drc@test@both
+   \if@drc@both\afterfi\drc@test@both\fi
    \clearpage
    \immediate\write\@auxout{\global\string\@namedef{drcschool@test\the\c@worksheet @pts}{\drc@strip@pt\drcschool@pts}}%
    \removebackgroundgrid
@@ -1895,23 +1942,29 @@
   \fi
 }
 
-\newcommand*{\vecsum}{\@ifstar{\def\drc@next{\IfSolutionT}\vec@sum}{\def\drc@next{\@firstofone}\vec@sum}}
-\newcommand*{\vec@sum}[1][]{\vec@sum@{#1}}
-\def\vec@sum@#1(#2)(#3){\@ifnextchar[{\vec@sum@@{#1}{#2}{#3}}{\vec@sum@@{#1}{#2}{#3}[\@empty]}}
-\def\vec@sum@@#1#2#3[#4];{%
-   \fill[#1](0,0)circle(.05);
-   \path[#1](#2)++(#3)coordinate(S) ;
-   \drc@next{\draw[dashed,#1] (#2)--(S)--(#3) ;}
-   \draw[<-,#1] let \p1 = (#2) in (#2) -- (0,0) node[sloped,above,midway]{\footnotesize\vsl@{#4}};
-   \draw[<-,#1] let \p1 = (#3) in (#3) -- (0,0) node[sloped,below,midway]{\footnotesize\vsl@{#4}};
-   \drc@next{\draw[<-,#1] let \p1 = (S) in (S) -- (0,0) node[sloped,below,midway]{\footnotesize\vsl@{#4}}};
+\newcommand*{\vecsum}{%
+   \@ifstar{\@testopt{\vec@sum\IfSolutionT}{}}%
+           {\@testopt{\vec@sum\@firstofone}{}}%
+}
+\def\vec@sum#1[#2](#3)(#4){\@testopt{\vec@sum@{#1}{#2}{#3}{#4}}{}}
+\def\vec@sum@#1#2#3#4[#5]{%
+   \fill[#2](0,0)circle(.05);
+   \path[#2](#3)++(#4)coordinate(S);
+   #1{\draw[dashed,#2](#3)--(S)--(#4);}
+   \draw[<-,#2] let \p1 = (#3) in (#3)--node[sloped,below]{\vsl@{#5}}(0,0);
+   \draw[<-,#2] let \p1 = (#4) in (#4)--node[sloped,below]{\vsl@{#5}}(0,0);
+   #1{\draw[<-,#2] let \p1 = (S) in (S)--node[sloped,below]{\vsl@{#5}}(0,0);}
 }
 \newcommand*{\vsl@}[1]{%
-   \ifx\@empty#1\relax\else
-   \pgfmathparse{veclen(\x1,\y1)/1cm}%
-   \pgfmathroundtozerofill{\pgfmathresult}%
-   \drc@decimal\pgfmathresult\,#1
-   \fi
+   \IfBlankF{#1}{%
+      \bgroup
+      \pgfmathparse{veclen(\x1,\y1)/1cm}%
+      \pgfmathroundtozerofill{\pgfmathresult}%
+      \mathcode`\.=44
+      \scriptsize
+      $\m@th\pgfmathresult$\,#1%
+      \egroup
+   }%
 }
 
 \newcommand*{\grid}{\drc@grid} % this is redefined in fillable worksheets
@@ -2093,7 +2146,6 @@
    \vrule\@height\dimexpr\ht\z@-\dimen@\relax\@depth\dimexpr4\dimen@-\ht\z@\relax\@width\dimen@
 }
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%
@@ -2226,11 +2278,7 @@
    \relax
    \begingroup
    \fboxrule\z@
-   \ifmmode
-      \@xp\fillbox@m@hy
-   \else
-      \@xp\fillbox@t@hy
-   \fi
+   \TextOrMath\fillbox@t@hy\fillbox@m@hy
 }
 \newcommand*{\fillbox@t@hy}[2][2]{%
    \leavevmode

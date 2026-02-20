@@ -143,6 +143,8 @@
 \radiobutton#S
 \removebackgroundgrid#S
 \rightangle#S
+\round[opt]{arg}#S
+\roundto{arg1}{arg2}#S
 \runinexercises[opt]#S
 \saveprevdepth#S
 \scolumnheader#S
@@ -154,6 +156,7 @@
 \totalpoints#S
 \true#S
 \useprevdepth#S
+\unit{arg}#S
 \vecsum#S
 \warningsymbol#S
 \wrap[opt]{arg1}#S

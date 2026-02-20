@@ -1445,20 +1445,22 @@ ICH HABE ES NOCH NICHT GANZ DURCHGETESTET, ALSO MIT VORSICHT GENIESSEN!
 Das Makro \cs{vecsum} nimmt zwei \TikZ-Koordinaten und bildet die Summe mit Parallelogramm.
 Die Syntax ist
 \bcode
-\\vecsum[\param{\TikZ\ Optionen}](\param{coord1})(\param{coord2})[\param{Einheit}];
+\\vecsum\optstar[\param{\TikZ\ Optionen}](\param{coord1})(\param{coord2})[\param{Einheit}];
 \ecode
-Wird das letzte optionale Argument nicht angegeben, so sieht man nur die Vektoren. Wird
-etwas angegeben (es ist für eine Einheit gedacht), so wird die Länge der Vektoren ausgegeben.
-Die \TikZ-Optionen können Verschiebungen und Farben enthalten, aber \emph{keine} Skalierung:
+Wird das letzte optionale Argument nicht angegeben, so sieht man nur die Vektoren.
+Wird etwas angegeben (es ist für eine Einheit gedacht), so wird die Länge der Vektoren
+ausgegeben. Die \TikZ-Optionen können Verschiebungen und Farben enthalten, aber
+\emph{keine} Skalierung:
 \begin{center}
 \begin{tikzpicture}
 \vecsum(30:4)(120:3)[N];
 \vecsum[xshift=4cm,red](1,1)(-1,1);
 \vecsum[xshift=3cm,yshift=4cm](3,-1)(20:2);
-\vecsum[xshift=6cm](10:2)(-25:1.2)[];
+\vecsum[xshift=6cm](10:2)(-25:1.2)[\relax];
 \end{tikzpicture}
 \end{center}
-Will man die Längen ohne Einheiten haben, so muss man ein leeres optionales Argument angeben.
+Will man die Längen ohne Einheiten haben, so muss man z.B.~\cs{relax} als optionales
+Argument angeben.
 
 Das Makro \cs{vecsum} besitzt auch eine Variante mit Stern \cs{vecsum*}, die die Summe nur
 in den Lösungen drückt:
@@ -2006,6 +2008,34 @@ Es gibt einen Befehl \cs{csqrt}, der eine Wurzel mit einem Extra-Haken druckt:
 \sqrt{2}+\sqrt[3]{3} = \csqrt{2}+\csqrt[3]{3}
 \]
 Manche Schüler haben Schwierigkeiten, zu verstehen, wo eine Wurzel endet\ldots
+
+\subsection{Runden}
+Etwas experimentell: Das Makro \cs{round\optstar[\param{Zahl}]\{\param{fp-Ausdruck}\}} rundet
+den \emph{floating point}~Ausdruck auf die Zahl (default 3) von gültigen Ziffern.
+Die Sternform gibt das Ergebnis als Zehnerpotenz aus:
+
+\begin{tabular}[t]{l@{\quad\textrightarrow\quad}l}
+\verb+\fpeval{2.53*5.24/73.28}+    & \fpeval{2.53*5.24/763.28}\\
+\verb+\round{2.53*5.24/73.28}+     & \round{2.53*5.24/763.28}\\
+\verb+\round[3]{2.53*5.24/73.28}+  & \round[3]{2.53*5.24/763.28} (gleich wie oben, 3 gültige Ziffer ist default)\\
+\verb+\round[2]{2.53*5.24/73.28}+  & \round[2]{2.53*5.24/763.28}\\
+\verb+\round[1]{2.53*5.24/73.28}+  & \round[1]{2.53*5.24/763.28}\\
+\verb+\round*{2.53*5.24/73.28}+    & \round*{2.53*5.24/763.28}\\
+\verb+\round*[2]{2.53*5.24/73.28}+ & \round*[2]{2.53*5.24/763.28}\\
+\verb+\round*[1]{2.53*5.24/73.28}+ & \round*[1]{2.53*5.24/763.28}
+\end{tabular}
+
+\noindent
+Das Makro \cs{roundto\{\param{Zahl}\}\{\param{fp-Ausdruck}\}} mit \emph{zwei}
+obligatorischen Argumenten rundet hingegen zu einer gegebenen Zahl von
+\emph{Nachkommastellen}: vergleiche
+\[
+\verb+\round[3]{0.004728}+ \to \round[3]{0.004728}\qquad
+\verb+\roundto{3}{0.004728}+ \to \roundto{3}{0.004728}
+\]
+\warningsymbol\ Gültige Nullen rechts werden nicht immer korrekt hinzugefügt!
+Irgendwann kümmere ich mich vielleicht drum, aber wer ein deutlich
+besseres Makro möchte, sollte \cs{num} vom Paket \pkg{siunitx} verwenden.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

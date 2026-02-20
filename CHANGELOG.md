@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 20XX-XX-XX [v2.2.0]
+- Minor code changes.
+- Added `\round` and `\roundto`.
+
 ## 2026-01-20 [v2.1.0]
 ### Fixed
 My my, this is getting embarrassing... the fix in [v2.0.3] which should have
@@ -529,6 +533,7 @@ Added optional number of points to `\question`.
 ## 2022-08-10 v0.0
 First more or less stable version.
 
+[v2.2.0]: https://github.com/dcampagnari/drcschool/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/dcampagnari/drcschool/compare/v2.0.3...v2.1.0
 [v2.0.3]: https://github.com/dcampagnari/drcschool/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/dcampagnari/drcschool/compare/v2.0.1...v2.0.2
