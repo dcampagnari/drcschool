@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 20XX-XX-XX [v2.2.0]
+## 2026-02-20 [v2.2.0]
 - Minor code changes.
 - Added `\round` and `\roundto`.
 
@@ -552,3 +552,4 @@ First more or less stable version.
 [v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
 [v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
+
