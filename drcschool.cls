@@ -20,7 +20,7 @@
 %% This work consists of the file drcschool.cls only.
 %%
 \NeedsTeXFormat{LaTeX2e}[2020-10-01]
-\ProvidesClass{drcschool}[2026-02-20 v2.2.0]
+\ProvidesClass{drcschool}[2026-08-02 v2.3.0]
 
 \PassOptionsToClass{fontsize=11pt,twoside}{scrartcl}
 
@@ -65,8 +65,8 @@
    \def\@sqrt[##1]{\root\uproot{2}\leftroot{1}##1\of}% font correction for roots
    \DeclareFontFamily{U}{eurosym}{}%
    \DeclareFontShape{U}{eurosym}{m}{n}{<->s*[.95]feymr10}{}%
-   \newcommand*{\EUR}[1]{##1\,\euro}%
-   \newcommand*{\euro}{\mbox{\usefont{U}{eurosym}{m}{n}e}}%
+   \def\EUR##1{##1\,\euro}%
+   \def\euro{\mbox{\usefont{U}{eurosym}{m}{n}e}}%
 }
 % This must be here because the packages which I load later might
 % use the same hook
@@ -98,14 +98,22 @@
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
 \RequirePackage[table]{xcolor}
+   \definecolor{forest}{RGB}{34,139,34}
+   \definecolor{darkgreen}{RGB}{0,90,0}%green!35!black
 \RequirePackage{longtable}
 \RequirePackage{icomma}
+\AtBeginDocument[icomma]{%
+   \edef\math@period@to@comma{%
+      \noexpand\m@th
+      \mathcode`\noexpand\.=\the\numexpr\mathcomma-4096*(\mathcomma/4096)\relax\relax
+      }%
+}
 \if@drctikz\@xp\@firstofone\else\@xp\@gobble\fi{\RequirePackage{tikz}}
 \drc@pgfplots{\RequirePackage{pgfplots}}
 \IfFileExists{drcmath.sty}{%
    \RequirePackage[arrowvec,noamssymb]{drcmath}%
 %   \def\FiraSans@scale{.9}%
-   \g@addto@macro\drc@unit@defs{\def\litre{\hbox{\usefont{OT1}{FiraSans-TLF}{m}{n}l}}}%
+   \g@addto@macro\drc@unit@defs{\def\litre{\hbox{\usefont{OT1}{FiraSans-TLF}{sl}{n}l}}}%
   }{
    \providecommand*{\E}{\cdot10^}%
 }
@@ -230,6 +238,7 @@
 }
 \newcommand*{\afterfi}{}
 \def\afterfi#1#2\fi{\fi#1}
+\newcommand*{\comma@to@period}[1]{\ifx#1\relax\else\if#1,.\else#1\fi\expandafter\comma@to@period\fi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -707,19 +716,20 @@
    }%
 }
 \newcommand*{\exercise@test@}[1][0]{%
-   \if@tempswa\drc@addto@pts{#1}\fi
+   \dimen@\dimexpr\fpeval{\comma@to@period#1\relax}\p@\relax
+   \if@tempswa\drc@addto@pts\fi
    \refstepcounter{exercise}%
    \gdef\s@luti@n{0}% no solution yet
-   \dimen@#1\p@
    \drc@heading{\beforeexerciseskip}{\afterexerciseskip}{%
       \drc@difficulty
       \drc@ex@name~\theexercise\drc@extra\autodot\drc@title@sep
-      \drc@title@L\drc@pts@pre\drc@strip@pt\dimen@\drc@pts@post\ \ifdim\dimen@=\p@\drc@pointname\else\drc@pointsname\fi\drc@title@R
+      \drc@title@L\drc@pts@pre\boldmath$\math@period@to@comma#1$\drc@pts@post\ \ifdim\dimen@=\p@\drc@pointname\else\drc@pointsname\fi\drc@title@R
    }%
    \reset@exercise@format
 }
-\def\drc@addto@pts#1{\advance\drcschool@pts#1\p@\relax}
-% similar to the above but with independent counter
+\def\drc@addto@pts{\advance\drcschool@pts\dimen@}
+
+% similar to \exercise but with independent counter
 \newcounter{experiment}
 \newcommand*{\experimentname}{Versuch}
 \newcommand*{\experiment}{%
@@ -762,6 +772,7 @@
 \newif\if@drc@both
 \newcommand*{\solutionname}{Lösung}
 \newenvironment{solution}{%
+   \par
    \ifdefined\s@lution
       \ClassError{drcschool}{Nested solutions}%
                  {A solution's solution isn't meaningful.}%
@@ -1438,7 +1449,7 @@
 \define@key{drc@copies}{vmargin}{\drc@dimb#1\relax}
 \define@key{drc@copies}{margin}{\drc@dima#1\relax\drc@dimb\drc@dima}
 \define@key{drc@copies}{fontsize}{\KOMAoption{fontsize}{#1}}
-\define@key{drc@copies}{solution}[true]{\drc@key@to@bool{solution}{@solution}{#1}}
+\define@key{drc@copies}{solution}[true]{\drc@solution@bool{#1}}
 
 \newcommand{\copies}[2]{%#1=signature; #2=title
    \def\@tempa##1x##2x##3\relax{\def\drc@ny{##1}\def\drc@nx{##2}}%
@@ -1610,6 +1621,15 @@
    \IfBlankTF{#1}{\@hangfrom{{#2}\space}}{\hangindent#1\noindent{#2}\space}%
    \ignorespaces
 }
+\newcommand*{\topalign}{\leavevmode\begingroup\@ifstar{\@tempswatrue\top@align}{\@tempswafalse\top@align}}
+\newcommand*{\top@align}[2][1]{%
+   \setbox\drc@box=\hbox{\ignorespaces#2\unskip}%
+   \setbox\z@=\hbox{\lower\dimexpr\ht\drc@box-#1\fontcharht\font`A\box\drc@box}%
+   \if@tempswa\ht\z@\z@\fi
+   \box\z@
+   \endgroup
+}
+
 \newcommand*{\V}{{\fboxsep\p@\fbox{V}} }
 \newcommand*{\B}{{\fboxsep\p@\fbox{B}} }
 \newcommand*{\exercises}[1]{\leavevmode\vtop{\def\\{\cr\ignorespaces}\ialign{\strut##\hfil\cr#1\crcr}}}
@@ -1732,7 +1752,8 @@
 \newcommand*{\drc@pts@pre}{}
 \newcommand*{\drc@pts@post}{}
 \IfFileExists{logo-ggs.png}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{logo-ggs}\hfill}}{\def\drc@logo{}}%
-\newcommand*{\SetLogo}[1]{\IfBlankTF{#1}{\let\drc@logo\@empty}{\def\drc@logo{\includegraphics[height=1.7\ht\drc@box]{#1}\hfill}}}
+%\IfFileExists{logo-ggs-colour.png}{\def\drc@logo{\includegraphics[trim=48pt 90pt 40pt 95pt,height=1.7\ht\drc@box]{logo-ggs-colour}\hfill}}{\def\drc@logo{}}%
+\newcommand*{\SetLogo}[2][]{\IfBlankTF{#2}{\let\drc@logo\@empty}{\def\drc@logo{\includegraphics[#1,height=1.7\ht\drc@box]{#2}\hfill}}}
 \define@key{drc@test}{subject}{\gdef\drc@subject{#1}}
 \define@key{drc@test}{teacher}{\gdef\drc@teacher{#1}}
 \define@key{drc@test}{M}[]{\gdef\drc@subject{Mathematik}}
@@ -1828,7 +1849,7 @@
 
 \newcommand*{\drc@test@both}{%
    \begingroup
-   \let\drc@addto@pts\@gobble
+   \let\drc@addto@pts\relax
    \let\label\@gobble
    \let\label@in@display\@gobble
    \drc@pdfbookmark[1]{\drc@test@nr. \drc@test@type\ \drc@subject\ifdefined\drc@test@ver\ -- \drc@test@ver\fi}{KA.\the\c@worksheet.T}%
@@ -1909,7 +1930,18 @@
    \def\usetikzlibrary{\@gobble}
 \fi
 
-\tikzset{>=latex}
+\tikzset{%
+   >=latex,
+   field line/.style={
+      decoration={
+         markings,
+         mark=at position 0.2 with {\arrow{>}},
+         mark=at position 0.51 with {\arrow{>}},
+         mark=at position 0.8 with {\arrow{>}}
+       },
+      postaction=decorate
+   }
+}
 \usetikzlibrary{arrows.meta,patterns,calc,angles}
 
 \newcommand*{\right@ngle}{}
@@ -1960,9 +1992,9 @@
       \bgroup
       \pgfmathparse{veclen(\x1,\y1)/1cm}%
       \pgfmathroundtozerofill{\pgfmathresult}%
-      \mathcode`\.=44
+      \math@period@to@comma
       \scriptsize
-      $\m@th\pgfmathresult$\,#1%
+      $\pgfmathresult$\,#1%
       \egroup
    }%
 }

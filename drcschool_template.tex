@@ -1820,10 +1820,10 @@ horizontale Auf{}listungen mit Punktzahl etwas zu ,,überladen``, aber das ist G
 \renewcommand*{\markname}{Notenpunkte}
 \renewcommand*{\pointsname}{VP}
 \begin{test}[class*=Kursstufe,subject=Gemeinschaftskunde,logo=example-image-a,solution=true]
-\exercise[10]
-Analog zu \env{worksheet*} existiert auch die Umgebung \env{test*}, welches alle Keys
-wie \env{test} annimmt plus \opt{solution=\param{Ein-Aus-Wert}}. Somit kann man den Test
-entweder mit oder ohne Lösung drucken.
+\exercise[2+2+3+3]
+Hat man mehrere Teilaufgaben, kann man die Teilpunkte entweder als optionalen Parameter
+zu \cs{question} angeben, oder direkt als ,,Summe`` im optionalen Parameter zu
+\cs{exercise}. Auch da kann man Dezimalzahlen verwenden, mit oder ohne Komma.
 \begin{solution}
 Man kann mehrere Tests in der gleichen Datei haben. Die Punktzahlen sollten sich nicht
 in die Quere kommen (es sei denn, ich habe etwas verbockt\ldots).

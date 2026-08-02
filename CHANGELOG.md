@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project tries to adhere to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## 2026-08-02 [v2.3.0]
+### Added
+- Support for partial points in exam.
+- Macro `\topalign`.
+### Fixed
+- The environment `{copies}` did not accept the key `solution=both` because I forgot
+  to change the corresponding boolean managament...
+- Added a `\par` at the start of a `{solution}`. Without it, in the version without
+  solution a trailing space remained at the end of the line in some circumstances.
+### Changed
+- The macros `\EUR` and `\euro` are now `\def`ed to avoid errors with packages
+  defining them. (I hope.)
 
 ## 2026-02-20 [v2.2.0]
 - Minor code changes.
@@ -552,4 +564,3 @@ First more or less stable version.
 [v1.1.0]: https://github.com/dcampagnari/drcschool/compare/v1.0.6...v1.1.0
 [v1.0.6]: https://github.com/dcampagnari/drcschool/compare/v1.0.5...v1.0.6
 [v1.0.5]: https://github.com/dcampagnari/drcschool/releases/tag/v1.0.5
-

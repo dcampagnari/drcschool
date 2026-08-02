@@ -152,6 +152,7 @@
 \shortsolution#S
 \teacher#S
 \time#S
+\topalign#S
 \toprule#St
 \totalpoints#S
 \true#S
